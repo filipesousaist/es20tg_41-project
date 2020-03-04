@@ -16,12 +16,12 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
     }
 
     def "student question is not created"(){
-        //the student creates an empty question
+        //an exception is thrown
         expect: false
     }
 
     def "user not consistent"(){
-        //One student creates a studentQuestion, but student details in studentQuestion are from another student
+        //an exception is thrown
         expect: false
     }
 }
