@@ -1,10 +1,22 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.discussion;
 
+import org.springframework.stereotype.Service;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.StudentDto;
 
-public class DiscussionService {
-    public void createClarificationRequest(ClarificationRequestDto clarificationRequestDto,Integer questionId, Integer studentId){
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 
+@Service
+public class DiscussionService {
+    public ClarificationRequestDto createClarificationRequest(Integer questionId, Integer userId, ClarificationRequestDto clarificationRequestDto){
+        if(questionId < 0)
+            throw new TutorException(ErrorMessage.QUESTION_NOT_FOUND);
+        return new ClarificationRequestDto();
+    }
+
+    public Integer getMaxClarificationRequestKey(){
+        return 0;
     }
 }

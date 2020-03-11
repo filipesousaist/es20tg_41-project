@@ -174,5 +174,10 @@ public class QuestionService {
 
         xmlImporter.importQuestions(questionsXML, this, courseRepository);
     }
+
+    public Integer getMaxQuestionKey(){
+        //TODO
+        return 9999;
+    }
 }
 

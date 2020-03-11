@@ -67,7 +67,7 @@ class CreateTopicTest extends Specification {
 
         then: "an error occurs"
         def exception = thrown(TutorException)
-        exception.errorMessage == ErrorMessage.DUPLICATE_TOPIC
+        exception.errormessage == ErrorMessage.DUPLICATE_TOPIC
     }
 
     @TestConfiguration
