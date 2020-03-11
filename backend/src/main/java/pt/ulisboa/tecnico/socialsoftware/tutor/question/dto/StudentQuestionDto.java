@@ -18,7 +18,7 @@ public class StudentQuestionDto implements Serializable {
     }
 
     public StudentQuestionDto(StudentQuestion studentQuestion) {
-
+        //receive QuestionDTO ?
         this.id = studentQuestion.getId();
 
         this.question = studentQuestion.getQuestion();
