@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.COURSE_EXECUTION_NOT_FOUND;
@@ -97,6 +98,10 @@ public class UserService {
         UsersXmlImport xmlImporter = new UsersXmlImport();
 
         xmlImporter.importUsers(usersXML, this);
+    }
+
+    public Optional<User> findUserById(Integer id){
+        return this.userRepository.findById(id);
     }
 
     public User getDemoTeacher() {

@@ -55,7 +55,12 @@ public enum ErrorMessage {
 
 
     ACCESS_DENIED("You do not have permission to view this resource"),
-    CANNOT_OPEN_FILE("Cannot open file");
+    CANNOT_OPEN_FILE("Cannot open file"),
+
+    CLARIFICATION_REQUEST_ALREADY_EXISTS("You can not request another clarification for this question"),
+    CLARIFICATION_REQUEST_TITLE_IS_EMTPY("The Clarification Request title is empty"),
+    CLARIFICATION_REQUEST_TEXT_IS_EMTPY("The Clarification Request text is empty");
+
 
     public final String label;
 

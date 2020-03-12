@@ -1,23 +1,45 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
+import javax.persistence.*;
 
-
+@Entity
+@Table(name = "clarification_requests")
 public class ClarificationRequest {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique=true, nullable = false)
     private Integer key;
 
+    @ManyToOne
+    @JoinColumn(name = "question_id")
     private Question question;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User student;
 
     private String title;
 
     private String text;
+
+    public ClarificationRequest(User student, Question question, ClarificationRequestDto clarificationRequestDto) {
+        this.id = clarificationRequestDto.getId();
+        this.key = clarificationRequestDto.getKey();
+        this.question = question;
+        this.student = student;
+        this.title = clarificationRequestDto.getTitle();
+        this.text = clarificationRequestDto.getText();
+    }
+
+
 
 
     public Integer getId() {
@@ -67,4 +89,5 @@ public class ClarificationRequest {
     public void setText(String text) {
         this.text = text;
     }
+
 }
