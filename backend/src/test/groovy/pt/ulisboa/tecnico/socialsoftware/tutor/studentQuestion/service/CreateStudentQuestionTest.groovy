@@ -1,17 +1,21 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.question.service
+package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.StudentQuestionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.StudentQuestionDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.StudentQuestionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.StudentQuestionService
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.StudentQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
@@ -45,6 +49,7 @@ class CreateStudentQuestionTest extends Specification{
 
     def course
     def courseExecution
+    def user
 
 
     def setup(){
@@ -54,17 +59,29 @@ class CreateStudentQuestionTest extends Specification{
         courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)
 
-        def user = new User()
+        user = new User()
         user.setKey(1)
         userRepository.save(user)
+
     }
 
     def "create studentQuestion"(){
         given: "a studentQuestionDto"
         def studentQuestionDto = new StudentQuestionDto()
-        studentQuestionDto.setTitle(QUESTION_TITLE)
-        studentQuestionDto.setContent(QUESTION_CONTENT)
-        studentQuestionDto.addOption(OPTION_CONTENT)
+        and: "a questionDto"
+        def questionDto = new QuestionDto()
+        questionDto.setKey(1)
+        questionDto.setTitle(QUESTION_TITLE)
+        questionDto.setContent(QUESTION_CONTENT)
+        questionDto.setStatus(Question.Status.AVAILABLE.name())
+        and: 'a optionId'
+        def optionDto = new OptionDto()
+        optionDto.setContent(OPTION_CONTENT)
+        optionDto.setCorrect(true)
+        def options = new ArrayList<OptionDto>()
+        options.add(optionDto)
+        questionDto.setOptions(options)
+        studentQuestionDto.setQuestionDto(questionDto)
         and: "a userId"
         def userId = userRepository.findAll().get(0).getId()
 
@@ -75,18 +92,36 @@ class CreateStudentQuestionTest extends Specification{
         studentQuestionRepository.count() == 1L
         def result = studentQuestionRepository.findAll().get(0)
         result.getId() != null
-        result.getTitle() == QUESTION_TITLE
-        result.getContent() == QUESTION_CONTENT
-        result.getOptions().size() == 1
-        result.getOptions().get(0) == OPTION_CONTENT
+        result.getQuestion().getKey() == 1
+        result.getQuestion().getStatus() == Question.Status.AVAILABLE
+        result.getQuestion().getTitle() == QUESTION_TITLE
+        result.getQuestion().getContent() == QUESTION_CONTENT
+        result.getQuestion().getImage() == null
+        result.getQuestion().getOptions().size() == 1
+        result.getQuestion().getCourse().getName() == COURSE_NAME
+        def resOption = result.getQuestion().getOptions().get(0)
+        resOption.getContent() == OPTION_CONTENT
+        resOption.getCorrect()
+        result.getUser() == user
     }
 
     def "student question is not created when content is null"(){
         given: "a studentQuestionDto"
         def studentQuestionDto = new StudentQuestionDto()
-        studentQuestionDto.setTitle(QUESTION_TITLE)
-        //studentQuestionDto.setContent(null)
-        studentQuestionDto.addOption(OPTION_CONTENT)
+        and: "a questionDto"
+        def questionDto = new QuestionDto()
+        questionDto.setKey(1)
+        questionDto.setTitle(QUESTION_TITLE)
+        questionDto.setContent("")
+        questionDto.setStatus(Question.Status.AVAILABLE.name())
+        and: 'a optionId'
+        def optionDto = new OptionDto()
+        optionDto.setContent(OPTION_CONTENT)
+        optionDto.setCorrect(true)
+        def options = new ArrayList<OptionDto>()
+        options.add(optionDto)
+        questionDto.setOptions(options)
+        studentQuestionDto.setQuestionDto(questionDto)
         and: "a userId"
         def userId = userRepository.findAll().get(0).getId()
 
@@ -95,7 +130,7 @@ class CreateStudentQuestionTest extends Specification{
 
         then:
         TutorException exception = thrown()
-        exception.getErrorMessage() == STUDENT_QUESTION_MISSING_DATA
+        exception.getErrorMessage() == QUESTION_MISSING_DATA
         studentQuestionRepository.findAll().size() == 0
     }
 

@@ -41,8 +41,6 @@ public enum ErrorMessage {
     QUIZ_NO_LONGER_AVAILABLE("This quiz is no longer available"),
     QUIZ_NOT_YET_AVAILABLE("This quiz is not yet available"),
 
-    STUDENT_QUESTION_MISSING_DATA("Missing information for question"),
-
     NO_CORRECT_OPTION("Question does not have a correct option"),
     NOT_ENOUGH_QUESTIONS("Not enough questions to create a quiz"),
     QUESTION_MISSING_DATA("Missing information for quiz"),
