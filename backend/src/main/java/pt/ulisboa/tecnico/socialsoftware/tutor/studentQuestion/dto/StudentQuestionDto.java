@@ -43,4 +43,6 @@ public class StudentQuestionDto implements Serializable {
     public void setQuestionDto(QuestionDto questionDto) {
         this.questionDto = questionDto;
     }
+
 }
+

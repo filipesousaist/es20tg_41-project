@@ -54,4 +54,5 @@ public class StudentQuestion {
     public void setQuestion(Question question) {
         this.question = question;
     }
+
 }
