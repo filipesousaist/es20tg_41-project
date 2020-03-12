@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.StudentQuestion;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 
 import javax.persistence.*;
@@ -53,6 +54,9 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval=true)
     private Set<QuizAnswer> quizAnswers = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<StudentQuestion> studentQuestions = new HashSet<>();
 
     @ManyToMany
     private Set<CourseExecution> courseExecutions = new HashSet<>();
@@ -145,6 +149,8 @@ public class User implements UserDetails {
     public Set<QuizAnswer> getQuizAnswers() {
         return quizAnswers;
     }
+
+    public Set<StudentQuestion> getStudentQuestions() { return studentQuestions; }
 
     public Set<CourseExecution> getCourseExecutions() {
         return courseExecutions;
@@ -343,6 +349,8 @@ public class User implements UserDetails {
     public void addQuizAnswer(QuizAnswer quizAnswer) {
         this.quizAnswers.add(quizAnswer);
     }
+
+    public void addStudentQuestion(StudentQuestion studentQuestion) { this.studentQuestions.add(studentQuestion); }
 
     public void addCourse(CourseExecution course) {
         this.courseExecutions.add(course);
