@@ -12,6 +12,7 @@ public enum ErrorMessage {
     ASSESSMENT_NOT_FOUND("Assessment not found with id %d"),
     TOPIC_CONJUNCTION_NOT_FOUND("Topic Conjunction not found with id %d"),
     COURSE_EXECUTION_NOT_FOUND("Course execution not found with name %d"),
+    CLARIFICATION_REQUEST_NOT_FOUND("Clarification request not found with id %d"),
 
     COURSE_NOT_FOUND("Course not found with name %s"),
     COURSE_NAME_IS_EMPTY("The course name is empty"),
@@ -19,11 +20,13 @@ public enum ErrorMessage {
     COURSE_EXECUTION_ACRONYM_IS_EMPTY("The course execution acronym is empty"),
     COURSE_EXECUTION_ACADEMIC_TERM_IS_EMPTY("The course execution academic term is empty"),
     USERNAME_NOT_FOUND("Username %s not found"),
+    CLARIFICATION_TEXT_IS_EMPTY("The clarification text is empty"),
 
     QUIZ_USER_MISMATCH("Quiz %s is not assigned to student %s"),
     QUIZ_MISMATCH("Quiz Answer Quiz %d does not match Quiz Question Quiz %d"),
     QUESTION_OPTION_MISMATCH("Question %d does not have option %d"),
     COURSE_EXECUTION_MISMATCH("Course Execution %d does not have quiz %d"),
+    TEACHER_COURSE_EXECUTION_MISMATCH("Teacher %d does not have course %d"),
 
     DUPLICATE_TOPIC("Duplicate topic: %s"),
     DUPLICATE_USER("Duplicate user: %s"),
@@ -40,6 +43,7 @@ public enum ErrorMessage {
     USER_NOT_ENROLLED("%s - Not enrolled in any available course"),
     QUIZ_NO_LONGER_AVAILABLE("This quiz is no longer available"),
     QUIZ_NOT_YET_AVAILABLE("This quiz is not yet available"),
+    CLARIFICATION_NOT_CONSISTENT("Field %s of clarification not consistent"),
 
     NO_CORRECT_OPTION("Question does not have a correct option"),
     NOT_ENOUGH_QUESTIONS("Not enough questions to create a quiz"),

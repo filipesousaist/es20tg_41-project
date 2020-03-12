@@ -128,7 +128,7 @@ class createClarificationServiceSpockTest extends Specification {
 
 
         clarification = new ClarificationDto()
-        clarification.setKey(1)
+        clarification.setKey(discussionRepository.getMaxClarificationKey()+1)
 
         def quiz = new Quiz()
         quiz.setKey(1)
@@ -248,7 +248,7 @@ class createClarificationServiceSpockTest extends Specification {
 
         then:
         def exception = thrown(TutorException)
-        exception.getErrorMessage() == ErrorMessage.CLARIFICATION_NOT_CONSISTENT
+        exception.getErrorMessage() == ErrorMessage.CLARIFICATION_TEXT_IS_EMPTY
         discussionRepository.count() == 0L
     }
 

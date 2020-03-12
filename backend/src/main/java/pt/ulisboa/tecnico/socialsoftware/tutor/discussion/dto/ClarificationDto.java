@@ -2,7 +2,9 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
 
-public class ClarificationDto {
+import java.io.Serializable;
+
+public class ClarificationDto implements Serializable {
 
     private Integer id;
 
@@ -13,7 +15,9 @@ public class ClarificationDto {
     public ClarificationDto(){}
 
     public ClarificationDto(Clarification clarification){
-
+        this.id = clarification.getId();
+        this.key = clarification.getKey();
+        this.text = clarification.getText();
     }
 
     public Integer getId() {
@@ -40,4 +44,12 @@ public class ClarificationDto {
         this.text = text;
     }
 
+    @Override
+    public String toString() {
+        return "ClarificationDto{" +
+                "id=" + id +
+                ", key=" + key +
+                ", text='" + text + '\'' +
+                '}';
+    }
 }
