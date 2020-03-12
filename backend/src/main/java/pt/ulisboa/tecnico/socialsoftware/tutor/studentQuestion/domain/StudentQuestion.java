@@ -37,6 +37,8 @@ public class StudentQuestion {
         this.user = user;
 
         this.question = new Question(course, studentQuestionDto.getQuestionDto());
+
+        user.addStudentQuestion(this);
     }
 
     public Integer getId() { return id; }
