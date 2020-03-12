@@ -1,12 +1,9 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.question.dto;
+package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.StudentQuestion;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
-import java.io.Serializable;
-
-public class StudentQuestionDto implements Serializable {
+public class StudentQuestion {
 
     private Integer id;
 
@@ -14,16 +11,13 @@ public class StudentQuestionDto implements Serializable {
 
     private User user;
 
-    public StudentQuestionDto() {
+    public void StudentQuestion(){
     }
 
-    public StudentQuestionDto(StudentQuestion studentQuestion) {
-        //receive QuestionDTO ?
-        this.id = studentQuestion.getId();
+    public void StudentQuestion(Question question, User user){
+        this.question = question;
 
-        this.question = studentQuestion.getQuestion();
-
-        this.user = studentQuestion.getUser();
+        this.user = user;
     }
 
     public Integer getId() { return id; }
@@ -37,5 +31,4 @@ public class StudentQuestionDto implements Serializable {
     public User getUser() { return user; }
 
     public void setUser(User user) { this.user = user;}
-
 }
