@@ -2,12 +2,17 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
@@ -18,39 +23,20 @@ public class StudentQuestion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(columnDefinition = "TEXT")
-    private String title;
-
-    @Column(columnDefinition = "TEXT")
-    private String content;
-
-    @ElementCollection
-    private List<String> options = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
+    @OneToOne
+    private Question question;
 
     public StudentQuestion(){
     }
 
     public StudentQuestion(Course course, User user, StudentQuestionDto studentQuestionDto){
-
-        checkConsistentQuestion(studentQuestionDto);
-
-        this.title = studentQuestionDto.getTitle();
-
-        this.content = studentQuestionDto.getContent();
-
-        this.options = studentQuestionDto.getOptions();
-
         this.user = user;
 
-        this.course = course;
+        this.question = new Question(course, studentQuestionDto.getQuestionDto());
     }
 
     public Integer getId() { return id; }
@@ -61,44 +47,11 @@ public class StudentQuestion {
 
     public void setUser(User user) { this.user = user;}
 
-    public String getTitle() {
-        return title;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public List<String> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<String> options) {
-        this.options = options;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    private void checkConsistentQuestion(StudentQuestionDto studentQuestionDto) {
-        if (studentQuestionDto.getTitle().trim().length() == 0 ||
-                studentQuestionDto.getContent().trim().length() == 0 ||
-                studentQuestionDto.getOptions().contains(null) ||
-                studentQuestionDto.getOptions().contains("") ) {
-            throw new TutorException(STUDENT_QUESTION_MISSING_DATA);
-        }
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 }

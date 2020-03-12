@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto;
 
+
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.StudentQuestion;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
 import java.io.Serializable;
@@ -10,11 +12,7 @@ public class StudentQuestionDto implements Serializable {
 
     private Integer id;
 
-    private String title;
-
-    private String content;
-
-    private List<String> options = new ArrayList<>();
+    private QuestionDto questionDto;
 
     private UserDto userDto;
 
@@ -25,11 +23,7 @@ public class StudentQuestionDto implements Serializable {
 
         this.id = studentQuestion.getId();
 
-        this.title = studentQuestion.getTitle();
-
-        this.content = studentQuestion.getContent();
-
-        this.options = studentQuestion.getOptions();
+        this.questionDto = new QuestionDto(studentQuestion.getQuestion());
 
         this.userDto = new UserDto(studentQuestion.getUser());
     }
@@ -42,31 +36,11 @@ public class StudentQuestionDto implements Serializable {
 
     public void setUser(UserDto userDto) { this.userDto = userDto;}
 
-    public List<String> getOptions() {
-        return options;
+    public QuestionDto getQuestionDto() {
+        return questionDto;
     }
 
-    public void setOptions(List<String> options) {
-        this.options = options;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void addOption(String option){
-        this.options.add(option);
+    public void setQuestionDto(QuestionDto questionDto) {
+        this.questionDto = questionDto;
     }
 }
