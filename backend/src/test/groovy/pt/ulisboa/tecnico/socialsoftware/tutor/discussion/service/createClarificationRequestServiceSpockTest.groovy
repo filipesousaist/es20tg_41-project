@@ -100,9 +100,11 @@ class createClarificationRequestServiceSpockTest extends Specification {
 
 
         def quiz = new Quiz()
+        quiz.setKey(1)
         quizRepository.save(quiz)
 
         question1 = new Question()
+        question1.setKey(1)
         question1.setTitle(QUESTION_TITLE)
         question1.setContent(QUESTION_CONTENT)
         questionRepository.save(question1)
@@ -202,7 +204,7 @@ class createClarificationRequestServiceSpockTest extends Specification {
 
         then: "the ClarificationRequest is in the repository"
         //clarificationRequestRepository.count() == 1L
-        //def result = clarificationRequestRepository.findAll().get(0)
+        def result = clarificationRequestRepository.findAll().get(0)
         result != null
 
         and: "the values are correct"

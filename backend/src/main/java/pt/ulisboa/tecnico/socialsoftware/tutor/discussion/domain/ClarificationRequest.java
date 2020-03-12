@@ -1,9 +1,11 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
-
+import javax.persistence.*;
 
 public class ClarificationRequest {
 
@@ -18,6 +20,8 @@ public class ClarificationRequest {
     private String title;
 
     private String text;
+
+    public ClarificationRequest(){}
 
 
     public Integer getId() {
