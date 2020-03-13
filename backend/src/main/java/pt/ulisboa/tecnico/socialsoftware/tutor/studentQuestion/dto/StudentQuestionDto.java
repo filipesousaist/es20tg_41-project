@@ -5,8 +5,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.StudentQuestion;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class StudentQuestionDto implements Serializable {
 

@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
@@ -8,6 +9,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
 @Entity
 public class StudentQuestion {
@@ -30,11 +33,19 @@ public class StudentQuestion {
     }
 
     public StudentQuestion(Course course, User user, StudentQuestionDto studentQuestionDto){
+        checkQuestion(studentQuestionDto);
+
         this.user = user;
 
         this.question = new Question(course, studentQuestionDto.getQuestionDto());
 
         user.addStudentQuestion(this);
+    }
+
+    private void checkQuestion(StudentQuestionDto studentQuestionDto) {
+        if (studentQuestionDto.getQuestionDto() == null){
+            throw new TutorException(QUESTION_IS_MISSING);
+        }
     }
 
     public Integer getId() { return id; }

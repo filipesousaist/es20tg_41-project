@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain;
 
+
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.QuestionEvaluationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
@@ -9,6 +10,12 @@ import javax.persistence.*;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.QUESTION_EVALUATION_MISSING_JUSTIFICATION;
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.STUDENT_QUESTION_TEACHER_NOT_IN_COURSE;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 
 @Entity
 public class QuestionEvaluation {
