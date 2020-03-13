@@ -30,8 +30,10 @@ public class ClarificationRequest {
     @JoinColumn(name = "clarification_id")
     private Clarification clarification;
 
+    @Autowired
     private String title;
 
+    @Autowired
     private String text;
 
     public ClarificationRequest(){}
