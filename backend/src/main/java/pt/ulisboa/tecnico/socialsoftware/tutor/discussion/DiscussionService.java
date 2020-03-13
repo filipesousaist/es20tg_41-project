@@ -78,52 +78,86 @@ public class DiscussionService {
             value = { SQLException.class },
             backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public ClarificationRequestDto createClarificationRequest(Integer courseExectutionId, Integer questionId, Integer userId, ClarificationRequestDto clarificationRequestDto){
+    public ClarificationRequestDto submitClarificationRequest(Integer courseExectutionId, Integer questionId, Integer userId, ClarificationRequestDto clarificationRequestDto){
 
-        Question question = this.questionRepository.findById(questionId)
-                .orElseThrow(() -> new TutorException(ErrorMessage.QUESTION_NOT_FOUND));
+        Question question = getQuestion(questionId);
 
-        User user = this.userService.findUserById(userId)
-                .orElseThrow(() -> new TutorException(ErrorMessage.USER_NOT_FOUND));
+        User user = getUser(this.userService.findUserById(userId));
 
-        CourseExecution courseExecution = this.courseExecutionRepository.findById(courseExectutionId)
-                .orElseThrow(() -> new TutorException(ErrorMessage.COURSE_EXECUTION_NOT_FOUND));
+        CourseExecution courseExecution = getCourseExecution(courseExectutionId);
 
-        if(clarificationRequestDto.getTitle() == null || clarificationRequestDto.getTitle().trim().equals(""))
-            throw new TutorException(ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMTPY);
+        checkClarificationRequest(clarificationRequestDto.getTitle(), ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMTPY);
 
-        if(clarificationRequestDto.getText() == null || clarificationRequestDto.getText().trim().equals(""))
-            throw new TutorException(ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMTPY);
+        checkClarificationRequest(clarificationRequestDto.getText(), ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMTPY);
 
-        List<Question> questions = this.statementService.getSolvedQuizzes(user.getUsername(), courseExecution.getId())
-                .stream()
-                .map(SolvedQuizDto::getStatementQuiz)
-                .map(StatementQuizDto::getQuizAnswerId)
-                .map(this.quizAnswerRepository::findById)
-                .map(Optional::get)
-                .map(QuizAnswer::getQuiz)
-                .map(Quiz::getQuizQuestions)
-                .flatMap(Collection::stream)
-                .map(QuizQuestion::getQuestion)
-                .collect(Collectors.toList());
+        List<Question> questions = getQuestions(user, courseExecution);
 
-        if(!questions.contains(question))
-            throw new TutorException(ErrorMessage.QUESTION_ANSWER_NOT_FOUND);
+        checkQuestionAnswer(question, questions);
 
-        if(this.clarificationRequestRepository.findByKey(clarificationRequestDto.getKey()).isPresent())
-            throw new TutorException(ErrorMessage.CLARIFICATION_REQUEST_ALREADY_EXISTS);
+        checkForDuplicateClarificationRequest(clarificationRequestDto);
 
         if(clarificationRequestDto.getKey() == null)
             clarificationRequestDto.setKey(getMaxClarificationRequestKey()+1);
 
-        ClarificationRequest clarificationRequest = new ClarificationRequest(user, question, clarificationRequestDto);
-
-        this.clarificationRequestRepository.save(clarificationRequest);
-        question.addClarificationRequest(clarificationRequest);
-        user.addClarificationRequest(clarificationRequest);
+        ClarificationRequest clarificationRequest = createClarificationRequest(clarificationRequestDto, question, user);
 
         return new ClarificationRequestDto(clarificationRequest);
     }
+
+    private ClarificationRequest createClarificationRequest(ClarificationRequestDto clarificationRequestDto, Question question, User user) {
+        ClarificationRequest clarificationRequest = new ClarificationRequest(user, question, clarificationRequestDto);
+        this.clarificationRequestRepository.save(clarificationRequest);
+        question.addClarificationRequest(clarificationRequest);
+        user.addClarificationRequest(clarificationRequest);
+        return clarificationRequest;
+    }
+
+    private void checkForDuplicateClarificationRequest(ClarificationRequestDto clarificationRequestDto) {
+        if(this.clarificationRequestRepository.findByKey(clarificationRequestDto.getKey()).isPresent())
+            throw new TutorException(ErrorMessage.CLARIFICATION_REQUEST_ALREADY_EXISTS);
+    }
+
+    private void checkQuestionAnswer(Question question, List<Question> questions) {
+        if(!questions.contains(question))
+            throw new TutorException(ErrorMessage.QUESTION_ANSWER_NOT_FOUND);
+    }
+
+    private List<Question> getQuestions(User user, CourseExecution courseExecution) {
+        return this.statementService.getSolvedQuizzes(user.getUsername(), courseExecution.getId())
+                    .stream()
+                    .map(SolvedQuizDto::getStatementQuiz)
+                    .map(StatementQuizDto::getQuizAnswerId)
+                    .map(this.quizAnswerRepository::findById)
+                    .map(Optional::get)
+                    .map(QuizAnswer::getQuiz)
+                    .map(Quiz::getQuizQuestions)
+                    .flatMap(Collection::stream)
+                    .map(QuizQuestion::getQuestion)
+                    .collect(Collectors.toList());
+    }
+
+    private void checkClarificationRequest(String title, ErrorMessage clarificationRequestTitleIsEmtpy) {
+        if (title == null || title.trim().equals(""))
+            throw new TutorException(clarificationRequestTitleIsEmtpy);
+    }
+
+    private CourseExecution getCourseExecution(Integer courseExectutionId) {
+        return this.courseExecutionRepository.findById(courseExectutionId)
+                    .orElseThrow(() -> new TutorException(ErrorMessage.COURSE_EXECUTION_NOT_FOUND));
+    }
+
+    private User getUser(Optional<User> userById) {
+        return userById
+                .orElseThrow(() -> new TutorException(ErrorMessage.USER_NOT_FOUND));
+    }
+
+    private Question getQuestion(Integer questionId) {
+        return this.questionRepository.findById(questionId)
+                    .orElseThrow(() -> new TutorException(ErrorMessage.QUESTION_NOT_FOUND));
+    }
+
+
+
 
     @Retryable(
             value = { SQLException.class },
@@ -131,8 +165,7 @@ public class DiscussionService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public ClarificationDto createClarification(Integer userId, Integer clarificationRequestId, ClarificationDto clarificationDto){
 
-        User teacher = userRepository.findById(userId)
-                .orElseThrow(() -> new TutorException(ErrorMessage.USER_NOT_FOUND));
+        User teacher = getUser(userRepository.findById(userId));
         ClarificationRequest clarificationRequest = clarificationRequestRepository.findById(clarificationRequestId)
                 .orElseThrow(() -> new TutorException(ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND));
 

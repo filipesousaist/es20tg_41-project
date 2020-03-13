@@ -26,8 +26,10 @@ public class ClarificationRequest {
     @JoinColumn(name = "user_id")
     private User student;
 
+    @Autowired
     private String title;
 
+    @Autowired
     private String text;
 
     public ClarificationRequest(){}
