@@ -20,7 +20,6 @@ public enum ErrorMessage {
     COURSE_EXECUTION_ACRONYM_IS_EMPTY("The course execution acronym is empty"),
     COURSE_EXECUTION_ACADEMIC_TERM_IS_EMPTY("The course execution academic term is empty"),
     USERNAME_NOT_FOUND("Username %s not found"),
-    CLARIFICATION_TEXT_IS_EMPTY("The clarification text is empty"),
 
     QUIZ_USER_MISMATCH("Quiz %s is not assigned to student %s"),
     QUIZ_MISMATCH("Quiz Answer Quiz %d does not match Quiz Question Quiz %d"),
@@ -43,7 +42,6 @@ public enum ErrorMessage {
     USER_NOT_ENROLLED("%s - Not enrolled in any available course"),
     QUIZ_NO_LONGER_AVAILABLE("This quiz is no longer available"),
     QUIZ_NOT_YET_AVAILABLE("This quiz is not yet available"),
-    CLARIFICATION_NOT_CONSISTENT("Field %s of clarification not consistent"),
 
     NO_CORRECT_OPTION("Question does not have a correct option"),
     NOT_ENOUGH_QUESTIONS("Not enough questions to create a quiz"),
@@ -63,7 +61,9 @@ public enum ErrorMessage {
 
     CLARIFICATION_REQUEST_ALREADY_EXISTS("You can not request another clarification for this question"),
     CLARIFICATION_REQUEST_TITLE_IS_EMTPY("The Clarification Request title is empty"),
-    CLARIFICATION_REQUEST_TEXT_IS_EMTPY("The Clarification Request text is empty");
+    CLARIFICATION_REQUEST_TEXT_IS_EMTPY("The Clarification Request text is empty"),
+    CLARIFICATION_TEXT_IS_EMPTY("The clarification text is empty"),
+    CLARIFICATION_NOT_CONSISTENT("Field %s of clarification not consistent");
 
 
     public final String label;

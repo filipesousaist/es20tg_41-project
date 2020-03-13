@@ -26,6 +26,10 @@ public class ClarificationRequest {
     @JoinColumn(name = "user_id")
     private User student;
 
+    @OneToOne
+    @JoinColumn(name = "clarification_id")
+    private Clarification clarification;
+
     private String title;
 
     private String text;
@@ -72,6 +76,14 @@ public class ClarificationRequest {
 
     public void setStudent(User student) {
         this.student = student;
+    }
+
+    public Clarification getClarification() {
+        return clarification;
+    }
+
+    public void setClarification(Clarification clarification) {
+        this.clarification = clarification;
     }
 
     public String getTitle() {

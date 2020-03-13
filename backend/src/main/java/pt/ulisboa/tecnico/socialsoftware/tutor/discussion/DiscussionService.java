@@ -131,21 +131,31 @@ public class DiscussionService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public ClarificationDto createClarification(Integer userId, Integer clarificationRequestId, ClarificationDto clarificationDto){
 
-        User teacher = userRepository.findById(userId)
-                .orElseThrow(() -> new TutorException(ErrorMessage.USER_NOT_FOUND));
-        ClarificationRequest clarificationRequest = clarificationRequestRepository.findById(clarificationRequestId)
-                .orElseThrow(() -> new TutorException(ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND));
+        User teacher = getUser(userRepository.findById(userId));
 
-        List<Course> courses = teacher.getCourseExecutions()
-                .stream()
-                .map(CourseExecution::getCourse)
-                .collect(Collectors.toList());
+        ClarificationRequest clarificationRequest = getClarificationRequest(clarificationRequestId);
 
-        if(!courses.contains(clarificationRequest.getQuestion().getCourse())){
-            throw new TutorException(ErrorMessage.TEACHER_COURSE_EXECUTION_MISMATCH,
-                    teacher.getId(), clarificationRequest.getQuestion().getCourse().getId());
-        }
+        List<Course> courses = getCourses(teacher);
 
+        checkQuestionCourse(teacher, clarificationRequest, courses);
+
+        checkClarificationText(clarificationDto);
+
+        Clarification clarification = createClarification(clarificationDto, teacher, clarificationRequest);
+
+        return new ClarificationDto(clarification);
+    }
+
+    private Clarification createClarification(ClarificationDto clarificationDto, User teacher, ClarificationRequest clarificationRequest) {
+        Clarification clarification = new Clarification(teacher, clarificationRequest, clarificationDto);
+        clarification.setKey(getMaxClarificationKey()+1);
+        clarificationRequest.setClarification(clarification);
+        teacher.addClarification(clarification);
+        entityManager.persist(clarification);
+        return clarification;
+    }
+
+    private void checkClarificationText(ClarificationDto clarificationDto) {
         if(clarificationDto.getText() == null) {
             throw new TutorException(ErrorMessage.CLARIFICATION_NOT_CONSISTENT, "Text");
         }
@@ -153,11 +163,30 @@ public class DiscussionService {
         else if (clarificationDto.getText().trim().equals("")){
             throw  new TutorException(ErrorMessage.CLARIFICATION_TEXT_IS_EMPTY);
         }
+    }
 
-        Clarification clarification = new Clarification(teacher, clarificationRequest, clarificationDto);
-        clarification.setKey(getMaxClarificationKey()+1);
-        entityManager.persist(clarification);
-        return new ClarificationDto(clarification);
+    private void checkQuestionCourse(User teacher, ClarificationRequest clarificationRequest, List<Course> courses) {
+        if(!courses.contains(clarificationRequest.getQuestion().getCourse())){
+            throw new TutorException(ErrorMessage.TEACHER_COURSE_EXECUTION_MISMATCH,
+                    teacher.getId(), clarificationRequest.getQuestion().getCourse().getId());
+        }
+    }
+
+    private List<Course> getCourses(User teacher) {
+        return teacher.getCourseExecutions()
+                    .stream()
+                    .map(CourseExecution::getCourse)
+                    .collect(Collectors.toList());
+    }
+
+    private ClarificationRequest getClarificationRequest(Integer clarificationRequestId) {
+        return clarificationRequestRepository.findById(clarificationRequestId)
+                    .orElseThrow(() -> new TutorException(ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND));
+    }
+
+    private User getUser(Optional<User> byId) {
+        return byId
+                .orElseThrow(() -> new TutorException(ErrorMessage.USER_NOT_FOUND));
     }
 
     public Integer getMaxClarificationRequestKey(){

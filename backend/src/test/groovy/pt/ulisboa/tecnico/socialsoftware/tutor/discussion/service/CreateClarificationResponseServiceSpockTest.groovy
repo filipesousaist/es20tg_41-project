@@ -34,6 +34,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
 import spock.lang.Specification
+import spock.lang.Unroll
 
 @DataJpaTest
 class createClarificationServiceSpockTest extends Specification {
@@ -56,7 +57,6 @@ class createClarificationServiceSpockTest extends Specification {
     static final String TEACHER_NAME_2 = "Teacher Name"
     static final String TEACHER_USERNAME_2 = "Teacher Username"
     static final String CLARIFICATION_TEXT = "A opção correta é 1), porque sim."
-    static final String EMPTY_CLARIFICATION_TEXT = " "
 
     @Autowired
     DiscussionService discussionService
@@ -101,7 +101,7 @@ class createClarificationServiceSpockTest extends Specification {
     def teacher1
     def teacher2
     def request
-    def clarification
+    def clarificationDto
     def question
     def user
 
@@ -129,8 +129,8 @@ class createClarificationServiceSpockTest extends Specification {
         userRepository.save(teacher1)
 
 
-        clarification = new ClarificationDto()
-        clarification.setKey(discussionService.getMaxClarificationKey()+1)
+        clarificationDto = new ClarificationDto()
+        clarificationDto.setKey(discussionService.getMaxClarificationKey()+1)
 
         def quiz = new Quiz()
         quiz.setKey(1)
@@ -167,13 +167,12 @@ class createClarificationServiceSpockTest extends Specification {
 
     def "create Clarification" (){
         given:"A clarificationRequest"
-        clarification.setText(CLARIFICATION_TEXT)
+        clarificationDto.setText(CLARIFICATION_TEXT)
 
         when:
-        discussionService.createClarification(teacher1.getId(), request.getId(), clarification)
+        discussionService.createClarification(teacher1.getId(), request.getId(), clarificationDto)
 
-        then:"the correct clarification is inside the repository"
-        discussionRepository.count() == 1L
+        then:"the values of the clarification are correct"
         def result = discussionRepository.findAll().get(0)
         result.getId() != null
         result.getKey() != null
@@ -181,32 +180,49 @@ class createClarificationServiceSpockTest extends Specification {
         result.getTeacher() == teacher1
         result.getClarificationRequest() == request
 
+        and: "the clarification is in the repository"
+        discussionRepository.count() == 1L
+
+        and: "the clarification is created"
+        teacher1.getClarifications().size() == 1L
+        request.getClarification() != null
+
     }
 
     def "the request does not exist" (){
         given:"createClarification a clarification"
-        clarification.setText(CLARIFICATION_TEXT)
+        clarificationDto.setText(CLARIFICATION_TEXT)
 
         when:
-        discussionService.createClarification(teacher1.getId(), -1, clarification)
+        discussionService.createClarification(teacher1.getId(), -1, clarificationDto)
 
-        then:
+        then: "check for exceptions"
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND
+
+        and: "clarification is not added to the repository"
         discussionRepository.count() == 0L
+
+        and: "clarification is not associated with the teacher"
+        teacher1.getClarifications().size() == 0L
     }
 
     def "the teacher does not exist" (){
         given:"createClarification a clarification"
-        clarification.setText(CLARIFICATION_TEXT)
+        clarificationDto.setText(CLARIFICATION_TEXT)
 
         when:
-        discussionService.createClarification(-1, request.getId(), clarification)
+        discussionService.createClarification(-1, request.getId(), clarificationDto)
 
         then:
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.USER_NOT_FOUND
+
+        and: "clarification is not added to the repository"
         discussionRepository.count() == 0L
+
+        and: "clarification is not associated with clarification request"
+        request.getClarification() == null
     }
 
     def "Teacher isn't in the same course as the question" (){
@@ -216,42 +232,50 @@ class createClarificationServiceSpockTest extends Specification {
         courses.add(courseExecution2)
         teacher2.setCourseExecutions(courses)
         userRepository.save(teacher2)
+        clarificationDto.setText(CLARIFICATION_TEXT)
 
         when:
-        discussionService.createClarification(teacher2.getId(), request.getId(), clarification)
+        discussionService.createClarification(teacher2.getId(), request.getId(), clarificationDto)
 
         then:
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.TEACHER_COURSE_EXECUTION_MISMATCH
+
+        and: "clarification is not added to the repository"
         discussionRepository.count() == 0L
+
+        and: "clarification is not associated with teacher"
+        teacher2.getClarifications().size() == 0L
+
+        and: "clarification is not associated with clarification request"
+        request.getClarification() == null
     }
 
-    def "Clarification with null string as clarification" (){
-        //Throws Exception
-        given:"createClarification a clarification"
-        clarification.setText(null)
+    @Unroll
+    def "invalid argument: text=#text" (){
+        given: "a clarification dto"
+        clarificationDto.setText(text)
 
         when:
-        discussionService.createClarification(teacher1.getId(), request.getId(), clarification)
+        discussionService.createClarification(teacher1.getId(), request.getId(), clarificationDto)
 
-        then:
-        def exception = thrown(TutorException)
-        exception.getErrorMessage() == ErrorMessage.CLARIFICATION_NOT_CONSISTENT
+        then: "check for exceptions"
+        def error = thrown(TutorException)
+        error.getErrorMessage() == errorMessage
+
+        and: "clarification is not added to the repository"
         discussionRepository.count() == 0L
 
-    }
+        and: "clarification is not associated with teacher"
+        teacher1.getClarifications().size() == 0L
 
-    def "Clarification with empty/only blank spaces" (){
-        given:"createClarification a clarification"
-        clarification.setText(EMPTY_CLARIFICATION_TEXT)
+        and: "clarification is not associated with clarification request"
+        request.getClarification() == null
 
-        when:
-        discussionService.createClarification(teacher1.getId(), request.getId(), clarification)
-
-        then:
-        def exception = thrown(TutorException)
-        exception.getErrorMessage() == ErrorMessage.CLARIFICATION_TEXT_IS_EMPTY
-        discussionRepository.count() == 0L
+        where:
+        text                || errorMessage
+        null                || ErrorMessage.CLARIFICATION_NOT_CONSISTENT
+        "    "              || ErrorMessage.CLARIFICATION_TEXT_IS_EMPTY
     }
 
     @TestConfiguration
