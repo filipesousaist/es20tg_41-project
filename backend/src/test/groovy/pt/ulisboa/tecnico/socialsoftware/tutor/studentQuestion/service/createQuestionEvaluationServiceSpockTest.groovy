@@ -127,7 +127,7 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         def result = questionEvaluationRepository.findAll().get(0)
         result != null
         result.getId() != null
-        result.getApproved() == true
+        result.isApproved() == true
         result.getJustification == JUSTIFICATION
         and: "returned references are also correct"
         result.teacher == teacher
