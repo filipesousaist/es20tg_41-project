@@ -5,6 +5,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
@@ -12,6 +14,10 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.StudentQuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.StudentQuestion
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.QuestionEvaluationDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.QuestionEvaluationRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.StudentQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
@@ -26,6 +32,11 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
     private static final String OPTION2_CONTENT = "Option 2";
     private static final String STUDENT_NAME = "Student Name";
     private static final String STUDENT_USERNAME = "Student Username";
+    private static final int STUDENT_KEY = 1;
+    private static final String JUSTIFICATION = "Good question";
+    private static final String TEACHER_NAME = "Teacher Name";
+    private static final String TEACHER_USERNAME = "Teacher Username";
+    private static final int TEACHER_KEY = 2;
 
 
     @Autowired
@@ -45,6 +56,18 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    StudentQuestionRepository studentQuestionRepository;
+
+    @Autowired
+    QuestionEvaluationRepository questionEvaluationRepository;
+
+    def studentQuestion
+    def studentQuestionID
+    def teacher
+    def teacherID
+    def questionEvaluationDto
 
     def setup() {
         // Create course and course execution
@@ -72,37 +95,133 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         options.add(option2Dto);
         questionDto.setOptions(options);
 
-        // Add question
-        questionService.createQuestion(course.getId(), questionDto);
-
         // Create student
-        def student = new User(STUDENT_NAME, STUDENT_USERNAME, 1, User.Role.STUDENT);
+        def student = new User(STUDENT_NAME, STUDENT_USERNAME, STUDENT_KEY, User.Role.STUDENT);
         student.getCourseExecutions().add(courseExecution);
         courseExecution.getUsers().add(student);
         userRepository.save(student);
 
-        def studentQuestion = new StudentQuestion()
+        // Create teacher, and get ID
+        teacher = new User(TEACHER_NAME, TEACHER_USERNAME, TEACHER_KEY, User.Role.TEACHER);
+        teacher.getCourseExecutions().add(courseExecution);
+        courseExecution.getUsers().add(teacher);
+        userRepository.save(teacher);
+        teacherID = userRepository.findByKey(TEACHER_KEY).id;
 
+        // Create student question, and get ID
+        def studentQuestionDto = new StudentQuestionDto();
+        studentQuestionDto.setQuestionDto(questionDto);
+        studentQuestion = new StudentQuestion(course, student, studentQuestionDto);
+        studentQuestionRepository.save(studentQuestion);
+        studentQuestionID = studentQuestionRepository.findAll().get(0).id;
     }
 
-    def "studentQuestion exists and justification is filled in"() {
-        expect: false
+    def "studentQuestion and teacher exist and justification is filled in"() {
+        given: "a QuestionEvaluationDto"
+        questionEvaluationDto = new QuestionEvaluationDto()
+        questionEvaluationDto.setJustification(JUSTIFICATION)
+        questionEvaluationDto.setApproved(true)
+
+        when: "a question evaluation is created"
+        studentQuestionService.createQuestionEvaluation(teacherID, studentQuestionID, questionEvaluationDto)
+
+        then: "the returned data are correct"
+        def result = questionEvaluationRepository.findAll().get(0)
+        result != null
+        result.getId() != null
+        result.getApproved() == true
+        result.getJustification == JUSTIFICATION
+        and: "returned references are also correct"
+        result.teacher == teacher
+        result.studentQuestion == studentQuestion
     }
 
-    def "studentQuestion is null"() {
-        expect: false
+    def "studentQuestion does not exist"() {
+        given: "a QuestionEvaluationDto"
+        questionEvaluationDto = new QuestionEvaluationDto()
+        questionEvaluationDto.setJustification(JUSTIFICATION)
+        questionEvaluationDto.setApproved(true)
+        and: "student question is deleted"
+        studentQuestionRepository.delete(studentQuestion)
+
+        when: "a question evaluation is created"
+        studentQuestionService.createQuestionEvaluation(teacherID, studentQuestionID, questionEvaluationDto)
+
+        then: "an exception is thrown"
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.STUDENT_QUESTION_NOT_FOUND
+        and: "the question evaluation is not created"
+        questionEvaluationRepository.size() == 0L
+    }
+
+    def "teacher does not exist"() {
+        given: "a QuestionEvaluationDto"
+        questionEvaluationDto = new QuestionEvaluationDto()
+        questionEvaluationDto.setJustification(JUSTIFICATION)
+        questionEvaluationDto.setApproved(true)
+        and: "teacher is deleted"
+        userRepository.delete(teacher)
+
+        when: "a question evaluation is created"
+        studentQuestionService.createQuestionEvaluation(teacherID, studentQuestionID, questionEvaluationDto)
+
+        then: "an exception is thrown"
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.USER_NOT_FOUND
+        and: "the question evaluation is not created"
+        questionEvaluationRepository.size() == 0L
     }
 
     def "justification is null"() {
-        expect: false
+        given: "a QuestionEvaluationDto with null justification"
+        questionEvaluationDto = new QuestionEvaluationDto()
+        questionEvaluationDto.setJustification(null)
+        questionEvaluationDto.setApproved(true)
+
+        when: "a question evaluation is created"
+        studentQuestionService.createQuestionEvaluation(teacherID, studentQuestionID, questionEvaluationDto)
+
+        then: "an exception is thrown"
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.QUESTION_EVALUATION_MISSING_JUSTIFICATION
+        and: "the question evaluation is not created"
+        questionEvaluationRepository.size() == 0
     }
 
     def "justification is empty"() {
-        expect: false
+        given: "a QuestionEvaluationDto with empty justification"
+        questionEvaluationDto = new QuestionEvaluationDto()
+        questionEvaluationDto.setJustification("")
+        questionEvaluationDto.setApproved(true)
+
+        when: "a question evaluation is created"
+        studentQuestionService.createQuestionEvaluation(teacherID, studentQuestionID, questionEvaluationDto)
+
+        then: "an exception is thrown"
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.QUESTION_EVALUATION_MISSING_JUSTIFICATION
+        and: "the question evaluation is not created"
+        questionEvaluationRepository.size() == 0
     }
 
     def "teacher does not teach the course of the question"() {
-        expect: false
+        given: "a QuestionEvaluationDto"
+        questionEvaluationDto = new QuestionEvaluationDto()
+        questionEvaluationDto.setJustification(JUSTIFICATION)
+        questionEvaluationDto.setApproved(true)
+        and: "a teacher who is not in the course"
+        def otherTeacher = new User("Other Teacher Name", "Other Teacher Username", TEACHER_KEY + 1, User.Role.TEACHER)
+        userRepository.add(otherTeacher)
+        def otherTeacherID = userRepository.findByKey(TEACHER_KEY + 1).id
+
+        when: "a question evaluation is created"
+        studentQuestionService.createQuestionEvaluation(otherTeacherID, studentQuestionID, questionEvaluationDto)
+
+        then: "an exception is thrown"
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.STUDENT_QUESTION_TEACHER_NOT_IN_COURSE
+        and: "the question evaluation is not created"
+        questionEvaluationRepository.size() == 0
     }
 
     @TestConfiguration

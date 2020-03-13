@@ -54,6 +54,10 @@ public enum ErrorMessage {
     AUTHENTICATION_ERROR("Authentication Error"),
     FENIX_CONFIGURATION_ERROR("Incorrect server configuration files for fenix"),
 
+    // StudentQuestion
+    STUDENT_QUESTION_NOT_FOUND("Student question not found with id %d"),
+    QUESTION_EVALUATION_MISSING_JUSTIFICATION("Student question has no justification"),
+    STUDENT_QUESTION_TEACHER_NOT_IN_COURSE("Teacher is not in course of student question"),
 
     ACCESS_DENIED("You do not have permission to view this resource"),
     CANNOT_OPEN_FILE("Cannot open file");
