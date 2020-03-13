@@ -103,6 +103,7 @@ class CreateStudentQuestionTest extends Specification{
         resOption.getContent() == OPTION_CONTENT
         resOption.getCorrect()
         result.getUser() == user
+        user.getStudentQuestions()contains(result)
     }
 
     def "student question is not created when content is null"(){
@@ -131,6 +132,21 @@ class CreateStudentQuestionTest extends Specification{
         then:
         TutorException exception = thrown()
         exception.getErrorMessage() == QUESTION_MISSING_DATA
+        studentQuestionRepository.findAll().size() == 0
+    }
+
+    def "student question is not created when question is null"(){
+        given: "a studentQuestionDto"
+        def studentQuestionDto = new StudentQuestionDto()
+        and: "a userId"
+        def userId = userRepository.findAll().get(0).getId()
+
+        when:
+        studentQuestionService.createStudentQuestion(course.getId(), userId, studentQuestionDto)
+
+        then:
+        TutorException exception = thrown()
+        exception.getErrorMessage() == QUESTION_IS_MISSING
         studentQuestionRepository.findAll().size() == 0
     }
 

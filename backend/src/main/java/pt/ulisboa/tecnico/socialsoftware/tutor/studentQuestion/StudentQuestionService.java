@@ -40,10 +40,12 @@ public class StudentQuestionService {
             value = {SQLException.class},
             backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public StudentQuestionDto createStudentQuestion(int courseId, int userId, StudentQuestionDto studentQuestionDto) {
+    public StudentQuestionDto createStudentQuestion(int courseId, Integer userId, StudentQuestionDto studentQuestionDto) {
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new TutorException(COURSE_NOT_FOUND, courseId));
 
         User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
+
+
 
         StudentQuestion studentQuestion = new StudentQuestion(course, user,studentQuestionDto);
         entityManager.persist(studentQuestion);
