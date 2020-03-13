@@ -119,7 +119,7 @@ class CreateExternalCourseExecutionServiceSpockTest extends Specification {
 
         then:
         def error = thrown(TutorException)
-        error.errorMessage == errorMessage
+        error.getErrorMessage() == errorMessage
 
         where:
         isCourse | isCourseExecution | type                 || errorMessage
@@ -155,7 +155,7 @@ class CreateExternalCourseExecutionServiceSpockTest extends Specification {
 
         then:
         def error = thrown(TutorException)
-        error.errorMessage == errorMessage
+        error.getErrorMessage() == errorMessage
 
         where:
         type                 | courseName | acronym     | academicTerm      || errorMessage

@@ -11,7 +11,11 @@ public enum ErrorMessage {
     TOPIC_NOT_FOUND("Topic not found with id %d"),
     ASSESSMENT_NOT_FOUND("Assessment not found with id %d"),
     TOPIC_CONJUNCTION_NOT_FOUND("Topic Conjunction not found with id %d"),
+
+    CLARIFICATION_REQUEST_NOT_FOUND("Clarification request not found with id %d"),
+
     COURSE_EXECUTION_NOT_FOUND("Course execution not found with id %d"),
+
 
     COURSE_NOT_FOUND("Course not found with name %s"),
     COURSE_NAME_IS_EMPTY("The course name is empty"),
@@ -25,6 +29,7 @@ public enum ErrorMessage {
     QUIZ_MISMATCH("Quiz Answer Quiz %d does not match Quiz Question Quiz %d"),
     QUESTION_OPTION_MISMATCH("Question %d does not have option %d"),
     COURSE_EXECUTION_MISMATCH("Course Execution %d does not have quiz %d"),
+    TEACHER_COURSE_EXECUTION_MISMATCH("Teacher %d does not have course %d"),
 
     DUPLICATE_TOPIC("Duplicate topic: %s"),
     DUPLICATE_USER("Duplicate user: %s"),
@@ -61,7 +66,14 @@ public enum ErrorMessage {
     STUDENT_QUESTION_TEACHER_NOT_IN_COURSE("Teacher is not in course of student question"),
 
     ACCESS_DENIED("You do not have permission to view this resource"),
-    CANNOT_OPEN_FILE("Cannot open file");
+    CANNOT_OPEN_FILE("Cannot open file"),
+
+    CLARIFICATION_REQUEST_ALREADY_EXISTS("You can not request another clarification for this question"),
+    CLARIFICATION_REQUEST_TITLE_IS_EMTPY("The Clarification Request title is empty"),
+    CLARIFICATION_REQUEST_TEXT_IS_EMTPY("The Clarification Request text is empty"),
+    CLARIFICATION_TEXT_IS_EMPTY("The clarification text is empty"),
+    CLARIFICATION_NOT_CONSISTENT("Field %s of clarification not consistent");
+
 
     public final String label;
 

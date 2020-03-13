@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.QuestionEvaluation;
@@ -64,6 +66,13 @@ public class User implements UserDetails {
 
     @ManyToMany
     private Set<CourseExecution> courseExecutions = new HashSet<>();
+
+    @OneToMany
+    private Set<ClarificationRequest> clarificationRequests = new HashSet<>();
+
+    @OneToMany
+    private Set<Clarification> clarifications = new HashSet<>();
+
 
     public User() {
     }
@@ -165,6 +174,23 @@ public class User implements UserDetails {
     public void setCourseExecutions(Set<CourseExecution> courseExecutions) {
         this.courseExecutions = courseExecutions;
     }
+
+    public Set<ClarificationRequest> getClarificationRequests() {
+        return clarificationRequests;
+    }
+
+    public void addClarificationRequest(ClarificationRequest clarificationRequest){
+        clarificationRequests.add(clarificationRequest);
+    }
+
+    public Set<Clarification> getClarifications() {
+        return clarifications;
+    }
+
+    public void addClarification(Clarification clarification) {
+        clarifications.add(clarification);
+    }
+
 
     public Integer getNumberOfTeacherQuizzes() {
         if (this.numberOfTeacherQuizzes == null)
