@@ -23,7 +23,7 @@ import spock.lang.Specification
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*
 
 @DataJpaTest
-class CreateStudentQuestionTest extends Specification{
+class CreateStudentQuestionServiceSpockTest extends Specification{
     public static final String COURSE_NAME = "Software Architecture"
     public static final String ACRONYM = "AS1"
     public static final String ACADEMIC_TERM = "1 SEM"

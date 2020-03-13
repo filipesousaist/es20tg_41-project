@@ -41,16 +41,9 @@ public class QuestionEvaluation {
     }
 
     public QuestionEvaluation(User teacher, StudentQuestion studentQuestion, QuestionEvaluationDto questionEvaluationDto) {
-        String justification = questionEvaluationDto.getJustification();
-        if (justification == null || justification.trim().isEmpty()) {
-            throw new TutorException(QUESTION_EVALUATION_MISSING_JUSTIFICATION);
-        }
+        String justification = checkAndGetJustification(questionEvaluationDto);
 
-        Course questionCourse = studentQuestion.getQuestion().getCourse();
-        if (!teacher.getCourseExecutions().stream()
-            .anyMatch(courseExecution -> courseExecution.getCourse().getId() == questionCourse.getId())) {
-            throw new TutorException(STUDENT_QUESTION_TEACHER_NOT_IN_COURSE);
-        }
+        checkTeacherInCourse(teacher, studentQuestion);
 
         this.teacher = teacher;
         teacher.addQuestionEvaluation(this);
@@ -59,6 +52,22 @@ public class QuestionEvaluation {
 
         this.approved = questionEvaluationDto.isApproved();
         this.justification = justification;
+    }
+
+    private String checkAndGetJustification(QuestionEvaluationDto questionEvaluationDto) {
+        String justification = questionEvaluationDto.getJustification();
+        if (justification == null || justification.trim().isEmpty()) {
+            throw new TutorException(QUESTION_EVALUATION_MISSING_JUSTIFICATION);
+        }
+        return justification;
+    }
+
+    private void checkTeacherInCourse(User teacher, StudentQuestion studentQuestion) {
+        Course questionCourse = studentQuestion.getQuestion().getCourse();
+        if (!teacher.getCourseExecutions().stream()
+                .anyMatch(courseExecution -> courseExecution.getCourse().getId() == questionCourse.getId())) {
+            throw new TutorException(STUDENT_QUESTION_TEACHER_NOT_IN_COURSE);
+        }
     }
 
     public Integer getId() {

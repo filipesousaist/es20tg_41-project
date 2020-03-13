@@ -24,6 +24,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.Studen
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
+import spock.lang.Unroll
 
 @DataJpaTest
 class CreateQuestionEvaluationServiceSpockTest extends Specification {
@@ -179,36 +180,24 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         questionEvaluationRepository.findAll().size() == 0L
     }
 
-    def "justification is null"() {
-        given: "a QuestionEvaluationDto with null justification"
+    @Unroll("invalid arguments: #justification || errorMessage")
+    def "invalid justification values"() {
+        given: "a QuestionEvaluationDto"
         questionEvaluationDto = new QuestionEvaluationDto()
-        questionEvaluationDto.setJustification(null)
+        questionEvaluationDto.setJustification(justification)
         questionEvaluationDto.setApproved(true)
 
         when: "a question evaluation is created"
         studentQuestionService.createQuestionEvaluation(teacherID, studentQuestionID, questionEvaluationDto)
 
-        then: "an exception is thrown"
+        then: "an error message is thrown"
         def exception = thrown(TutorException)
-        exception.getErrorMessage() == ErrorMessage.QUESTION_EVALUATION_MISSING_JUSTIFICATION
-        and: "the question evaluation is not created"
-        questionEvaluationRepository.findAll().size() == 0
-    }
+        exception.getErrorMessage() == errorMessage
 
-    def "justification is empty"() {
-        given: "a QuestionEvaluationDto with empty justification"
-        questionEvaluationDto = new QuestionEvaluationDto()
-        questionEvaluationDto.setJustification("")
-        questionEvaluationDto.setApproved(true)
-
-        when: "a question evaluation is created"
-        studentQuestionService.createQuestionEvaluation(teacherID, studentQuestionID, questionEvaluationDto)
-
-        then: "an exception is thrown"
-        def exception = thrown(TutorException)
-        exception.getErrorMessage() == ErrorMessage.QUESTION_EVALUATION_MISSING_JUSTIFICATION
-        and: "the question evaluation is not created"
-        questionEvaluationRepository.findAll().size() == 0
+        where:
+        justification || errorMessage
+        null          || ErrorMessage.QUESTION_EVALUATION_MISSING_JUSTIFICATION
+        ""            || ErrorMessage.QUESTION_EVALUATION_MISSING_JUSTIFICATION
     }
 
     def "teacher does not teach the course of the question"() {
