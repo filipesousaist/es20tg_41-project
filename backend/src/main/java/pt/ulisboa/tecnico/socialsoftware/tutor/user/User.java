@@ -6,8 +6,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.QuestionEvaluation;
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.StudentQuestion;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -54,8 +58,21 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval=true)
     private Set<QuizAnswer> quizAnswers = new HashSet<>();
 
+    @OneToMany
+    private Set<StudentQuestion> studentQuestions = new HashSet<>();
+
+    @OneToMany
+    private Set<QuestionEvaluation> questionEvaluations = new HashSet<>();
+
     @ManyToMany
     private Set<CourseExecution> courseExecutions = new HashSet<>();
+
+    @OneToMany
+    private Set<ClarificationRequest> clarificationRequests = new HashSet<>();
+
+    @OneToMany
+    private Set<Clarification> clarifications = new HashSet<>();
+
 
     public User() {
     }
@@ -146,6 +163,10 @@ public class User implements UserDetails {
         return quizAnswers;
     }
 
+    public Set<StudentQuestion> getStudentQuestions() { return studentQuestions; }
+
+    public Set<QuestionEvaluation> getQuestionEvaluations() { return questionEvaluations; }
+
     public Set<CourseExecution> getCourseExecutions() {
         return courseExecutions;
     }
@@ -153,6 +174,23 @@ public class User implements UserDetails {
     public void setCourseExecutions(Set<CourseExecution> courseExecutions) {
         this.courseExecutions = courseExecutions;
     }
+
+    public Set<ClarificationRequest> getClarificationRequests() {
+        return clarificationRequests;
+    }
+
+    public void addClarificationRequest(ClarificationRequest clarificationRequest){
+        clarificationRequests.add(clarificationRequest);
+    }
+
+    public Set<Clarification> getClarifications() {
+        return clarifications;
+    }
+
+    public void addClarification(Clarification clarification) {
+        clarifications.add(clarification);
+    }
+
 
     public Integer getNumberOfTeacherQuizzes() {
         if (this.numberOfTeacherQuizzes == null)
@@ -343,6 +381,10 @@ public class User implements UserDetails {
     public void addQuizAnswer(QuizAnswer quizAnswer) {
         this.quizAnswers.add(quizAnswer);
     }
+
+    public void addStudentQuestion(StudentQuestion studentQuestion) { this.studentQuestions.add(studentQuestion); }
+
+    public void addQuestionEvaluation(QuestionEvaluation questionEvaluation) { this.questionEvaluations.add(questionEvaluation); }
 
     public void addCourse(CourseExecution course) {
         this.courseExecutions.add(course);

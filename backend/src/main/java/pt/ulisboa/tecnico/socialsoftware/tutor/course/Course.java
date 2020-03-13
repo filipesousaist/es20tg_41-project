@@ -53,6 +53,7 @@ public class Course {
                         && courseExecution.getAcronym().equals(acronym)
                         && courseExecution.getAcademicTerm().equals(academicTerm))
                 .findAny();
+
     }
 
     public boolean existsCourseExecution(String acronym, String academicTerm, Course.Type type) {
