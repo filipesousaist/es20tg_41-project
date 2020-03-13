@@ -8,6 +8,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.QuestionEvaluation;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.StudentQuestion;
 
 import javax.persistence.*;
@@ -55,8 +56,11 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval=true)
     private Set<QuizAnswer> quizAnswers = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany
     private Set<StudentQuestion> studentQuestions = new HashSet<>();
+
+    @OneToMany
+    private Set<QuestionEvaluation> questionEvaluations = new HashSet<>();
 
     @ManyToMany
     private Set<CourseExecution> courseExecutions = new HashSet<>();
@@ -151,6 +155,8 @@ public class User implements UserDetails {
     }
 
     public Set<StudentQuestion> getStudentQuestions() { return studentQuestions; }
+
+    public Set<QuestionEvaluation> getQuestionEvaluations() { return questionEvaluations; }
 
     public Set<CourseExecution> getCourseExecutions() {
         return courseExecutions;
@@ -351,6 +357,8 @@ public class User implements UserDetails {
     }
 
     public void addStudentQuestion(StudentQuestion studentQuestion) { this.studentQuestions.add(studentQuestion); }
+
+    public void addQuestionEvaluation(QuestionEvaluation questionEvaluation) { this.questionEvaluations.add(questionEvaluation); }
 
     public void addCourse(CourseExecution course) {
         this.courseExecutions.add(course);

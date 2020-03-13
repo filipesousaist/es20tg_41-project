@@ -1,4 +1,5 @@
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
@@ -7,19 +8,21 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.StudentQuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.StudentQuestion
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.QuestionEvaluationDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.QuestionEvaluationRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.StudentQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
 
+@DataJpaTest
 class CreateQuestionEvaluationServiceSpockTest extends Specification {
     private static final String COURSE_NAME = "Engenharia de Software";
     private static final String ACRONYM = "ES";
@@ -35,10 +38,6 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
     private static final String TEACHER_NAME = "Teacher Name";
     private static final String TEACHER_USERNAME = "Teacher Username";
     private static final int TEACHER_KEY = 2;
-
-
-    @Autowired
-    QuestionService questionService;
 
     @Autowired
     StudentQuestionService studentQuestionService;
@@ -69,49 +68,49 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
 
     def setup() {
         // Create course and course execution
-        def course = new Course(COURSE_NAME, Course.Type.TECNICO);
-        courseRepository.save(course);
-        def courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO);
-        courseExecutionRepository.save(courseExecution);
+        def course = new Course(COURSE_NAME, Course.Type.TECNICO)
+        courseRepository.save(course)
+        def courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
+        courseExecutionRepository.save(courseExecution)
 
         // Create question
-        def questionDto = new QuestionDto();
-        questionDto.setKey(1);
-        questionDto.setTitle(QUESTION_TITLE);
-        questionDto.setContent(QUESTION_CONTENT);
-        questionDto.setStatus(Question.Status.AVAILABLE.name());
+        def questionDto = new QuestionDto()
+        questionDto.setKey(1)
+        questionDto.setTitle(QUESTION_TITLE)
+        questionDto.setContent(QUESTION_CONTENT)
+        questionDto.setStatus(Question.Status.AVAILABLE.name())
 
         // Create 2 options, and add them to question
-        def option1Dto = new OptionDto();
-        option1Dto.setContent(OPTION1_CONTENT);
-        option1Dto.setCorrect(true);
-        def option2Dto = new OptionDto();
-        option2Dto.setContent(OPTION2_CONTENT);
-        option2Dto.setCorrect(false);
-        def options = new ArrayList<OptionDto>();
-        options.add(option1Dto);
-        options.add(option2Dto);
-        questionDto.setOptions(options);
+        def option1Dto = new OptionDto()
+        option1Dto.setContent(OPTION1_CONTENT)
+        option1Dto.setCorrect(true)
+        def option2Dto = new OptionDto()
+        option2Dto.setContent(OPTION2_CONTENT)
+        option2Dto.setCorrect(false)
+        def options = new ArrayList<OptionDto>()
+        options.add(option1Dto)
+        options.add(option2Dto)
+        questionDto.setOptions(options)
 
         // Create student
-        def student = new User(STUDENT_NAME, STUDENT_USERNAME, STUDENT_KEY, User.Role.STUDENT);
-        student.getCourseExecutions().add(courseExecution);
-        courseExecution.getUsers().add(student);
-        userRepository.save(student);
+        def student = new User(STUDENT_NAME, STUDENT_USERNAME, STUDENT_KEY, User.Role.STUDENT)
+        student.getCourseExecutions().add(courseExecution)
+        courseExecution.getUsers().add(student)
+        userRepository.save(student)
 
         // Create teacher, and get ID
-        teacher = new User(TEACHER_NAME, TEACHER_USERNAME, TEACHER_KEY, User.Role.TEACHER);
-        teacher.getCourseExecutions().add(courseExecution);
-        courseExecution.getUsers().add(teacher);
-        userRepository.save(teacher);
-        teacherID = userRepository.findByKey(TEACHER_KEY).id;
+        teacher = new User(TEACHER_NAME, TEACHER_USERNAME, TEACHER_KEY, User.Role.TEACHER)
+        teacher.getCourseExecutions().add(courseExecution)
+        courseExecution.getUsers().add(teacher)
+        userRepository.save(teacher)
+        teacherID = userRepository.findByKey(TEACHER_KEY).id
 
         // Create student question, and get ID
-        def studentQuestionDto = new StudentQuestionDto();
-        studentQuestionDto.setQuestionDto(questionDto);
-        studentQuestion = new StudentQuestion(course, student, studentQuestionDto);
-        studentQuestionRepository.save(studentQuestion);
-        studentQuestionID = studentQuestionRepository.findAll().get(0).id;
+        def studentQuestionDto = new StudentQuestionDto()
+        studentQuestionDto.setQuestionDto(questionDto)
+        studentQuestion = new StudentQuestion(course, student, studentQuestionDto)
+        studentQuestionRepository.save(studentQuestion)
+        studentQuestionID = studentQuestionRepository.findAll().get(0).id
     }
 
     def "studentQuestion and teacher exist and justification is filled in"() {
@@ -124,14 +123,21 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         studentQuestionService.createQuestionEvaluation(teacherID, studentQuestionID, questionEvaluationDto)
 
         then: "the returned data are correct"
-        def result = questionEvaluationRepository.findAll().get(0)
-        result != null
-        result.getId() != null
-        result.isApproved() == true
-        result.getJustification == JUSTIFICATION
-        and: "returned references are also correct"
-        result.teacher == teacher
-        result.studentQuestion == studentQuestion
+        def questionEvaluation = questionEvaluationRepository.findAll().get(0)
+        questionEvaluation != null
+        questionEvaluation.getId() != null
+        questionEvaluation.isApproved() == true
+        questionEvaluation.getJustification() == JUSTIFICATION
+        and: "teacher is correct and contains this question evaluation"
+        def returnedTeacher = questionEvaluation.getTeacher()
+        returnedTeacher == teacher
+        returnedTeacher.getQuestionEvaluations().size() == 1L
+        (new ArrayList<>(returnedTeacher.getQuestionEvaluations())).get(0) == questionEvaluation
+        and: "student question is correct and contains this question evaluation"
+        def returnedStudentQuestion = questionEvaluation.getStudentQuestion()
+        returnedStudentQuestion == studentQuestion
+        returnedStudentQuestion.getQuestionEvaluations().size() == 1L
+        (new ArrayList<>(returnedStudentQuestion.getQuestionEvaluations())).get(0) == questionEvaluation
     }
 
     def "studentQuestion does not exist"() {
@@ -225,10 +231,6 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
     @TestConfiguration
     static class StudentQuestionServiceImplTestContextConfiguration {
 
-        @Bean
-        QuestionService questionService() {
-            return new QuestionService()
-        }
         @Bean
         StudentQuestionService studentQuestionService() {
             return new StudentQuestionService()

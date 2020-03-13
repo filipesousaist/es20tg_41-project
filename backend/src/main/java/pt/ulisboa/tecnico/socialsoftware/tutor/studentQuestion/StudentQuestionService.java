@@ -14,6 +14,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuesti
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.QuestionEvaluation;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.QuestionEvaluationDto;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.StudentQuestionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 
@@ -31,6 +32,9 @@ public class StudentQuestionService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private StudentQuestionRepository studentQuestionRepository;
 
 
     @PersistenceContext
@@ -51,7 +55,17 @@ public class StudentQuestionService {
         return new StudentQuestionDto(studentQuestion);
     }
 
-    public QuestionEvaluation createQuestionEvaluation(QuestionEvaluationDto qeDto, int studentQuestionId, int teacherId) {
-        return null;
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public QuestionEvaluationDto createQuestionEvaluation(int teacherId, int studentQuestionId, QuestionEvaluationDto qeDto) {
+        User teacher = userRepository.findById(teacherId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, teacherId));
+        StudentQuestion studentQuestion = studentQuestionRepository.findById(studentQuestionId).orElseThrow(() -> new TutorException(STUDENT_QUESTION_NOT_FOUND, studentQuestionId));
+
+        QuestionEvaluation questionEvaluation = new QuestionEvaluation(teacher, studentQuestion, qeDto);
+        entityManager.persist(questionEvaluation);
+
+        return new QuestionEvaluationDto(questionEvaluation);
     }
 }

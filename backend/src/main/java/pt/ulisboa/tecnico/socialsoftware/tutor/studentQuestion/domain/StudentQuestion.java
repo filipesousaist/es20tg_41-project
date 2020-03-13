@@ -6,6 +6,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuesti
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class StudentQuestion {
@@ -20,6 +22,9 @@ public class StudentQuestion {
 
     @OneToOne
     private Question question;
+
+    @OneToMany
+    private Set<QuestionEvaluation> questionEvaluations = new HashSet<>();
 
     public StudentQuestion(){
     }
@@ -48,4 +53,7 @@ public class StudentQuestion {
         this.question = question;
     }
 
+    public Set<QuestionEvaluation> getQuestionEvaluations() { return questionEvaluations; }
+
+    public void addQuestionEvaluation(QuestionEvaluation questionEvaluation) { questionEvaluations.add(questionEvaluation); }
 }

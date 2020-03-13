@@ -101,3 +101,4 @@ public class CourseDto implements Serializable {
         this.courseExecutionType = courseExecutionType;
     }
 }
+
