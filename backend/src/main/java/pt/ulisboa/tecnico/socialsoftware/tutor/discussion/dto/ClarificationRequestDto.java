@@ -2,7 +2,9 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest;
 
-public class ClarificationRequestDto {
+import java.io.Serializable;
+
+public class ClarificationRequestDto implements Serializable {
 
     private Integer id;
 
@@ -15,7 +17,10 @@ public class ClarificationRequestDto {
     public ClarificationRequestDto(){}
 
     public ClarificationRequestDto(ClarificationRequest clarificationRequest){
-
+        this.id = clarificationRequest.getId();
+        this.key = clarificationRequest.getKey();
+        this.title = clarificationRequest.getTitle();
+        this.text = clarificationRequest.getText();
     }
 
 

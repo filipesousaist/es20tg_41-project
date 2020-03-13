@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.discussion;
+package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
