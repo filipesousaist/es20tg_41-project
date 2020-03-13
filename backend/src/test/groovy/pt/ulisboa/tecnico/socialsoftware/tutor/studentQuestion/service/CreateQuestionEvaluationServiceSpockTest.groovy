@@ -1,5 +1,8 @@
+package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.service
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
@@ -155,7 +158,7 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.STUDENT_QUESTION_NOT_FOUND
         and: "the question evaluation is not created"
-        questionEvaluationRepository.size() == 0L
+        questionEvaluationRepository.findAll().size() == 0L
     }
 
     def "teacher does not exist"() {
@@ -173,7 +176,7 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.USER_NOT_FOUND
         and: "the question evaluation is not created"
-        questionEvaluationRepository.size() == 0L
+        questionEvaluationRepository.findAll().size() == 0L
     }
 
     def "justification is null"() {
@@ -189,7 +192,7 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.QUESTION_EVALUATION_MISSING_JUSTIFICATION
         and: "the question evaluation is not created"
-        questionEvaluationRepository.size() == 0
+        questionEvaluationRepository.findAll().size() == 0
     }
 
     def "justification is empty"() {
@@ -205,7 +208,7 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.QUESTION_EVALUATION_MISSING_JUSTIFICATION
         and: "the question evaluation is not created"
-        questionEvaluationRepository.size() == 0
+        questionEvaluationRepository.findAll().size() == 0
     }
 
     def "teacher does not teach the course of the question"() {
@@ -215,7 +218,7 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         questionEvaluationDto.setApproved(true)
         and: "a teacher who is not in the course"
         def otherTeacher = new User("Other Teacher Name", "Other Teacher Username", TEACHER_KEY + 1, User.Role.TEACHER)
-        userRepository.add(otherTeacher)
+        userRepository.save(otherTeacher)
         def otherTeacherID = userRepository.findByKey(TEACHER_KEY + 1).id
 
         when: "a question evaluation is created"
@@ -225,7 +228,7 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.STUDENT_QUESTION_TEACHER_NOT_IN_COURSE
         and: "the question evaluation is not created"
-        questionEvaluationRepository.size() == 0
+        questionEvaluationRepository.findAll().size() == 0
     }
 
     @TestConfiguration

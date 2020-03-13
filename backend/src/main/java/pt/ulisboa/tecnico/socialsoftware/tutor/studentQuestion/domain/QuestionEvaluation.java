@@ -3,10 +3,12 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.QuestionEvaluationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
+import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 
 import javax.persistence.*;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.QUESTION_EVALUATION_MISSING_JUSTIFICATION;
+import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.STUDENT_QUESTION_TEACHER_NOT_IN_COURSE;
 
 @Entity
 public class QuestionEvaluation {
@@ -35,6 +37,12 @@ public class QuestionEvaluation {
         String justification = questionEvaluationDto.getJustification();
         if (justification == null || justification.trim().isEmpty()) {
             throw new TutorException(QUESTION_EVALUATION_MISSING_JUSTIFICATION);
+        }
+
+        Course questionCourse = studentQuestion.getQuestion().getCourse();
+        if (!teacher.getCourseExecutions().stream()
+            .anyMatch(courseExecution -> courseExecution.getCourse().getId() == questionCourse.getId())) {
+            throw new TutorException(STUDENT_QUESTION_TEACHER_NOT_IN_COURSE);
         }
 
         this.teacher = teacher;
