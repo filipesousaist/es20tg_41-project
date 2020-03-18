@@ -6,10 +6,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.QuestionEvaluation;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.StudentQuestion;
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -64,6 +67,19 @@ public class User implements UserDetails {
 
     @ManyToMany
     private Set<CourseExecution> courseExecutions = new HashSet<>();
+
+    @OneToMany
+    private Set<ClarificationRequest> clarificationRequests = new HashSet<>();
+
+    @OneToMany
+    private Set<Clarification> clarifications = new HashSet<>();
+
+    @OneToMany
+    private Set<Tournament> tournamentsCreatedByMe = new HashSet<>();
+
+    @ManyToMany(mappedBy = "studentsEnrolled")
+    private Set<Tournament> tournamentsEnrolled = new HashSet<>();
+
 
     public User() {
     }
@@ -166,6 +182,23 @@ public class User implements UserDetails {
         this.courseExecutions = courseExecutions;
     }
 
+    public Set<ClarificationRequest> getClarificationRequests() {
+        return clarificationRequests;
+    }
+
+    public void addClarificationRequest(ClarificationRequest clarificationRequest){
+        clarificationRequests.add(clarificationRequest);
+    }
+
+    public Set<Clarification> getClarifications() {
+        return clarifications;
+    }
+
+    public void addClarification(Clarification clarification) {
+        clarifications.add(clarification);
+    }
+
+
     public Integer getNumberOfTeacherQuizzes() {
         if (this.numberOfTeacherQuizzes == null)
             this.numberOfTeacherQuizzes = (int) getQuizAnswers().stream()
@@ -251,6 +284,14 @@ public class User implements UserDetails {
 
     public void setNumberOfStudentAnswers(Integer numberOfStudentAnswers) {
         this.numberOfStudentAnswers = numberOfStudentAnswers;
+    }
+
+    public Set<Tournament> getTournamentsEnrolled() {
+        return tournamentsEnrolled;
+    }
+
+    public Set<Tournament> getTournamentsCreatedByMe() {
+        return tournamentsCreatedByMe;
     }
 
     public Integer getNumberOfCorrectTeacherAnswers() {
@@ -352,6 +393,7 @@ public class User implements UserDetails {
         }
     }
 
+
     public void addQuizAnswer(QuizAnswer quizAnswer) {
         this.quizAnswers.add(quizAnswer);
     }
@@ -363,6 +405,12 @@ public class User implements UserDetails {
     public void addCourse(CourseExecution course) {
         this.courseExecutions.add(course);
     }
+
+    public void addTournamentEnrolled(Tournament tournament) {this.tournamentsEnrolled.add(tournament);}
+
+    public void addTournamentCreatedByMe(Tournament tournament) {this.tournamentsCreatedByMe.add(tournament);}
+
+
 
     @Override
     public String toString() {

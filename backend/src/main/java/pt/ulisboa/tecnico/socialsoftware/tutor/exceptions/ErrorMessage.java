@@ -11,7 +11,11 @@ public enum ErrorMessage {
     TOPIC_NOT_FOUND("Topic not found with id %d"),
     ASSESSMENT_NOT_FOUND("Assessment not found with id %d"),
     TOPIC_CONJUNCTION_NOT_FOUND("Topic Conjunction not found with id %d"),
+
+    CLARIFICATION_REQUEST_NOT_FOUND("Clarification request not found with id %d"),
+
     COURSE_EXECUTION_NOT_FOUND("Course execution not found with id %d"),
+
 
     COURSE_NOT_FOUND("Course not found with name %s"),
     COURSE_NAME_IS_EMPTY("The course name is empty"),
@@ -25,6 +29,7 @@ public enum ErrorMessage {
     QUIZ_MISMATCH("Quiz Answer Quiz %d does not match Quiz Question Quiz %d"),
     QUESTION_OPTION_MISMATCH("Question %d does not have option %d"),
     COURSE_EXECUTION_MISMATCH("Course Execution %d does not have quiz %d"),
+    TEACHER_COURSE_EXECUTION_MISMATCH("Teacher %d does not have course %d"),
 
     DUPLICATE_TOPIC("Duplicate topic: %s"),
     DUPLICATE_USER("Duplicate user: %s"),
@@ -55,13 +60,32 @@ public enum ErrorMessage {
     AUTHENTICATION_ERROR("Authentication Error"),
     FENIX_CONFIGURATION_ERROR("Incorrect server configuration files for fenix"),
 
+    TOPICS_IS_EMPTY("The Tournament topics is empty"),
+    EMPTY_TOPIC("Empty topic"),
+    END_BEFORE_BEGINS("The tournament ends before it begins"),
+    INVALID_QUESTIONS_NUMBER("Invalid question number : %d"),
+    INVALID_COURSE_EXECUTION("The tournament is not associated with this course execution"),
+
+    TOURNAMENT_NOT_FOUND("The tournament doesn't exist"),
+    STUDENT_ALREADY_ENROLLED("The student is already enrolled"),
+    TOURNAMENT_IS_CLOSED("The tournament has already closed"),
+    NO_SUCH_TOPIC("No such topic in the course"),
+    USER_IS_NOT_A_STUDENT("The user trying to enroll is not a student"),
+
     // StudentQuestion
     STUDENT_QUESTION_NOT_FOUND("Student question not found with id %d"),
     QUESTION_EVALUATION_MISSING_JUSTIFICATION("Student question has no justification"),
     STUDENT_QUESTION_TEACHER_NOT_IN_COURSE("Teacher is not in course of student question"),
 
     ACCESS_DENIED("You do not have permission to view this resource"),
-    CANNOT_OPEN_FILE("Cannot open file");
+    CANNOT_OPEN_FILE("Cannot open file"),
+
+    CLARIFICATION_REQUEST_ALREADY_EXISTS("You can not request another clarification for this question"),
+    CLARIFICATION_REQUEST_TITLE_IS_EMTPY("The Clarification Request title is empty"),
+    CLARIFICATION_REQUEST_TEXT_IS_EMTPY("The Clarification Request text is empty"),
+    CLARIFICATION_TEXT_IS_EMPTY("The clarification text is empty"),
+    CLARIFICATION_NOT_CONSISTENT("Field %s of clarification not consistent");
+
 
     public final String label;
 
