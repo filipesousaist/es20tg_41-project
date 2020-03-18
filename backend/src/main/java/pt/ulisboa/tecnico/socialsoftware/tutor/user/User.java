@@ -12,6 +12,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.QuestionEvaluation;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.StudentQuestion;
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -72,6 +73,12 @@ public class User implements UserDetails {
 
     @OneToMany
     private Set<Clarification> clarifications = new HashSet<>();
+
+    @OneToMany
+    private Set<Tournament> tournamentsCreatedByMe = new HashSet<>();
+
+    @ManyToMany(mappedBy = "studentsEnrolled")
+    private Set<Tournament> tournamentsEnrolled = new HashSet<>();
 
 
     public User() {
@@ -279,6 +286,14 @@ public class User implements UserDetails {
         this.numberOfStudentAnswers = numberOfStudentAnswers;
     }
 
+    public Set<Tournament> getTournamentsEnrolled() {
+        return tournamentsEnrolled;
+    }
+
+    public Set<Tournament> getTournamentsCreatedByMe() {
+        return tournamentsCreatedByMe;
+    }
+
     public Integer getNumberOfCorrectTeacherAnswers() {
         if (this.numberOfCorrectTeacherAnswers == null)
             this.numberOfCorrectTeacherAnswers = (int) this.getQuizAnswers().stream()
@@ -378,6 +393,7 @@ public class User implements UserDetails {
         }
     }
 
+
     public void addQuizAnswer(QuizAnswer quizAnswer) {
         this.quizAnswers.add(quizAnswer);
     }
@@ -389,6 +405,12 @@ public class User implements UserDetails {
     public void addCourse(CourseExecution course) {
         this.courseExecutions.add(course);
     }
+
+    public void addTournamentEnrolled(Tournament tournament) {this.tournamentsEnrolled.add(tournament);}
+
+    public void addTournamentCreatedByMe(Tournament tournament) {this.tournamentsCreatedByMe.add(tournament);}
+
+
 
     @Override
     public String toString() {
