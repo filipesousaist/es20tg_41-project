@@ -3,10 +3,13 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Assessment;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
@@ -41,6 +44,9 @@ public class CourseExecution {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseExecution", fetch=FetchType.LAZY, orphanRemoval=true)
     private Set<Assessment> assessments = new HashSet<>();
+
+    @OneToMany(mappedBy = "courseExecution")
+    private List<Tournament> tournaments = new ArrayList<>();
 
     public CourseExecution() {
     }
@@ -143,5 +149,13 @@ public class CourseExecution {
 
     public void setType(Course.Type type) {
         this.type = type;
+    }
+
+    public List<Tournament> getTournaments() {
+        return tournaments;
+    }
+
+    public void addTournament(Tournament tournament) {
+        this.tournaments.add(tournament);
     }
 }
