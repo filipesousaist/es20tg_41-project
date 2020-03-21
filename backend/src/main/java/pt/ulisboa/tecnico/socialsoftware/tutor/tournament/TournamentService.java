@@ -37,13 +37,14 @@ public class TournamentService {
     @Autowired
     private CourseExecutionRepository courseExecutionRepository;
 
-    public TournamentDto createNewTournament(TournamentDto tournamentDto){
+    public TournamentDto createNewTournament(Integer userId, TournamentDto tournamentDto){
 
-        if (!tournamentDto.getUserDto().getRole().equals(User.Role.STUDENT)) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
+
+        if (!user.getRole().equals(User.Role.STUDENT)) {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
 
-        User user = userRepository.findById(tournamentDto.getUserDto().getId()).orElseThrow(() -> new TutorException(USER_NOT_FOUND, tournamentDto.getUserDto().getId()));
         LocalDateTime begin = tournamentDto.getBeginningTime();
         LocalDateTime end = tournamentDto.getEndingTime();
         int numberOfQuestions = tournamentDto.getNumberOfQuestions();
