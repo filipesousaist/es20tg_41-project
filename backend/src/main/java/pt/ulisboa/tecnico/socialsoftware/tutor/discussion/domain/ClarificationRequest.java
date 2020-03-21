@@ -26,8 +26,7 @@ public class ClarificationRequest {
     @JoinColumn(name = "user_id")
     private User student;
 
-    @OneToOne
-    @JoinColumn(name = "clarification_id")
+    @OneToOne(mappedBy = "clarificationRequest")
     private Clarification clarification;
 
     @Autowired

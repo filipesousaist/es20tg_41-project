@@ -84,6 +84,9 @@ public class DiscussionService {
 
         checkQuestionAnswer(question, questions);
 
+        if(clarificationRequestDto.getKey() == null)
+            clarificationRequestDto.setKey(getMaxClarificationRequestKey()+1);
+
         checkForDuplicateClarificationRequest(clarificationRequestDto);
 
         if(clarificationRequestDto.getKey() == null)

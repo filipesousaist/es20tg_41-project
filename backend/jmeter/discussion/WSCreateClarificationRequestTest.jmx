@@ -54,7 +54,7 @@
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/auth/demo/admin</stringProp>
+          <stringProp name="HTTPSampler.path">/auth/demo/student</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -94,11 +94,9 @@
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-	&quot;courseType&quot;: &quot;EXTERNAL&quot;,&#xd;
-	&quot;name&quot;: &quot;Demo Course&quot;,&#xd;
-	&quot;courseExecutionType&quot;: &quot;EXTERNAL&quot;,&#xd;
-	&quot;acronym&quot;: &quot;EC99&quot;,&#xd;
-	&quot;academicTerm&quot;: &quot;first term&quot;&#xd;
+	&quot;title&quot;:&quot;doubt on question 1&quot;,&#xd;
+	&quot;text&quot;:&quot;doubt on question 1&quot;,&#xd;
+	&quot;username&quot;:&quot;Demo-Student&quot;&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -109,7 +107,7 @@
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/admin/courses/executions</stringProp>
+            <stringProp name="HTTPSampler.path">/questions/1526/clarification_request</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -120,45 +118,27 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert course type" enabled="true">
-              <stringProp name="JSON_PATH">$.courseType</stringProp>
-              <stringProp name="EXPECTED_VALUE">EXTERNAL</stringProp>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert clarification request titke" enabled="true">
+              <stringProp name="JSON_PATH">$.title</stringProp>
+              <stringProp name="EXPECTED_VALUE">doubt on question 1</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
               <boolProp name="ISREGEX">false</boolProp>
             </JSONPathAssertion>
             <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert course name" enabled="true">
-              <stringProp name="JSON_PATH">$.name</stringProp>
-              <stringProp name="EXPECTED_VALUE">Demo Course</stringProp>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert clarification request text" enabled="true">
+              <stringProp name="JSON_PATH">$.text</stringProp>
+              <stringProp name="EXPECTED_VALUE">doubt on question 1</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
               <boolProp name="ISREGEX">false</boolProp>
             </JSONPathAssertion>
             <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert course execution type" enabled="true">
-              <stringProp name="JSON_PATH">$.courseExecutionType</stringProp>
-              <stringProp name="EXPECTED_VALUE">EXTERNAL</stringProp>
-              <boolProp name="JSONVALIDATION">true</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">false</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert course execution acronym" enabled="true">
-              <stringProp name="JSON_PATH">$.acronym</stringProp>
-              <stringProp name="EXPECTED_VALUE">EC99</stringProp>
-              <boolProp name="JSONVALIDATION">true</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">false</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert course execution academic term" enabled="true">
-              <stringProp name="JSON_PATH">$.academicTerm</stringProp>
-              <stringProp name="EXPECTED_VALUE">first term</stringProp>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert clarification request username" enabled="true">
+              <stringProp name="JSON_PATH">username</stringProp>
+              <stringProp name="EXPECTED_VALUE">Demo-Student</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -277,7 +257,7 @@
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">DELETE FROM course_executions WHERE acronym LIKE &apos;EC%&apos;;</stringProp>
+          <stringProp name="query">DELETE FROM clarification_requests WHERE text LIKE &apos;blabla&apos;;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
