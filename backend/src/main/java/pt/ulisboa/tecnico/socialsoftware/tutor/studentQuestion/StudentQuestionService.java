@@ -21,6 +21,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
@@ -67,5 +69,19 @@ public class StudentQuestionService {
         entityManager.persist(questionEvaluation);
 
         return new QuestionEvaluationDto(questionEvaluation);
+    }
+
+    /*@Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<StudentQuestionDto> getStudentQuestions() {
+        return studentQuestionRepository.findAll().stream().map(StudentQuestionDto::new).collect(Collectors.toList());
+    }*/
+
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public StudentQuestionDto findById(Integer studentQuestionId) {
+        return this.studentQuestionRepository.findById(studentQuestionId).map(studentQuestion -> new StudentQuestionDto(studentQuestion))
+                .orElseThrow(() -> new TutorException(STUDENT_QUESTION_NOT_FOUND, studentQuestionId));
     }
 }
