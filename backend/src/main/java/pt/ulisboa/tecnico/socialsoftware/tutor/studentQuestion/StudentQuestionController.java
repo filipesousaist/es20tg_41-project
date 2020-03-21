@@ -22,10 +22,15 @@ public class StudentQuestionController {
     @Autowired
     StudentQuestionService studentQuestionService;
 
-    @PostMapping("courses/{courseId}/users/{userId}/studentQuestions")
+    @PostMapping("courses/{courseId}/studentQuestions")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
-    public StudentQuestionDto createStudentQuestion(@PathVariable int courseId, @PathVariable Integer userId, @RequestBody StudentQuestionDto studentQuestionDto) {
-        return studentQuestionService.createStudentQuestion(courseId, userId, studentQuestionDto);
+    public StudentQuestionDto createStudentQuestion(Principal principal, @PathVariable int courseId, @RequestBody StudentQuestionDto studentQuestionDto) {
+        User user = (User) ((Authentication) principal).getPrincipal();
+
+        if (user == null) {
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+        return studentQuestionService.createStudentQuestion(courseId, user.getId(), studentQuestionDto);
     }
 
     @PostMapping("studentQuestions/{studentQuestionId}/questionEvaluations")
