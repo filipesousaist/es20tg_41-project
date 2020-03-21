@@ -2,26 +2,41 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
+import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.QuestionEvaluationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuestionDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
-import javax.validation.Valid;
-import java.util.List;
+import java.security.Principal;
+
+import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.AUTHENTICATION_ERROR;
 
 @RestController
 public class StudentQuestionController {
 
     @Autowired
-    private StudentQuestionService studentQuestionService;
+    StudentQuestionService studentQuestionService;
 
     @PostMapping("courses/{courseId}/users/{userId}/studentQuestions")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
-    public StudentQuestionDto createStudentQuestion(@PathVariable int courseId, @PathVariable Integer userId, @Valid @RequestBody StudentQuestionDto studentQuestionDto) {
+    public StudentQuestionDto createStudentQuestion(@PathVariable int courseId, @PathVariable Integer userId, @RequestBody StudentQuestionDto studentQuestionDto) {
         return studentQuestionService.createStudentQuestion(courseId, userId, studentQuestionDto);
     }
 
-    //public List<StudentQuestionDto> getStudentQuestions() { return studentQuestionService.getStudentQuestions(); }
+    @PostMapping("studentQuestions/{studentQuestionId}/questionEvaluations")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#studentQuestionId, 'STUDENT_QUESTION.ACCESS')")
+    public QuestionEvaluationDto createQuestionEvaluation(Principal principal, @PathVariable int studentQuestionId, @RequestBody QuestionEvaluationDto questionEvaluationDto) {
+        User user = (User) ((Authentication) principal).getPrincipal();
 
-    //@GetMapping("/studentQuestions/{studentQuestionId}")
-    //public StudentQuestionDto getStudentQuestion(@PathVariable Integer studentQuestionId) { return studentQuestionService.findById(studentQuestionId); }
+        if (user == null) {
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+
+        return studentQuestionService.createQuestionEvaluation(user.getId(), studentQuestionId, questionEvaluationDto);
+    }
 }
