@@ -95,18 +95,20 @@ public class TournamentService {
         return courseEx;
     }
 
-    public TournamentDto enrollTournament(UserDto student, TournamentDto tournamentdto) {
+    public TournamentDto enrollTournament(Integer studentId, TournamentDto tournamentdto) {
+
+
+        User user = userRepository.findById(studentId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, studentId));
 
         if (tournamentdto.getId() == null) {
             throw new TutorException(TOURNAMENT_NOT_FOUND);
         }
 
-        if (!student.getRole().equals(User.Role.STUDENT)) {
+        if (!user.getRole().equals(User.Role.STUDENT)) {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
 
         Tournament tournament = tournamentRepository.findTournamentById(tournamentdto.getId()).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
-        User user = userRepository.findById(student.getId()).orElseThrow(() -> new TutorException(USER_NOT_FOUND, student.getId()));
 
         tournament.addStudentEnrolled(user);
         user.addTournamentEnrolled(tournament);

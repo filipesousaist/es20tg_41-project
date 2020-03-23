@@ -126,7 +126,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
         tournamentDto = tournamentService.createNewTournament(user1.getId(), tournamentDto)
 
         when:
-        tournamentService.enrollTournament(userDto, tournamentDto)
+        tournamentService.enrollTournament(userDto.getId(), tournamentDto)
 
         then:"is in the database"
         tournamentRepository.findAll().size() == 1
@@ -142,7 +142,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
 
     def "a student enrolling in a tournament that doesn't exists"() {
         when:
-        tournamentService.enrollTournament(userDto, tournamentDto)
+        tournamentService.enrollTournament(userDto.getId(), tournamentDto)
 
         then:
         TutorException exception = thrown()
@@ -153,8 +153,8 @@ class EnrollTournamentServiceSpockTest extends Specification {
         given: "student creates a tournament"
         tournamentDto = tournamentService.createNewTournament(user1.getId(), tournamentDto)
         when:
-        tournamentService.enrollTournament(userDto, tournamentDto)
-        tournamentService.enrollTournament(userDto, tournamentDto)
+        tournamentService.enrollTournament(userDto.getId(), tournamentDto)
+        tournamentService.enrollTournament(userDto.getId(), tournamentDto)
 
         then:
         TutorException exception = thrown()
@@ -168,7 +168,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
         tournamentRepository.findAll().get(0).setClosed(true)
 
         when:
-        tournamentService.enrollTournament(userDto, tournamentDto)
+        tournamentService.enrollTournament(userDto.getId(), tournamentDto)
 
         then:
         TutorException exception = thrown()
@@ -183,7 +183,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
         def user2Dto = new UserDto(user2)
 
         when:
-        tournamentService.enrollTournament(user2Dto, tournamentDto)
+        tournamentService.enrollTournament(user2Dto.getId(), tournamentDto)
 
         then:
         TutorException exception = thrown()
