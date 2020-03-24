@@ -60,6 +60,18 @@ public enum ErrorMessage {
     AUTHENTICATION_ERROR("Authentication Error"),
     FENIX_CONFIGURATION_ERROR("Incorrect server configuration files for fenix"),
 
+    TOPICS_IS_EMPTY("The Tournament topics is empty"),
+    EMPTY_TOPIC("Empty topic"),
+    END_BEFORE_BEGINS("The tournament ends before it begins"),
+    INVALID_QUESTIONS_NUMBER("Invalid question number : %d"),
+    INVALID_COURSE_EXECUTION("The tournament is not associated with this course execution"),
+
+    TOURNAMENT_NOT_FOUND("The tournament doesn't exist"),
+    STUDENT_ALREADY_ENROLLED("The student is already enrolled"),
+    TOURNAMENT_IS_CLOSED("The tournament has already closed"),
+    NO_SUCH_TOPIC("No such topic in the course"),
+    USER_IS_NOT_A_STUDENT("The user trying to enroll is not a student"),
+
     // StudentQuestion
     STUDENT_QUESTION_NOT_FOUND("Student question not found with id %d"),
     QUESTION_EVALUATION_MISSING_JUSTIFICATION("Student question has no justification"),
