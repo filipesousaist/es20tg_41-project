@@ -21,26 +21,26 @@ public class TournamentController {
     @Autowired
     private TournamentService tournamentService;
 
-    @PostMapping("student/{studentId}/tournament")
-    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#studentId, 'COURSE.ACCESS')")
-    public TournamentDto createTournament(Principal principal, @PathVariable Integer studentId, @RequestBody TournamentDto tournamentDto) {
+    @PostMapping("course/{courseId}/tournament/createtournament")
+    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
+    public TournamentDto createTournament(Principal principal, @PathVariable Integer courseId, @RequestBody TournamentDto tournamentDto) {
         User user = (User) ((Authentication) principal).getPrincipal();
 
-        if(user == null || user.getId() != studentId){
+        if(user == null || !user.getRole().equals(User.Role.STUDENT)){
             throw new TutorException(AUTHENTICATION_ERROR);
         }
-        return tournamentService.createNewTournament(studentId, tournamentDto);
+        return tournamentService.createNewTournament(tournamentDto.getUserDto().getId(), tournamentDto);
     }
 
-    @PostMapping("student/{studentId}/tournament")
-    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#studentId, 'COURSE.ACCESS')")
-    public TournamentDto enrollTournament(Principal principal, @PathVariable Integer studentId, @RequestBody TournamentDto tournamentDto) {
+    @PostMapping("course/{courseId}/tournament/enrollTournament")
+    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
+    public TournamentDto enrollTournament(Principal principal, @PathVariable Integer courseId, @RequestBody TournamentDto tournamentDto) {
 
         User user = (User) ((Authentication) principal).getPrincipal();
 
-        if(user == null || user.getId() != studentId){
+        if(user == null || !user.getRole().equals(User.Role.STUDENT)){
             throw new TutorException(AUTHENTICATION_ERROR);
         }
-        return tournamentService.enrollTournament(studentId, tournamentDto);
+        return tournamentService.enrollTournament(tournamentDto.getUserDto().getId(), tournamentDto);
     }
 }
