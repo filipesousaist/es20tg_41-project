@@ -8,6 +8,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament;
@@ -15,6 +16,9 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto.TournamentDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.repository.TournamentRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,9 @@ public class TournamentService {
     @Autowired
     private CourseExecutionRepository courseExecutionRepository;
 
+    @PersistenceContext
+    EntityManager entityManager;
+
     public TournamentDto createNewTournament(Integer userId, TournamentDto tournamentDto){
 
         User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
@@ -53,7 +60,7 @@ public class TournamentService {
 
         Tournament tournament = new Tournament(user, topics, begin, end, numberOfQuestions, courseEx);
         user.addTournamentCreatedByMe(tournament);
-        tournamentRepository.save(tournament);
+        entityManager.persist(tournament);
         courseEx.addTournament(tournament);
         for (Topic topic : topics) {
             topic.addTournament(tournament);
@@ -112,5 +119,15 @@ public class TournamentService {
         tournament.addStudentEnrolled(user);
         user.addTournamentEnrolled(tournament);
         return new TournamentDto(tournament);
+    }
+
+    public void removeTournament(Integer tournamentId) {
+
+        Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
+
+        tournament.remove();
+
+        entityManager.remove(tournament);
+
     }
 }

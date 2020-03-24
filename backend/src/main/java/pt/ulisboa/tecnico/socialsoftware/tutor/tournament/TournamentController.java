@@ -1,12 +1,10 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto.TournamentDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
@@ -42,5 +40,20 @@ public class TournamentController {
             throw new TutorException(AUTHENTICATION_ERROR);
         }
         return tournamentService.enrollTournament(tournamentDto.getUserDto().getId(), tournamentDto);
+    }
+
+    @DeleteMapping("course/{courseId}/tournament/deleteTournament/{tournamentId}")
+    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
+    public ResponseEntity removeTournament(Principal principal, @PathVariable Integer tournamentId) {
+
+        User user = (User) ((Authentication) principal).getPrincipal();
+
+        if(user == null || !user.getRole().equals(User.Role.STUDENT)){
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+
+        tournamentService.removeTournament(tournamentId);
+
+        return ResponseEntity.ok().build();
     }
 }

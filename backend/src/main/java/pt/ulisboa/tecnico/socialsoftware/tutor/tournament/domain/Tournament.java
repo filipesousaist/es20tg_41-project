@@ -144,4 +144,20 @@ public class Tournament {
     public void setCourseExecution(CourseExecution courseExecution) {
         this.courseExecution = courseExecution;
     }
+
+    public void remove() {
+
+        for(User user: this.studentsEnrolled) {
+            user.getTournamentsEnrolled().remove(this);
+        }
+        this.studentsEnrolled = null;
+
+        for(Topic topic: this.titles) {
+            topic.getTournaments().remove(this);
+        }
+        this.titles = null;
+
+        this.courseExecution.getTournaments().remove(this);
+        this.courseExecution = null;
+    }
 }
