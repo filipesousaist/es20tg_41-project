@@ -8,7 +8,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament;
@@ -20,6 +19,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class TournamentService {
     @PersistenceContext
     EntityManager entityManager;
 
-    public TournamentDto createNewTournament(Integer userId, TournamentDto tournamentDto){
+    public TournamentDto createNewTournament(Integer userId, Integer courseExId, TournamentDto tournamentDto){
 
         User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
 
@@ -51,11 +51,13 @@ public class TournamentService {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
 
-        LocalDateTime begin = tournamentDto.getBeginningTime();
-        LocalDateTime end = tournamentDto.getEndingTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        LocalDateTime begin = LocalDateTime.parse(tournamentDto.getBeginningTime(), formatter);
+        LocalDateTime end = LocalDateTime.parse(tournamentDto.getEndingTime(), formatter);
         int numberOfQuestions = tournamentDto.getNumberOfQuestions();
 
-        CourseExecution courseEx = getCourseExecution(tournamentDto);
+        CourseExecution courseEx = courseExecutionRepository.findById(courseExId).orElseThrow(() -> new TutorException(INVALID_COURSE_EXECUTION));
         List<Topic> topics = getTopics(tournamentDto, courseEx);
 
         Tournament tournament = new Tournament(user, topics, begin, end, numberOfQuestions, courseEx);
@@ -81,24 +83,6 @@ public class TournamentService {
 
         }
         return topics;
-    }
-
-    private CourseExecution getCourseExecution(TournamentDto tournamentDto) {
-        CourseDto courseDto =  tournamentDto.getCourseExecutionDto();
-        CourseExecution courseEx;
-        if (courseDto.getCourseType() == null) {
-            throw new TutorException(INVALID_COURSE_EXECUTION);
-        }
-        if (courseDto.getCourseType().equals(Course.Type.EXTERNAL)) {
-            courseEx = courseExecutionRepository.findByAcronymAcademicTermType(
-                    courseDto.getAcronym(), courseDto.getAcademicTerm(), Course.Type.EXTERNAL.name()).orElse(null);
-        } else {
-            courseEx = courseExecutionRepository.findByAcronymAcademicTermType(
-                    courseDto.getAcronym(), courseDto.getAcademicTerm(), Course.Type.TECNICO.name()).orElse(null);        }
-        if (courseEx == null) {
-            throw new TutorException(INVALID_COURSE_EXECUTION);
-        }
-        return courseEx;
     }
 
     public TournamentDto enrollTournament(Integer studentId, TournamentDto tournamentdto) {

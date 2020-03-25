@@ -9,27 +9,26 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TournamentDto implements Serializable {
 
-    CourseDto courseExecutionDto;
-    UserDto userDto;
     Integer id;
     List<TopicDto> titles = new ArrayList<>();
-    LocalDateTime beginningTime;
-    LocalDateTime endingTime;
+    String beginningTime;
+    String endingTime;
     int numberOfQuestions;
 
     public TournamentDto() {}
 
     public TournamentDto(Tournament tournament) {
-        courseExecutionDto = new CourseDto(tournament.getCourseExecution());
-        userDto = new UserDto(tournament.getCreatedByUser());
         id = tournament.getId();
-        beginningTime = tournament.getBeginningTime();
-        endingTime = tournament.getEndingTime();
+        if (tournament.getBeginningTime() != null)
+            beginningTime = tournament.getBeginningTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        if (tournament.getEndingTime() != null)
+            endingTime = tournament.getEndingTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         numberOfQuestions = tournament.getNumberOfQuestions();
 
         List<Topic> tournamentTitles= tournament.getTitles();
@@ -37,14 +36,6 @@ public class TournamentDto implements Serializable {
             TopicDto topicDto = new TopicDto(var);
             titles.add(topicDto);
         }
-    }
-
-    public UserDto getUserDto() {
-        return userDto;
-    }
-
-    public void setUserDto(UserDto user) {
-        this.userDto = user;
     }
 
     public List<TopicDto> getTitles() {
@@ -55,19 +46,19 @@ public class TournamentDto implements Serializable {
         this.titles = titles;
     }
 
-    public LocalDateTime getBeginningTime() {
+    public String getBeginningTime() {
         return beginningTime;
     }
 
-    public void setBeginningTime(LocalDateTime beginningTime) {
+    public void setBeginningTime(String beginningTime) {
         this.beginningTime = beginningTime;
     }
 
-    public LocalDateTime getEndingTime() {
+    public String getEndingTime() {
         return endingTime;
     }
 
-    public void setEndingTime(LocalDateTime endingTime) {
+    public void setEndingTime(String endingTime) {
         this.endingTime = endingTime;
     }
 
@@ -85,13 +76,5 @@ public class TournamentDto implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public CourseDto getCourseExecutionDto() {
-        return courseExecutionDto;
-    }
-
-    public void setCourseExecutionDto(CourseDto courseExecutionDto) {
-        this.courseExecutionDto = courseExecutionDto;
     }
 }

@@ -19,7 +19,7 @@ public class TournamentController {
     @Autowired
     private TournamentService tournamentService;
 
-    @PostMapping("course/{courseId}/tournament/createtournament")
+    @PostMapping("/course/{courseId}/tournament/createtournament")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
     public TournamentDto createTournament(Principal principal, @PathVariable Integer courseId, @RequestBody TournamentDto tournamentDto) {
         User user = (User) ((Authentication) principal).getPrincipal();
@@ -27,10 +27,10 @@ public class TournamentController {
         if(user == null || !user.getRole().equals(User.Role.STUDENT)){
             throw new TutorException(AUTHENTICATION_ERROR);
         }
-        return tournamentService.createNewTournament(tournamentDto.getUserDto().getId(), tournamentDto);
+        return tournamentService.createNewTournament(user.getId(), courseId, tournamentDto);
     }
 
-    @PostMapping("course/{courseId}/tournament/enrollTournament")
+    @PostMapping("/course/{courseId}/tournament/enrollTournament")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
     public TournamentDto enrollTournament(Principal principal, @PathVariable Integer courseId, @RequestBody TournamentDto tournamentDto) {
 
@@ -39,12 +39,12 @@ public class TournamentController {
         if(user == null || !user.getRole().equals(User.Role.STUDENT)){
             throw new TutorException(AUTHENTICATION_ERROR);
         }
-        return tournamentService.enrollTournament(tournamentDto.getUserDto().getId(), tournamentDto);
+        return tournamentService.enrollTournament(user.getId(), tournamentDto);
     }
 
-    @DeleteMapping("course/{courseId}/tournament/deleteTournament/{tournamentId}")
+    @DeleteMapping("/course/{courseId}/tournament/deleteTournament/{tournamentId}")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
-    public ResponseEntity removeTournament(Principal principal, @PathVariable Integer tournamentId) {
+    public ResponseEntity removeTournament(Principal principal, @PathVariable Integer courseId, @PathVariable Integer tournamentId) {
 
         User user = (User) ((Authentication) principal).getPrincipal();
 
