@@ -131,7 +131,7 @@ class CreateTournamentServiceSpockTest extends Specification {
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
 
         when:
-        def result = tournamentService.createNewTournament(student.getId(), courseEx1.getCourseId(), tournamentDto)
+        def result = tournamentService.createNewTournament(student.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then: "the returned data are correct"
 
@@ -162,6 +162,9 @@ class CreateTournamentServiceSpockTest extends Specification {
         tournament.getBeginningTime().isEqual(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
         tournament.getEndingTime().isEqual(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
         tournament.getNumberOfQuestions() == NUMBEROFQUESTIONS
+        tournament.getCourseExecution().getCourse().getName() == COURSE_NAME1
+        tournament.getCourseExecution().getAcronym() == ACRONYM1
+        tournament.getCourseExecution().getAcademicTerm() == ACADEMIC_TERM1
     }
 
     @Unroll
@@ -176,7 +179,7 @@ class CreateTournamentServiceSpockTest extends Specification {
         tournamentDto.setNumberOfQuestions(numberOfQuestions)
 
         when:
-        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseId(), tournamentDto)
+        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then:
         def error = thrown(TutorException)
@@ -219,7 +222,7 @@ class CreateTournamentServiceSpockTest extends Specification {
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
 
         when:
-        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseId(), tournamentDto)
+        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then:
         def error = thrown(TutorException)
@@ -237,7 +240,7 @@ class CreateTournamentServiceSpockTest extends Specification {
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
 
         when:
-        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseId(), tournamentDto)
+        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then:
         def error = thrown(TutorException)
@@ -255,7 +258,7 @@ class CreateTournamentServiceSpockTest extends Specification {
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
 
         when:
-        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseId(), tournamentDto)
+        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then:
         def error = thrown(TutorException)
@@ -274,7 +277,7 @@ class CreateTournamentServiceSpockTest extends Specification {
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
 
         when:
-        tournamentService.createNewTournament(teacher.getId(), courseEx1.getCourseId(), tournamentDto)
+        tournamentService.createNewTournament(teacher.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then:
         def error = thrown(TutorException)

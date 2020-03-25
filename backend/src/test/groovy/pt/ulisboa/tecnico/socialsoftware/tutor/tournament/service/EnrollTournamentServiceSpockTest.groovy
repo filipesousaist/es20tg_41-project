@@ -123,7 +123,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
 
     def "a student exists and enrolls in a tournament"() {
         given: "student creates a tournament"
-        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseId(), tournamentDto)
+        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         when:
         tournamentService.enrollTournament(user1.getId(), tournamentDto)
@@ -151,7 +151,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
 
     def "a student enrolls in a tournament when he's already enrolled"() {
         given: "student creates a tournament"
-        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseId(), tournamentDto)
+        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
         when:
         tournamentService.enrollTournament(user1.getId(), tournamentDto)
         tournamentService.enrollTournament(user1.getId(), tournamentDto)
@@ -164,7 +164,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
 
     def "a student enrolls in a tournament where the ending date already passed"() {
         given: "student creates a tournament"
-        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseId(), tournamentDto)
+        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
         tournamentRepository.findAll().get(0).setClosed(true)
 
         when:
@@ -179,7 +179,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
         given: "student creates a tournament"
         def user2 = userService.createUser(NAME_2, USERNAME_2, User.Role.TEACHER)
         userRepository.save(user2)
-        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseId(), tournamentDto)
+        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         when:
         tournamentService.enrollTournament(user2.getId(), tournamentDto)

@@ -114,4 +114,8 @@ public class TournamentService {
         entityManager.remove(tournament);
 
     }
+
+    public List<TournamentDto> getAllOpenTournament() {
+        return new ArrayList<>();
+    }
 }
