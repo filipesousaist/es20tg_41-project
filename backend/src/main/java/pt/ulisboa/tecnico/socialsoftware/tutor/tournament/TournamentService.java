@@ -21,7 +21,9 @@ import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
@@ -116,6 +118,16 @@ public class TournamentService {
     }
 
     public List<TournamentDto> getAllOpenTournament() {
-        return new ArrayList<>();
+        return tournamentRepository.findAll().stream()
+                .filter(tournament -> !tournament.getClosed())
+                .map(TournamentDto::new)
+                /*
+                .sorted(Comparator
+                        .comparing(TournamentDto::getCourseExecutionDtoName)
+                        .thenComparing(TournamentDto::getEndingTime)
+                        .thenComparing(TournamentDto::getBeginningTime)
+                        .thenComparing(TournamentDto::getNumberOfQuestions))
+                 */
+                .collect(Collectors.toList());
     }
 }
