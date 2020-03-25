@@ -10,6 +10,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto.TournamentDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import java.security.Principal;
+import java.util.List;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.AUTHENTICATION_ERROR;
 
@@ -19,20 +20,20 @@ public class TournamentController {
     @Autowired
     private TournamentService tournamentService;
 
-    @PostMapping("/course/{courseId}/tournament/createtournament")
-    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
-    public TournamentDto createTournament(Principal principal, @PathVariable Integer courseId, @RequestBody TournamentDto tournamentDto) {
+    @PostMapping("/courseExecution/{courseExecutionId}/tournament/createtournament")
+    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseExecutionId, 'EXECUTION.ACCESS')")
+    public TournamentDto createTournament(Principal principal, @PathVariable Integer courseExecutionId, @RequestBody TournamentDto tournamentDto) {
         User user = (User) ((Authentication) principal).getPrincipal();
 
         if(user == null || !user.getRole().equals(User.Role.STUDENT)){
             throw new TutorException(AUTHENTICATION_ERROR);
         }
-        return tournamentService.createNewTournament(user.getId(), courseId, tournamentDto);
+        return tournamentService.createNewTournament(user.getId(), courseExecutionId, tournamentDto);
     }
 
-    @PostMapping("/course/{courseId}/tournament/enrollTournament")
-    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
-    public TournamentDto enrollTournament(Principal principal, @PathVariable Integer courseId, @RequestBody TournamentDto tournamentDto) {
+    @PostMapping("/courseExecution/{courseExecutionId}/tournament/enrollTournament")
+    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseExecutionId, 'EXECUTION.ACCESS')")
+    public TournamentDto enrollTournament(Principal principal, @PathVariable Integer courseExecutionId, @RequestBody TournamentDto tournamentDto) {
 
         User user = (User) ((Authentication) principal).getPrincipal();
 
@@ -42,9 +43,9 @@ public class TournamentController {
         return tournamentService.enrollTournament(user.getId(), tournamentDto);
     }
 
-    @DeleteMapping("/course/{courseId}/tournament/deleteTournament/{tournamentId}")
-    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
-    public ResponseEntity removeTournament(Principal principal, @PathVariable Integer courseId, @PathVariable Integer tournamentId) {
+    @DeleteMapping("/courseExecution/{courseExecutionId}/tournament/{tournamentId}/deleteTournament")
+    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseExecutionId, 'EXECUTION.ACCESS')")
+    public ResponseEntity removeTournament(Principal principal, @PathVariable Integer courseExecutionId, @PathVariable Integer tournamentId) {
 
         User user = (User) ((Authentication) principal).getPrincipal();
 
@@ -55,5 +56,16 @@ public class TournamentController {
         tournamentService.removeTournament(tournamentId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/course/tournament/getAllOpenTournament")
+    public List<TournamentDto> getAllOpenTournament(Principal principal) {
+
+        User user = (User) ((Authentication) principal).getPrincipal();
+
+        if(user == null){
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+        return tournamentService.getAllOpenTournament();
     }
 }
