@@ -1,0 +1,109 @@
+2020-03-22 11:29:23,273 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2020-03-22 11:29:23,415 INFO o.a.j.JMeter: Loading user properties from: /opt/jmeter/bin/user.properties
+2020-03-22 11:29:23,431 INFO o.a.j.JMeter: Loading system properties from: /opt/jmeter/bin/system.properties
+2020-03-22 11:29:23,444 INFO o.a.j.JMeter: Copyright (c) 1998-2019 The Apache Software Foundation
+2020-03-22 11:29:23,444 INFO o.a.j.JMeter: Version 5.2.1
+2020-03-22 11:29:23,445 INFO o.a.j.JMeter: java.version=11.0.6
+2020-03-22 11:29:23,445 INFO o.a.j.JMeter: java.vm.name=OpenJDK 64-Bit Server VM
+2020-03-22 11:29:23,446 INFO o.a.j.JMeter: os.name=Linux
+2020-03-22 11:29:23,446 INFO o.a.j.JMeter: os.arch=amd64
+2020-03-22 11:29:23,447 INFO o.a.j.JMeter: os.version=4.15.0-91-generic
+2020-03-22 11:29:23,447 INFO o.a.j.JMeter: file.encoding=UTF-8
+2020-03-22 11:29:23,448 INFO o.a.j.JMeter: java.awt.headless=null
+2020-03-22 11:29:23,448 INFO o.a.j.JMeter: Max memory     =1073741824
+2020-03-22 11:29:23,449 INFO o.a.j.JMeter: Available Processors =4
+2020-03-22 11:29:23,529 INFO o.a.j.JMeter: Default Locale=English (EN)
+2020-03-22 11:29:23,529 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2020-03-22 11:29:23,529 INFO o.a.j.JMeter: JMeterHome=/opt/jmeter
+2020-03-22 11:29:23,530 INFO o.a.j.JMeter: user.dir  =/home/pedro/Desktop/3oAno/ES/Project/es20tg_41-project
+2020-03-22 11:29:23,530 INFO o.a.j.JMeter: PWD       =/home/pedro/Desktop/3oAno/ES/Project/es20tg_41-project
+2020-03-22 11:29:23,530 INFO o.a.j.JMeter: IP: 127.0.1.1 Name: pedro-HP-Pavilion-Laptop-15-cc5xx FullName: pedro-HP-Pavilion-Laptop-15-cc5xx
+2020-03-22 11:29:24,868 INFO o.a.j.g.a.LookAndFeelCommand: Installing Darcula LAF
+2020-03-22 11:29:25,012 INFO o.a.j.g.a.LookAndFeelCommand: Using look and feel: com.bulenkov.darcula.DarculaLaf [Darcula]
+2020-03-22 11:29:25,013 INFO o.a.j.JMeter: Setting LAF to: com.bulenkov.darcula.DarculaLaf
+2020-03-22 11:29:25,245 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2020-03-22 11:29:31,283 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2020-03-22 11:29:31,284 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2020-03-22 11:29:31,284 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2020-03-22 11:29:31,284 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2020-03-22 11:29:31,285 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2020-03-22 11:29:31,285 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2020-03-22 11:29:31,788 INFO o.a.j.e.KeyToolUtils: keytool found at 'keytool'
+2020-03-22 11:29:31,789 INFO o.a.j.p.h.p.ProxyControl: HTTP(S) Test Script Recorder SSL Proxy will use keys that support embedded 3rd party resources in file /opt/jmeter/bin/proxyserver.jks
+2020-03-22 11:29:31,937 INFO o.a.j.s.FileServer: Default base='/home/pedro/Desktop/3oAno/ES/Project/es20tg_41-project'
+2020-03-22 11:29:32,455 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2020-03-22 11:29:32,455 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to ISO-8859-1
+2020-03-22 11:29:32,455 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2020-03-22 11:29:32,455 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2020-03-22 11:29:32,479 INFO o.a.j.v.ViewResultsFullVisualizer: Add JavaFX to your Java installation if you want to use renderer: org.apache.jmeter.visualizers.RenderInBrowser
+2020-03-22 11:29:53,481 INFO o.a.j.g.a.Load: Loading file: /home/pedro/Desktop/3oAno/ES/Project/es20tg_41-project/backend/jmeter/administration/WSGetExternalCourseExecutionsTest.jmx
+2020-03-22 11:29:53,482 INFO o.a.j.s.FileServer: Set new base='/home/pedro/Desktop/3oAno/ES/Project/es20tg_41-project/backend/jmeter/administration'
+2020-03-22 11:29:53,733 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2020-03-22 11:29:53,752 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2020-03-22 11:29:53,754 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2020-03-22 11:29:53,757 INFO o.a.j.s.SaveService: Loading file: /home/pedro/Desktop/3oAno/ES/Project/es20tg_41-project/backend/jmeter/administration/WSGetExternalCourseExecutionsTest.jmx
+2020-03-22 11:29:54,191 INFO o.a.j.v.ViewResultsFullVisualizer: Add JavaFX to your Java installation if you want to use renderer: org.apache.jmeter.visualizers.RenderInBrowser
+2020-03-22 11:29:54,256 INFO o.a.j.s.FileServer: Set new base='/home/pedro/Desktop/3oAno/ES/Project/es20tg_41-project/backend/jmeter/administration'
+2020-03-22 11:30:28,587 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2020-03-22 11:30:28,592 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2020-03-22 11:30:28,593 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2020-03-22 11:30:28,603 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2020-03-22 11:30:28,603 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2020-03-22 11:30:30,038 ERROR o.a.j.u.BeanShellInterpreter: Error invoking bsh method: eval	In file: inline evaluation of: ``import org.apache.jmeter.services.FileServer fileserver.getFileServer().getBaseD . . . '' Encountered "fileserver" at line 1, column 46.
+
+2020-03-22 11:30:30,039 WARN o.a.j.f.BeanShell: Error running BSH script
+org.apache.jorphan.util.JMeterException: Error invoking bsh method: eval	In file: inline evaluation of: ``import org.apache.jmeter.services.FileServer fileserver.getFileServer().getBaseD . . . '' Encountered "fileserver" at line 1, column 46.
+
+	at org.apache.jmeter.util.BeanShellInterpreter.bshInvoke(BeanShellInterpreter.java:180) ~[ApacheJMeter_core.jar:5.2.1]
+	at org.apache.jmeter.util.BeanShellInterpreter.eval(BeanShellInterpreter.java:186) ~[ApacheJMeter_core.jar:5.2.1]
+	at org.apache.jmeter.functions.BeanShell.execute(BeanShell.java:100) [ApacheJMeter_functions.jar:5.2.1]
+	at org.apache.jmeter.engine.util.CompoundVariable.execute(CompoundVariable.java:136) [ApacheJMeter_core.jar:5.2.1]
+	at org.apache.jmeter.engine.util.CompoundVariable.execute(CompoundVariable.java:111) [ApacheJMeter_core.jar:5.2.1]
+	at org.apache.jmeter.testelement.property.FunctionProperty.getStringValue(FunctionProperty.java:92) [ApacheJMeter_core.jar:5.2.1]
+	at org.apache.jmeter.testelement.AbstractTestElement.getPropertyAsString(AbstractTestElement.java:281) [ApacheJMeter_core.jar:5.2.1]
+	at org.apache.jmeter.config.Argument.getValue(Argument.java:146) [ApacheJMeter_core.jar:5.2.1]
+	at org.apache.jmeter.config.Arguments.getArgumentsAsMap(Arguments.java:94) [ApacheJMeter_core.jar:5.2.1]
+	at org.apache.jmeter.engine.PreCompiler.createArgumentsMap(PreCompiler.java:114) [ApacheJMeter_core.jar:5.2.1]
+	at org.apache.jmeter.engine.PreCompiler.addNode(PreCompiler.java:101) [ApacheJMeter_core.jar:5.2.1]
+	at org.apache.jorphan.collections.HashTree.traverseInto(HashTree.java:994) [jorphan.jar:5.2.1]
+	at org.apache.jorphan.collections.HashTree.traverse(HashTree.java:977) [jorphan.jar:5.2.1]
+	at org.apache.jmeter.engine.StandardJMeterEngine.run(StandardJMeterEngine.java:362) [ApacheJMeter_core.jar:5.2.1]
+	at java.lang.Thread.run(Thread.java:834) [?:?]
+Caused by: java.lang.reflect.InvocationTargetException
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.apache.jmeter.util.BeanShellInterpreter.bshInvoke(BeanShellInterpreter.java:163) ~[ApacheJMeter_core.jar:5.2.1]
+	... 14 more
+Caused by: bsh.ParseException: In file: inline evaluation of: ``import org.apache.jmeter.services.FileServer fileserver.getFileServer().getBaseD . . . '' Encountered "fileserver" at line 1, column 46.
+
+	at bsh.Parser.generateParseException(Parser.java:6106) ~[bsh-2.0b6.jar:2.0b6 2016-02-05 05:16:19]
+	at bsh.Parser.jj_consume_token(Parser.java:5977) ~[bsh-2.0b6.jar:2.0b6 2016-02-05 05:16:19]
+	at bsh.Parser.ImportDeclaration(Parser.java:480) ~[bsh-2.0b6.jar:2.0b6 2016-02-05 05:16:19]
+	at bsh.Parser.BlockStatement(Parser.java:2823) ~[bsh-2.0b6.jar:2.0b6 2016-02-05 05:16:19]
+	at bsh.Parser.Line(Parser.java:172) ~[bsh-2.0b6.jar:2.0b6 2016-02-05 05:16:19]
+	at bsh.Interpreter.Line(Interpreter.java:1011) ~[bsh-2.0b6.jar:2.0b6 2016-02-05 05:16:19]
+	at bsh.Interpreter.eval(Interpreter.java:641) ~[bsh-2.0b6.jar:2.0b6 2016-02-05 05:16:19]
+	at bsh.Interpreter.eval(Interpreter.java:750) ~[bsh-2.0b6.jar:2.0b6 2016-02-05 05:16:19]
+	at bsh.Interpreter.eval(Interpreter.java:739) ~[bsh-2.0b6.jar:2.0b6 2016-02-05 05:16:19]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.apache.jmeter.util.BeanShellInterpreter.bshInvoke(BeanShellInterpreter.java:163) ~[ApacheJMeter_core.jar:5.2.1]
+	... 14 more
+2020-03-22 11:30:30,047 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2020-03-22 11:30:30,152 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : Thread Group
+2020-03-22 11:30:30,153 INFO o.a.j.e.StandardJMeterEngine: Starting 1 threads for group Thread Group.
+2020-03-22 11:30:30,153 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2020-03-22 11:30:30,153 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=1 ramp-up=1 delayedStart=false
+2020-03-22 11:30:30,162 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2020-03-22 11:30:30,163 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2020-03-22 11:30:30,174 INFO o.a.j.t.JMeterThread: Thread started: Thread Group 1-1
+2020-03-22 11:30:30,218 INFO o.a.j.p.h.s.HTTPHCAbstractImpl: Local host = pedro-HP-Pavilion-Laptop-15-cc5xx
+2020-03-22 11:30:30,236 INFO o.a.j.p.h.s.HTTPHC4Impl: HTTP request retry count = 0
+2020-03-22 11:30:33,052 INFO o.a.j.t.JMeterThread: Thread is done: Thread Group 1-1
+2020-03-22 11:30:33,052 INFO o.a.j.t.JMeterThread: Thread finished: Thread Group 1-1
+2020-03-22 11:30:33,053 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2020-03-22 11:30:33,053 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
