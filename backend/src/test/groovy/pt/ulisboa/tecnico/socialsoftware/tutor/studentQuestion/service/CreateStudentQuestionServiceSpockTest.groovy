@@ -20,6 +20,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
 
+import java.time.LocalDateTime
+
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*
 
 @DataJpaTest
@@ -74,6 +76,8 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
         questionDto.setStatus(Question.Status.PROPOSED.name())
+        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter));
+
         and: 'a optionId'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)
