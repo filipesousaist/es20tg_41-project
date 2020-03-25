@@ -7,7 +7,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Clarifications")
+@Table(name = "clarifications")
 public  class Clarification {
 
     @Id
@@ -18,11 +18,11 @@ public  class Clarification {
     private Integer key;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User teacher;
 
     @OneToOne
-    @JoinColumn(name = "clarificationRequestId")
+    @JoinColumn(name = "clarification_request_id")
     private ClarificationRequest clarificationRequest;
 
     @Autowired
