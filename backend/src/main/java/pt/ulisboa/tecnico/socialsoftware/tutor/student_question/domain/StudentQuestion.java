@@ -25,6 +25,7 @@ public class StudentQuestion {
     private User user;
 
     @OneToOne
+    @JoinColumn(name = "question_id")
     private Question question;
 
     @OneToMany
