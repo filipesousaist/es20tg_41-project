@@ -203,8 +203,13 @@ public class DiscussionService {
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public ClarificationDto getClarification(Integer clarificationRequestId){
+        ClarificationRequest clarificationRequest = clarificationRequestRepository.findById(clarificationRequestId)
+                .orElseThrow(() -> new TutorException(CLARIFICATION_REQUEST_NOT_FOUND));
 
-        return new ClarificationDto();
+        if (clarificationRequest.getClarification() == null)
+            throw new TutorException(CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION);
+
+        return new ClarificationDto(clarificationRequest.getClarification());
     }
 
 

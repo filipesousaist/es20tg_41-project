@@ -208,10 +208,9 @@ class GetClarificationServiceSpockTest extends Specification{
         clarificationDto.setText(CLARIFICATION_REQUEST_TEXT)
         def clarification = new Clarification(user2, clarificationRequest, clarificationDto)
         discussionRepository.save(clarification)
-        clarificationRequest.setClarification(clarification)
 
         when:
-        def result = discussionService.getClarification(clarificationRequest.getId())
+        discussionService.getClarification(clarificationRequest.getId())
 
         then:
         def error = thrown(TutorException)
@@ -227,7 +226,7 @@ class GetClarificationServiceSpockTest extends Specification{
         clarificationRequest.setClarification(clarification)
 
         when:
-        def result = discussionService.getClarification(-1)
+        discussionService.getClarification(-1)
 
         then:
         def error = thrown(TutorException)
