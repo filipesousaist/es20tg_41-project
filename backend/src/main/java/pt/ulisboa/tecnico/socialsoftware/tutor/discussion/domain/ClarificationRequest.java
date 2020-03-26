@@ -15,9 +15,6 @@ public class ClarificationRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique=true, nullable = false)
-    private Integer key;
-
     @ManyToOne
     @JoinColumn(name = "question_id")
     private Question question;
@@ -26,8 +23,7 @@ public class ClarificationRequest {
     @JoinColumn(name = "user_id")
     private User student;
 
-    @OneToOne
-    @JoinColumn(name = "clarification_id")
+    @OneToOne(mappedBy = "clarificationRequest")
     private Clarification clarification;
 
     @Autowired
@@ -40,7 +36,6 @@ public class ClarificationRequest {
 
     public ClarificationRequest(User student, Question question, ClarificationRequestDto clarificationRequestDto) {
         this.id = clarificationRequestDto.getId();
-        this.key = clarificationRequestDto.getKey();
         this.question = question;
         this.student = student;
         this.title = clarificationRequestDto.getTitle();
@@ -54,14 +49,6 @@ public class ClarificationRequest {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getKey() {
-        return key;
-    }
-
-    public void setKey(Integer key) {
-        this.key = key;
     }
 
     public Question getQuestion() {

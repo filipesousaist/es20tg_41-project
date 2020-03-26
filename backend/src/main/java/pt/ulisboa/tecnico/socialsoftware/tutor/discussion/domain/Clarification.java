@@ -7,22 +7,19 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Clarifications")
+@Table(name = "clarifications")
 public  class Clarification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true, nullable = false)
-    private Integer key;
-
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User teacher;
 
     @OneToOne
-    @JoinColumn(name = "clarificationRequestId")
+    @JoinColumn(name = "clarification_request_id")
     private ClarificationRequest clarificationRequest;
 
     @Autowired
@@ -33,7 +30,6 @@ public  class Clarification {
 
     public Clarification(User teacher, ClarificationRequest request, ClarificationDto clarificationDto){
         this.id = clarificationDto.getId();
-        this.key = clarificationDto.getKey();
         this.teacher = teacher;
         this.clarificationRequest = request;
         this.text = clarificationDto.getText();
@@ -45,14 +41,6 @@ public  class Clarification {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getKey() {
-        return key;
-    }
-
-    public void setKey(Integer key) {
-        this.key = key;
     }
 
     public User getTeacher() {

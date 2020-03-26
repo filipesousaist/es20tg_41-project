@@ -8,16 +8,16 @@ public class ClarificationDto implements Serializable {
 
     private Integer id;
 
-    private Integer key;
-
     private String text;
+
+    private String username;
 
     public ClarificationDto(){}
 
     public ClarificationDto(Clarification clarification){
         this.id = clarification.getId();
-        this.key = clarification.getKey();
         this.text = clarification.getText();
+        this.username = clarification.getTeacher().getUsername();
     }
 
     public Integer getId() {
@@ -28,14 +28,6 @@ public class ClarificationDto implements Serializable {
         this.id = id;
     }
 
-    public Integer getKey() {
-        return key;
-    }
-
-    public void setKey(Integer key) {
-        this.key = key;
-    }
-
     public String getText() {
         return text;
     }
@@ -44,12 +36,20 @@ public class ClarificationDto implements Serializable {
         this.text = text;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString() {
         return "ClarificationDto{" +
                 "id=" + id +
-                ", key=" + key +
                 ", text='" + text + '\'' +
+                ", username='" + username + '\'' +
                 '}';
     }
 }
