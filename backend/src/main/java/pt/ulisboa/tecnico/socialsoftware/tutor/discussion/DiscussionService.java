@@ -201,6 +201,12 @@ public class DiscussionService {
 
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ClarificationDto getClarification(Integer clarificationRequestId){
+
+        return new ClarificationDto();
+    }
+
 
 
 }
