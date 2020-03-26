@@ -3,11 +3,13 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament;
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class TournamentDto implements Serializable {
 
@@ -16,6 +18,7 @@ public class TournamentDto implements Serializable {
     String beginningTime;
     String endingTime;
     int numberOfQuestions;
+    List<String> studentsUsername = new ArrayList<>();
 
     public TournamentDto() {}
 
@@ -31,6 +34,10 @@ public class TournamentDto implements Serializable {
         for (Topic var : tournamentTitles) {
             TopicDto topicDto = new TopicDto(var);
             titles.add(topicDto);
+        }
+        Set<User> users = tournament.getStudentsEnrolled();
+        for (User user : users) {
+            studentsUsername.add(user.getUsername());
         }
     }
 
@@ -72,5 +79,13 @@ public class TournamentDto implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public List<String> getStudentsUsername() {
+        return studentsUsername;
+    }
+
+    public void setStudentsUsername(List<String> studentsUsername) {
+        this.studentsUsername = studentsUsername;
     }
 }

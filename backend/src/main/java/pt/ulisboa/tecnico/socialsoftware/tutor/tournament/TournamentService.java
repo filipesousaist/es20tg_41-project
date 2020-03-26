@@ -47,7 +47,7 @@ public class TournamentService {
     @PersistenceContext
     EntityManager entityManager;
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public TournamentDto createNewTournament(Integer userId, Integer courseExId, TournamentDto tournamentDto){
 
         User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
