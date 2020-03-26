@@ -172,7 +172,6 @@ class createClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setKey(discussionService.getMaxClarificationRequestKey()+1)
         clarificationRequestDto.setUsername(user1.getUsername())
 
         when:
@@ -197,7 +196,6 @@ class createClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setKey(discussionService.getMaxClarificationRequestKey()+1)
         clarificationRequestDto.setUsername("Username_not_used")
 
         when:
@@ -222,7 +220,6 @@ class createClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setKey(discussionService.getMaxClarificationRequestKey()+1)
         clarificationRequestDto.setUsername(user2.getUsername())
 
         when:
@@ -248,7 +245,6 @@ class createClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setKey(discussionService.getMaxClarificationRequestKey()+1)
         clarificationRequestDto.setUsername(user1.getUsername())
 
 
@@ -306,7 +302,6 @@ class createClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(title)
         clarificationRequestDto.setText(text)
-        clarificationRequestDto.setKey(discussionService.getMaxClarificationRequestKey()+1)
         clarificationRequestDto.setUsername(user1.getUsername())
 
         when:

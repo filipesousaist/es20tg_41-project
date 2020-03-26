@@ -159,7 +159,6 @@ class createClarificationServiceSpockTest extends Specification {
         quizAnswerRepository.save(quizAnswer)
 
         request = new ClarificationRequest()
-        request.setKey(1)
         request.setQuestion(question)
         request.setStudent(user)
         discussionRepository.save(request)

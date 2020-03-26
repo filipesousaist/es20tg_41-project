@@ -80,12 +80,6 @@ public class DiscussionService {
 
         checkQuestionAnswer(question, questions);
 
-        if(clarificationRequestDto.getKey() == null)
-            if(clarificationRequestRepository.findMaxKey() == null)
-                clarificationRequestDto.setKey(1);
-            else
-                clarificationRequestDto.setKey(clarificationRequestRepository.findMaxKey()+1);
-
         checkForDuplicateClarificationRequest(question, user);
 
         ClarificationRequest clarificationRequest = createClarificationRequest(clarificationRequestDto, question, user);

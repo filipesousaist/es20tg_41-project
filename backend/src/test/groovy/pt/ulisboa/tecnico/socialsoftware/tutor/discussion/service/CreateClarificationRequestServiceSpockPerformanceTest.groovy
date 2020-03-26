@@ -167,7 +167,6 @@ class CreateClarificationRequestServiceSpockPerformanceTest extends Specificatio
 
         when:
         1.upto(1, {
-            clarificationRequestDto.setKey(it)
             clarificationRequestDto.setUsername(USERNAME + it)
             discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
 
