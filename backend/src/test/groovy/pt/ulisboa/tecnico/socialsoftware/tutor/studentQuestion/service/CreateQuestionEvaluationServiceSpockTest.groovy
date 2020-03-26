@@ -26,6 +26,8 @@ import spock.lang.Specification
 import spock.lang.Unroll
 import java.time.LocalDateTime
 
+import java.time.LocalDateTime
+
 @DataJpaTest
 class CreateQuestionEvaluationServiceSpockTest extends Specification {
     private static final String COURSE_NAME = "Engenharia de Software";
