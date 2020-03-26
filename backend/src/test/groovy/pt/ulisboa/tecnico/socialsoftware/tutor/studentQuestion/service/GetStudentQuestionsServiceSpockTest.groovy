@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.service
+package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -11,13 +11,14 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.StudentQuestionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.StudentQuestion
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuestionDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.StudentQuestionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.StudentQuestionService
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain.StudentQuestion
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.StudentQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
+import java.time.LocalDateTime
 
 @DataJpaTest
 class GetStudentQuestionsServiceSpockTest extends Specification {
@@ -46,6 +47,7 @@ class GetStudentQuestionsServiceSpockTest extends Specification {
     def course
     def courseExecution
     def user
+    def userId
 
     def setup() {
         course = new Course(COURSE_NAME, Course.Type.TECNICO)
@@ -55,19 +57,22 @@ class GetStudentQuestionsServiceSpockTest extends Specification {
         courseExecutionRepository.save(courseExecution)
 
         user = new User()
-        //user.setKey(1)
+        user.setKey(1)
         userRepository.save(user)
+
+        userId = user.getId()
     }
 
-    def "create 2 student questions with 1 option and get student questions"() {
+    def "create 2 student question with 1 option and get student questions"() {
         given: "a studentQuestionDto"
         def studentQuestionDto = new StudentQuestionDto()
         and: "a questionDto"
         def questionDto = new QuestionDto()
-        questionDto.setKey(1)
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
         questionDto.setStatus(Question.Status.AVAILABLE.name()) // mudar para PROPOSED
+        def time = LocalDateTime.now().format(Course.formatter)
+        questionDto.setCreationDate(time)
         and: 'a optionDto'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)
@@ -87,36 +92,36 @@ class GetStudentQuestionsServiceSpockTest extends Specification {
         studentQuestionRepository.save(studentQuestion2)
 
         when:
-        def result = studentQuestionService.getStudentQuestions(user.getId())
+        def result = studentQuestionService.getStudentQuestions(userId)
 
-        then:
+        then: "questions are received"
         result.size() == 2
-        def resStudentQuestion = result.get(0)
+        def resStudentQuestionDto = result.get(0)
         and: "user is correct"
-        resStudentQuestion.getUser() == user
+        resStudentQuestionDto.getUser().getId() == userId
         and: "question is correct"
-        def resQuestion = resStudentQuestion.getQuestion()
-        resQuestion.getId() != null
-        resQuestion.getKey() == 1
-        resQuestion.getStatus() == Question.Status.AVAILABLE
-        resQuestion.getTitle() == QUESTION_TITLE
-        resQuestion.getContent() == QUESTION_CONTENT
-        resQuestion.getImage() == null
-        resQuestion.getOptions().size() == 1
-        resQuestion.getCourse().getName() == COURSE_NAME
+        def resQuestionDto = resStudentQuestionDto.getQuestionDto()
+        resQuestionDto != null
+        resQuestionDto.getId() != null
+        resQuestionDto.getStatus() == Question.Status.AVAILABLE.toString()
+        resQuestionDto.getTitle() == QUESTION_TITLE
+        resQuestionDto.getContent() == QUESTION_CONTENT
+        resQuestionDto.getImage() == null
+        resQuestionDto.getOptions().size() == 1
+        resQuestionDto.getCreationDate() == time
         and: "option is correct"
-        def resOption = resQuestion.getOptions().get(0)
-        resOption.getContent() == OPTION_CONTENT
-        resOption.getCorrect()
+        def resOptionDto = resQuestionDto.getOptions().get(0)
+        resOptionDto.getContent() == OPTION_CONTENT
+        resOptionDto.getCorrect()
     }
 
     def "get student questions without creating any student question"() {
         given: "no student questions are created"
 
         when:
-        def result = studentQuestionService.getStudentQuestions(user.getId())
+        def result = studentQuestionService.getStudentQuestions(userId)
 
-        then:
+        then: "no student questions are returned"
         result.size() == 0
     }
 

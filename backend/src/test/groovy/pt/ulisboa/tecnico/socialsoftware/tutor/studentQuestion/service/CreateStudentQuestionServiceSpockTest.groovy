@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.service
+package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.service;
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -13,12 +13,13 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.StudentQuestionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuestionDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.StudentQuestionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.StudentQuestionService
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.StudentQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
+import java.time.LocalDateTime
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*
 
@@ -74,6 +75,7 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
         questionDto.setStatus(Question.Status.AVAILABLE.name())
+        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter))
         and: 'a optionId'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)
@@ -115,6 +117,7 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent("")
         questionDto.setStatus(Question.Status.AVAILABLE.name())
+        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter))
         and: 'a optionId'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)
