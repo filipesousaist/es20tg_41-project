@@ -24,6 +24,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionR
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository;
@@ -41,6 +42,8 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
 @Service
 public class DiscussionService {
@@ -84,10 +87,7 @@ public class DiscussionService {
 
         checkQuestionAnswer(question, questions);
 
-        checkForDuplicateClarificationRequest(clarificationRequestDto);
-
-        if(clarificationRequestDto.getKey() == null)
-            clarificationRequestDto.setKey(getMaxClarificationRequestKey()+1);
+        checkForDuplicateClarificationRequest(question, user);
 
         ClarificationRequest clarificationRequest = createClarificationRequest(clarificationRequestDto, question, user);
 
@@ -108,8 +108,8 @@ public class DiscussionService {
         return clarificationRequest;
     }
 
-    private void checkForDuplicateClarificationRequest(ClarificationRequestDto clarificationRequestDto) {
-        if(this.clarificationRequestRepository.findByKey(clarificationRequestDto.getKey()).isPresent())
+    private void checkForDuplicateClarificationRequest(Question question, User user) {
+        if(this.clarificationRequestRepository.findByUserIdAndQuestionId(user.getId(), question.getId()).isPresent())
             throw new TutorException(ErrorMessage.CLARIFICATION_REQUEST_ALREADY_EXISTS);
     }
 
@@ -140,9 +140,9 @@ public class DiscussionService {
             value = { SQLException.class },
             backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public ClarificationDto createClarification(Integer userId, Integer clarificationRequestId, ClarificationDto clarificationDto){
+    public ClarificationDto createClarification(int clarificationRequestId, ClarificationDto clarificationDto){
 
-        User teacher = getUser(userRepository.findById(userId));
+        User teacher = getUser(clarificationDto.getUsername());
 
         ClarificationRequest clarificationRequest = getClarificationRequest(clarificationRequestId);
 
@@ -159,10 +159,9 @@ public class DiscussionService {
 
     private Clarification createClarification(ClarificationDto clarificationDto, User teacher, ClarificationRequest clarificationRequest) {
         Clarification clarification = new Clarification(teacher, clarificationRequest, clarificationDto);
-        clarification.setKey(getMaxClarificationKey()+1);
         clarificationRequest.setClarification(clarification);
         teacher.addClarification(clarification);
-        entityManager.persist(clarification);
+        discussionRepository.save(clarification);
         return clarification;
     }
 
@@ -195,11 +194,6 @@ public class DiscussionService {
                     .orElseThrow(() -> new TutorException(ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND));
     }
 
-    private User getUser(Optional<User> byId) {
-        return byId
-                .orElseThrow(() -> new TutorException(ErrorMessage.USER_NOT_FOUND));
-    }
-
     public Integer getMaxClarificationRequestKey(){
         Integer key = clarificationRequestRepository.findMaxKey();
         return key != null ? key : 0;
@@ -214,12 +208,30 @@ public class DiscussionService {
                 .stream().map(ClarificationRequestDto::new).collect(Collectors.toList());
     }
 
-    public Clarification findByKey(Integer key) {
-        return this.discussionRepository.findByKey(key);
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ClarificationDto findClarificationById(Integer clarificationId) {
+        return discussionRepository.findById(clarificationId).map(ClarificationDto::new)
+                .orElseThrow(() -> new TutorException(CLARIFICATION_NOT_FOUND, clarificationId));
     }
 
-    public Integer getMaxClarificationKey() {
-        Integer result = discussionRepository.getMaxClarificationKey();
-        return result != null ? result : 0;
+    public CourseDto findClarificationRequestCourse(Integer clarificationRequestId){
+        return this.clarificationRequestRepository.findById(clarificationRequestId)
+                .map(ClarificationRequest::getQuestion)
+                .map(Question::getCourse)
+                .map(CourseDto::new)
+                .orElseThrow(() -> new TutorException(CLARIFICATION_REQUEST_NOT_FOUND, clarificationRequestId));
     }
+
+    public CourseDto findClarificationCourseExecution(Integer clarificationId){
+        return this.discussionRepository.findById(clarificationId)
+                .map(Clarification::getClarificationRequest)
+                .map(ClarificationRequest::getQuestion)
+                .map(Question::getCourse)
+                .map(CourseDto::new)
+                .orElseThrow(() -> new TutorException(CLARIFICATION_NOT_FOUND, clarificationId));
+    }
+
 }

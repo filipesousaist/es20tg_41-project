@@ -14,8 +14,8 @@ import java.util.Optional;
 @Transactional
 public interface ClarificationRequestRepository extends JpaRepository<ClarificationRequest, Integer> {
 
-    @Query(value = "SELECT * FROM clarification_requests WHERE key = :key", nativeQuery = true)
-    Optional<ClarificationRequest> findByKey(Integer key);
+    @Query(value = "SELECT * FROM clarification_requests WHERE user_id = :userId AND question_id = :questionId", nativeQuery = true)
+    Optional<ClarificationRequest> findByUserIdAndQuestionId(Integer userId, Integer questionId);
 
     @Query(value = "SELECT  MAX(key) FROM clarification_requests", nativeQuery = true)
     Integer findMaxKey();

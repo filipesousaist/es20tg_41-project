@@ -13,6 +13,7 @@ public enum ErrorMessage {
     TOPIC_CONJUNCTION_NOT_FOUND("Topic Conjunction not found with id %d"),
 
     CLARIFICATION_REQUEST_NOT_FOUND("Clarification request not found with id %d"),
+    CLARIFICATION_NOT_FOUND("Clarification not found with id %d"),
 
     COURSE_EXECUTION_NOT_FOUND("Course execution not found with id %d"),
 
