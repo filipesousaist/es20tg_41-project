@@ -23,7 +23,5 @@ public interface ClarificationRequestRepository extends JpaRepository<Clarificat
     @Query(value = "SELECT * FROM clarification_requests WHERE user_id = :userId", nativeQuery = true)
     List<ClarificationRequest> findByUserId(Integer userId);
 
-    @Query(value = "SELECT * FROM clarification_requests WHERE user_id = :userId AND question_id = :questionId", nativeQuery = true)
-    Optional<ClarificationRequest> findByUserIdAndQuestionId(Integer userId, Integer questionId);
 }
 
