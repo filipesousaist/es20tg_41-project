@@ -163,7 +163,7 @@ class CreateClarificationServiceSpockPerformanceTest extends Specification{
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_REQUEST_TEXT)
 
-        1.upto(1000, {
+        1.upto(1, {
             user1 = userService.createUser(NAME + it, USERNAME + it, ROLE)
             user1.addCourse(courseExecution)
             userRepository.save(user1)
@@ -188,7 +188,7 @@ class CreateClarificationServiceSpockPerformanceTest extends Specification{
         clarificationDto.setUsername(teacher1.getUsername())
 
         when:
-        1.upto(1000, {
+        1.upto(1, {
             clarificationDto.setText(CLARIFICATION_TEXT + it)
             discussionService.createClarification(it,clarificationDto)
         })

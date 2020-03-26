@@ -190,33 +190,8 @@ public class DiscussionService {
                     .orElseThrow(() -> new TutorException(ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND));
     }
 
-    private User getUser(Optional<User> byId) {
-        return byId
-                .orElseThrow(() -> new TutorException(ErrorMessage.USER_NOT_FOUND));
-    }
 
-
-    public Integer getMaxClarificationRequestKey(){
-        Integer key = clarificationRequestRepository.findMaxKey();
-        return key != null ? key : 0;
-    }
-
-
-    public List<ClarificationRequestDto> getClarificationRequestsByStudent(Integer userId){
-        return this.clarificationRequestRepository.findByUserId(userId)
-                .stream().map(ClarificationRequestDto::new).collect(Collectors.toList());
-    }
-
-    @Retryable(
-            value = { SQLException.class },
-            backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public ClarificationDto findClarificationById(Integer clarificationId) {
-        return discussionRepository.findById(clarificationId).map(ClarificationDto::new)
-                .orElseThrow(() -> new TutorException(CLARIFICATION_NOT_FOUND, clarificationId));
-    }
-
-
     public CourseDto findClarificationRequestCourse(Integer clarificationRequestId){
         return this.clarificationRequestRepository.findById(clarificationRequestId)
                 .map(ClarificationRequest::getQuestion)
@@ -226,13 +201,6 @@ public class DiscussionService {
 
     }
 
-    public CourseDto findClarificationCourseExecution(Integer clarificationId){
-        return this.discussionRepository.findById(clarificationId)
-                .map(Clarification::getClarificationRequest)
-                .map(ClarificationRequest::getQuestion)
-                .map(Question::getCourse)
-                .map(CourseDto::new)
-                .orElseThrow(() -> new TutorException(CLARIFICATION_NOT_FOUND, clarificationId));
-    }
+
 
 }

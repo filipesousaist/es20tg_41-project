@@ -26,6 +26,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.time.LocalDateTime
+
 @DataJpaTest
 class CreateQuestionEvaluationServiceSpockTest extends Specification {
     private static final String COURSE_NAME = "Engenharia de Software";
@@ -83,6 +85,8 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
         questionDto.setStatus(Question.Status.AVAILABLE.name())
+        def time = LocalDateTime.now().format(Course.formatter)
+        questionDto.setCreationDate(time)
 
         // Create 2 options, and add them to question
         def option1Dto = new OptionDto()

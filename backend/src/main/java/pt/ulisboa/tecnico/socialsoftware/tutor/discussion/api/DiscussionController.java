@@ -27,9 +27,4 @@ public class DiscussionController {
         return this.discussionService.createClarification(clarificationRequestId, clarification);
     }
 
-    @GetMapping("clarifications/{clarificationId}")
-    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#clarificationId, 'CLARIFICATION.ACCESS')")
-    public ClarificationDto getClarification(@PathVariable int clarificationId) {
-        return this.discussionService.findClarificationById(clarificationId);
-    }
 }
