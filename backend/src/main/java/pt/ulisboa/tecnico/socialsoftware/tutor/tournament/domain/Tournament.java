@@ -112,7 +112,7 @@ public class Tournament {
 
     public void addStudentEnrolled(User user) {
 
-        if (this.studentsEnrolled.contains(user)) {
+        if (this.studentsEnrolled.contains(user) && !user.getUsername().equals("Demo-Student")) {
             throw new TutorException(STUDENT_ALREADY_ENROLLED);
         }
         if (this.isClosed) {

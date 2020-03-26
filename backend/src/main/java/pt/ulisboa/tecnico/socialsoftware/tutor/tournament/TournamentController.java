@@ -43,6 +43,7 @@ public class TournamentController {
         return tournamentService.enrollTournament(user.getId(), tournamentId);
     }
 
+/*
     @DeleteMapping("/courseExecution/{courseExecutionId}/tournament/{tournamentId}/deleteTournament")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseExecutionId, 'EXECUTION.ACCESS')")
     public ResponseEntity removeTournament(Principal principal, @PathVariable Integer courseExecutionId, @PathVariable Integer tournamentId) {
@@ -57,8 +58,8 @@ public class TournamentController {
 
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/course/tournament/getAllOpenTournament")
+*/
+    @GetMapping("/tournament/getAllOpenTournament")
     public List<TournamentDto> getAllOpenTournament(Principal principal) {
 
         User user = (User) ((Authentication) principal).getPrincipal();
