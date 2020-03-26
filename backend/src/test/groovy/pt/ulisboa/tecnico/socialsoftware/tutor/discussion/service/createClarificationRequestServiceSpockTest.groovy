@@ -172,10 +172,10 @@ class createClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setKey(discussionService.getMaxClarificationRequestKey()+1)
+        clarificationRequestDto.setUsername(user1.getUsername())
 
         when:
-        discussionService.submitClarificationRequest(courseExecution.getId(), 900, user1.getId(), clarificationRequestDto)
+        discussionService.submitClarificationRequest(900, clarificationRequestDto)
 
         then: "check for exceptions"
         def error = thrown(TutorException)
@@ -196,10 +196,10 @@ class createClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setKey(discussionService.getMaxClarificationRequestKey()+1)
+        clarificationRequestDto.setUsername("Username_not_used")
 
         when:
-        discussionService.submitClarificationRequest(courseExecution.getId(), question1.getId(), -1, clarificationRequestDto)
+        discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
 
         then: "check for exceptions"
         def error = thrown(TutorException)
@@ -215,40 +215,15 @@ class createClarificationRequestServiceSpockTest extends Specification {
         user1.getClarificationRequests().size() == 0L
     }
 
-    def "the course execution does not exist" (){
-        given: "a clarification request dto"
-        def clarificationRequestDto = new ClarificationRequestDto()
-        clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
-        clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setKey(discussionService.getMaxClarificationRequestKey()+1)
-
-        when:
-        discussionService.submitClarificationRequest(-1, question1.getId(), user1.getId(), clarificationRequestDto)
-
-        then: "check for exceptions"
-        def error = thrown(TutorException)
-        error.getErrorMessage() == ErrorMessage.COURSE_EXECUTION_NOT_FOUND
-
-        and: " the clarification request is not added to the repository"
-        clarificationRequestRepository.count() == 0L
-
-        and: "the clarification request is not associated with the question"
-        question1.getClarificationRequests().size() == 0L
-
-        and: "the clarification request is not associated with the user"
-        user1.getClarificationRequests().size() == 0L
-    }
-
-
     def "the question has not been answered by the student" (){
         given: "a clarification request dto"
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setKey(discussionService.getMaxClarificationRequestKey()+1)
+        clarificationRequestDto.setUsername(user2.getUsername())
 
         when:
-        discussionService.submitClarificationRequest(courseExecution.getId(), question1.getId(), user2.getId(), clarificationRequestDto)
+        discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
 
         then: "check for exceptions"
         def error = thrown(TutorException)
@@ -270,10 +245,11 @@ class createClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setKey(discussionService.getMaxClarificationRequestKey()+1)
+        clarificationRequestDto.setUsername(user1.getUsername())
+
 
         when:
-        discussionService.submitClarificationRequest(courseExecution.getId(), question1.getId(), user1.getId(), clarificationRequestDto)
+        discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
 
         then: "the ClarificationRequest is in the repository"
         clarificationRequestRepository.count() == 1L
@@ -283,6 +259,7 @@ class createClarificationRequestServiceSpockTest extends Specification {
         and: "the values are correct"
         result.getTitle() == CLARIFICATION_TITLE
         result .getText() == CLARIFICATION_TEXT
+        result.getStudent() == user1
         and: "the clarification request is created"
         question1.getClarificationRequests().size() == 1L
         def clariReqs = new ArrayList<>(question1.getClarificationRequests()).get(0)
@@ -299,10 +276,11 @@ class createClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        discussionService.submitClarificationRequest(courseExecution.getId(), question1.getId(), user1.getId(), clarificationRequestDto)
+        clarificationRequestDto.setUsername(user1.getUsername())
+        discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
 
         when:
-        discussionService.submitClarificationRequest(courseExecution.getId(), question1.getId(), user1.getId(), clarificationRequestDto)
+        discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
 
         then: "check for exceptions"
         def error = thrown(TutorException)
@@ -324,10 +302,10 @@ class createClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(title)
         clarificationRequestDto.setText(text)
-        clarificationRequestDto.setKey(discussionService.getMaxClarificationRequestKey()+1)
+        clarificationRequestDto.setUsername(user1.getUsername())
 
         when:
-        discussionService.submitClarificationRequest(courseExecution.getId(), question1.getId(), user1.getId(), clarificationRequestDto)
+        discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
 
         then: "check for excpetions"
         def error = thrown(TutorException)
