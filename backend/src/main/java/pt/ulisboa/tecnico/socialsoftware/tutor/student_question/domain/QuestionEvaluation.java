@@ -1,8 +1,8 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain;
+package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain;
 
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.QuestionEvaluationDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.QuestionEvaluationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 

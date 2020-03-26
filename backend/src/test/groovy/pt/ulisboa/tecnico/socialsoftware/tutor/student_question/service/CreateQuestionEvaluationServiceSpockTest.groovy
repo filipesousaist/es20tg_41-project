@@ -1,8 +1,7 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.service
+package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
@@ -15,16 +14,18 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.StudentQuestionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain.StudentQuestion
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuestionDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.QuestionEvaluationDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.QuestionEvaluationRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.StudentQuestionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.StudentQuestionService
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain.StudentQuestion
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.QuestionEvaluationDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.QuestionEvaluationRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.StudentQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
 import spock.lang.Unroll
+
+import java.time.LocalDateTime
 
 @DataJpaTest
 class CreateQuestionEvaluationServiceSpockTest extends Specification {
@@ -83,6 +84,7 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
         questionDto.setStatus(Question.Status.AVAILABLE.name())
+        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter))
 
         // Create 2 options, and add them to question
         def option1Dto = new OptionDto()
@@ -130,17 +132,17 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         def questionEvaluation = questionEvaluationRepository.findAll().get(0)
         questionEvaluation != null
         questionEvaluation.getId() != null
-        questionEvaluation.isApproved() == true
+        questionEvaluation.isApproved()
         questionEvaluation.getJustification() == JUSTIFICATION
         and: "teacher is correct and contains this question evaluation"
         def returnedTeacher = questionEvaluation.getTeacher()
         returnedTeacher == teacher
-        returnedTeacher.getQuestionEvaluations().size() == 1L
+        returnedTeacher.getQuestionEvaluations().size() == 1
         (new ArrayList<>(returnedTeacher.getQuestionEvaluations())).get(0) == questionEvaluation
         and: "student question is correct and contains this question evaluation"
         def returnedStudentQuestion = questionEvaluation.getStudentQuestion()
         returnedStudentQuestion == studentQuestion
-        returnedStudentQuestion.getQuestionEvaluations().size() == 1L
+        returnedStudentQuestion.getQuestionEvaluations().size() == 1
         (new ArrayList<>(returnedStudentQuestion.getQuestionEvaluations())).get(0) == questionEvaluation
     }
 
@@ -159,7 +161,7 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.STUDENT_QUESTION_NOT_FOUND
         and: "the question evaluation is not created"
-        questionEvaluationRepository.findAll().size() == 0L
+        questionEvaluationRepository.findAll().size() == 0
     }
 
     def "teacher does not exist"() {
@@ -177,7 +179,7 @@ class CreateQuestionEvaluationServiceSpockTest extends Specification {
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.USER_NOT_FOUND
         and: "the question evaluation is not created"
-        questionEvaluationRepository.findAll().size() == 0L
+        questionEvaluationRepository.findAll().size() == 0
     }
 
     @Unroll("invalid arguments: #justification || errorMessage")
