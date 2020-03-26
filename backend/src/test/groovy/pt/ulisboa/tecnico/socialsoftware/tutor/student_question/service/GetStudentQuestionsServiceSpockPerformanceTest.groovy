@@ -12,17 +12,18 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.StudentQuestionService
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain.StudentQuestion
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.StudentQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto
 import spock.lang.Specification
 
 import java.time.LocalDateTime
 
-
 @DataJpaTest
-class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
+class GetStudentQuestionsServiceSpockPerformanceTest extends Specification {
     public static final String COURSE_NAME = "Software Architecture"
     public static final String ACRONYM = "AS1"
     public static final String ACADEMIC_TERM = "1 SEM"
@@ -31,7 +32,7 @@ class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
     public static final String OPTION_CONTENT = "optionId content"
 
     @Autowired
-    StudentQuestionRepository StudentQuestionRepository
+    StudentQuestionRepository studentQuestionRepository
 
     @Autowired
     StudentQuestionService studentQuestionService
@@ -46,35 +47,28 @@ class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
     UserRepository userRepository
 
 
-    def course
-    def courseExecution
-    def user
-
-    def setup(){
-        course = new Course(COURSE_NAME, Course.Type.TECNICO)
+    def "performance testing to get 1000 student questions 10000 times"() {
+        given:"a course"
+        def course = new Course(COURSE_NAME, Course.Type.TECNICO)
         courseRepository.save(course)
-
-        courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
+        and:"a courseExecution"
+        def courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)
-
-        user = new User()
+        and:"a user"
+        def user = new User()
         user.setKey(1)
         userRepository.save(user)
-
-    }
-
-
-    def "performance testing to create 1000 student questions"() {
-        given: "a studentQuestionDto"
+        def userID = user.getId()
+        and:"a studentQuestionDto"
         def studentQuestionDto = new StudentQuestionDto()
-        and: "a questionDto"
+        and:"a questionDto"
         def questionDto = new QuestionDto()
         questionDto.setKey(1)
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
         questionDto.setStatus(Question.Status.PROPOSED.name())
         questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter));
-        and: 'a optionId'
+        and: 'a optionDto'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)
         optionDto.setCorrect(true)
@@ -82,13 +76,17 @@ class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
         options.add(optionDto)
         questionDto.setOptions(options)
         studentQuestionDto.setQuestionDto(questionDto)
-        and: "a userId"
-        def userId = userRepository.findAll().get(0).getId()
+        studentQuestionDto.setUserDto(new UserDto(user))
+        1.upto(1000, {
+            studentQuestionRepository.save(new StudentQuestion(course, user, studentQuestionDto))
+        })
 
         when:
-        1.upto(10000, {studentQuestionService.createStudentQuestion(course.getId(), userId, studentQuestionDto)})
+        1.upto(10000, {studentQuestionService.getStudentQuestions(userID)})
 
-        then: true
+        then:
+        true
+
     }
 
     @TestConfiguration

@@ -30,9 +30,9 @@ public class StudentQuestionDto implements Serializable {
 
     public void setId(Integer id) { this.id = id; }
 
-    public UserDto getUser() { return userDto; }
+    public UserDto getUserDto() { return userDto; }
 
-    public void setUser(UserDto userDto) { this.userDto = userDto;}
+    public void setUserDto(UserDto userDto) { this.userDto = userDto;}
 
     public QuestionDto getQuestionDto() {
         return questionDto;
