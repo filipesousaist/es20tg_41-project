@@ -31,16 +31,16 @@ public class TournamentController {
         return tournamentService.createNewTournament(user.getId(), courseExecutionId, tournamentDto);
     }
 
-    @PostMapping("/courseExecution/{courseExecutionId}/tournament/enrollTournament")
+    @PostMapping("/courseExecution/{courseExecutionId}/tournament/{tournamentId}/enrollTournament")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseExecutionId, 'EXECUTION.ACCESS')")
-    public TournamentDto enrollTournament(Principal principal, @PathVariable Integer courseExecutionId, @RequestBody TournamentDto tournamentDto) {
+    public TournamentDto enrollTournament(Principal principal, @PathVariable Integer courseExecutionId, @PathVariable Integer tournamentId) {
 
         User user = (User) ((Authentication) principal).getPrincipal();
 
         if(user == null || !user.getRole().equals(User.Role.STUDENT)){
             throw new TutorException(AUTHENTICATION_ERROR);
         }
-        return tournamentService.enrollTournament(user.getId(), tournamentDto);
+        return tournamentService.enrollTournament(user.getId(), tournamentId);
     }
 
     @DeleteMapping("/courseExecution/{courseExecutionId}/tournament/{tournamentId}/deleteTournament")

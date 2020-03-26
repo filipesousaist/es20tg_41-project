@@ -1,14 +1,10 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto;
 
-import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
-import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament;
-import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;

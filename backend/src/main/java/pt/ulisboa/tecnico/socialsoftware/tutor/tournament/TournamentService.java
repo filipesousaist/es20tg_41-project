@@ -2,6 +2,8 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.tournament;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
@@ -45,6 +47,7 @@ public class TournamentService {
     @PersistenceContext
     EntityManager entityManager;
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TournamentDto createNewTournament(Integer userId, Integer courseExId, TournamentDto tournamentDto){
 
         User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
@@ -61,9 +64,9 @@ public class TournamentService {
 
         CourseExecution courseEx = courseExecutionRepository.findById(courseExId).orElseThrow(() -> new TutorException(INVALID_COURSE_EXECUTION));
         List<Topic> topics = getTopics(tournamentDto, courseEx);
-
         Tournament tournament = new Tournament(user, topics, begin, end, numberOfQuestions, courseEx);
         user.addTournamentCreatedByMe(tournament);
+
         entityManager.persist(tournament);
         courseEx.addTournament(tournament);
         for (Topic topic : topics) {
@@ -72,41 +75,44 @@ public class TournamentService {
 
         return new TournamentDto(tournament);
     }
-
-    private List<Topic> getTopics(TournamentDto tournamentDto, CourseExecution courseEx) {
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    List<Topic> getTopics(TournamentDto tournamentDto, CourseExecution courseEx) {
         List<TopicDto> titlesDto = tournamentDto.getTitles();
         if (titlesDto == null || titlesDto.isEmpty()) {
             throw new TutorException(EMPTY_TOPIC);
         }
         List<Topic> topics = new ArrayList<>();
         for (TopicDto dto : titlesDto) {
-            Topic topic = topicRepository.optionalFindTopicByName(courseEx.getId(), dto.getName()).orElseThrow(() -> new TutorException(NO_SUCH_TOPIC));
+            Topic topic = topicRepository.optionalFindTopicByName(courseEx.getCourse().getId(), dto.getName()).orElseThrow(() -> new TutorException(NO_SUCH_TOPIC));
             topics.add(topic);
 
         }
         return topics;
     }
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public TournamentDto enrollTournament(Integer studentId, Integer tournamentId) {
 
-    public TournamentDto enrollTournament(Integer studentId, TournamentDto tournamentdto) {
-
-
-        User user = userRepository.findById(studentId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, studentId));
-
-        if (tournamentdto.getId() == null) {
+        if (tournamentId == null) {
             throw new TutorException(TOURNAMENT_NOT_FOUND);
         }
+
+        if (studentId == null) {
+            throw new TutorException(USER_NOT_FOUND, studentId);
+        }
+
+        User user = userRepository.findById(studentId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, studentId));
 
         if (!user.getRole().equals(User.Role.STUDENT)) {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
 
-        Tournament tournament = tournamentRepository.findTournamentById(tournamentdto.getId()).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
+        Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
 
         tournament.addStudentEnrolled(user);
         user.addTournamentEnrolled(tournament);
         return new TournamentDto(tournament);
     }
-
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void removeTournament(Integer tournamentId) {
 
         Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
@@ -117,6 +123,7 @@ public class TournamentService {
 
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<TournamentDto> getAllOpenTournament() {
         return tournamentRepository.findAll().stream()
                 .filter(tournament -> !tournament.getClosed())

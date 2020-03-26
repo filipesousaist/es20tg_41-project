@@ -126,7 +126,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
         tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         when:
-        tournamentService.enrollTournament(user1.getId(), tournamentDto)
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
 
         then:"is in the database"
         tournamentRepository.findAll().size() == 1
@@ -142,7 +142,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
 
     def "a student enrolling in a tournament that doesn't exists"() {
         when:
-        tournamentService.enrollTournament(user1.getId(), tournamentDto)
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
 
         then:
         TutorException exception = thrown()
@@ -153,8 +153,8 @@ class EnrollTournamentServiceSpockTest extends Specification {
         given: "student creates a tournament"
         tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
         when:
-        tournamentService.enrollTournament(user1.getId(), tournamentDto)
-        tournamentService.enrollTournament(user1.getId(), tournamentDto)
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
 
         then:
         TutorException exception = thrown()
@@ -168,7 +168,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
         tournamentRepository.findAll().get(0).setClosed(true)
 
         when:
-        tournamentService.enrollTournament(user1.getId(), tournamentDto)
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
 
         then:
         TutorException exception = thrown()
@@ -182,7 +182,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
         tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         when:
-        tournamentService.enrollTournament(user2.getId(), tournamentDto)
+        tournamentService.enrollTournament(user2.getId(), tournamentDto.getId())
 
         then:
         TutorException exception = thrown()
