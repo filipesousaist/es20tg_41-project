@@ -71,19 +71,21 @@ public class StudentQuestionService {
         return new QuestionEvaluationDto(questionEvaluation);
     }
 
-    /*@Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<StudentQuestionDto> getStudentQuestions(int userId) {
-        return studentQuestionRepository.findAll().stream()
-                .filter(sq -> sq.getUser().getId() == userId)
+        return studentQuestionRepository.getByUserId(userId).stream()
                 .map(StudentQuestionDto::new).collect(Collectors.toList());
-    }*/
+    }
 
     @Retryable(
             value = { SQLException.class },
             backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public StudentQuestionDto findById(Integer studentQuestionId) {
-        return this.studentQuestionRepository.findById(studentQuestionId).map(studentQuestion -> new StudentQuestionDto(studentQuestion))
+        return this.studentQuestionRepository.findById(studentQuestionId).map(StudentQuestionDto::new)
                 .orElseThrow(() -> new TutorException(STUDENT_QUESTION_NOT_FOUND, studentQuestionId));
     }
 }
