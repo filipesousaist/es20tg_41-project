@@ -13,6 +13,7 @@ import java.util.Set;
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
 @Entity
+@Table(name = "student_questions")
 public class StudentQuestion {
 
     @Id
