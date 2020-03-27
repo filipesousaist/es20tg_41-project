@@ -8,19 +8,19 @@ public class ClarificationRequestDto implements Serializable {
 
     private Integer id;
 
-    private Integer key;
-
     private String title;
 
     private String text;
+
+    private String username;
 
     public ClarificationRequestDto(){}
 
     public ClarificationRequestDto(ClarificationRequest clarificationRequest){
         this.id = clarificationRequest.getId();
-        this.key = clarificationRequest.getKey();
         this.title = clarificationRequest.getTitle();
         this.text = clarificationRequest.getText();
+        this.username = clarificationRequest.getStudent().getUsername();
     }
 
 
@@ -31,14 +31,6 @@ public class ClarificationRequestDto implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getKey() {
-        return key;
-    }
-
-    public void setKey(Integer key) {
-        this.key = key;
     }
 
     public String getTitle() {
@@ -55,5 +47,13 @@ public class ClarificationRequestDto implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -8,6 +8,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.administration.AdministrationServ
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.AssessmentService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.TopicService;
@@ -40,6 +41,9 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
 
     @Autowired
     private StudentQuestionRepository studentQuestionRepository;
+
+    @Autowired
+    private DiscussionService discussionService;
 
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
@@ -79,6 +83,10 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
                     return userHasThisExecution(username, quizService.findQuizCourseExecution(id).getCourseExecutionId());
                 case "STUDENT_QUESTION.ACCESS":
                     return userHasExecutionOfStudentQuestion(username, id);
+                case "QUESTION.ANSWERED":
+                    return userHasAnsweredQuestion(username, id);
+                case "CLARIFICATION.REQUEST.ACCESS":
+                    return userHasAnExecutionOfTheCourse(username, discussionService.findClarificationRequestCourse(id).getCourseId());
                 default: return false;
             }
         }
@@ -96,6 +104,7 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
                 .anyMatch(course -> course.getCourseExecutionId() == id);
     }
 
+
     private boolean userHasExecutionOfStudentQuestion(String username, int studentQuestionId) {
         int questionId = studentQuestionRepository.findById(studentQuestionId)
                 .orElseThrow(() -> new TutorException(ErrorMessage.STUDENT_QUESTION_NOT_FOUND, studentQuestionId))
@@ -103,6 +112,11 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
                 .getId();
         return userHasAnExecutionOfTheCourse(username,
                 questionService.findQuestionCourse(questionId).getCourseId());
+    }
+
+    private boolean userHasAnsweredQuestion(String username, int id){
+        return userService.getAnsweredQuestions(username).stream()
+                .anyMatch(question -> question.getId() == id);
     }
 
      @Override

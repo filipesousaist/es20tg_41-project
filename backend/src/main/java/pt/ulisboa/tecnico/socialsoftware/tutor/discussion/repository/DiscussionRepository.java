@@ -10,11 +10,5 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 @Repository
 @Transactional
 public interface DiscussionRepository extends JpaRepository<Clarification, Integer> {
-    @Query(value = "select * from clarifications u where u.key = :key", nativeQuery = true)
-    Clarification findByKey(Integer key);
-
-    @Query(value = "select MAX(id) from clarifications", nativeQuery = true)
-    Integer getMaxClarificationKey();
-
 
 }
