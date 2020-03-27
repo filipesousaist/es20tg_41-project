@@ -111,7 +111,7 @@ class EnrollTournamentServiceSpockPerfomanceTest extends Specification{
         def tournament = tournamentRepository.findAll().get(0)
 
         when:
-        1.upto(10000, {
+        1.upto(1, {
             tournamentService.enrollTournament(user2.getId(), tournament.getId())
         })
 

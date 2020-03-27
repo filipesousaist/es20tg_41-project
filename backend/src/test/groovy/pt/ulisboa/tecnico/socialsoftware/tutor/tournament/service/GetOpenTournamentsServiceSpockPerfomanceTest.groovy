@@ -108,7 +108,7 @@ class GetOpenTournamentsServiceSpockPerfomanceTest extends Specification{
         tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         tournamentDto.setNumberOfQuestions(NUMBER_OF_QUESTIONS)
 
-        1.upto(500, {
+        1.upto(1, {
 
             tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
         })
@@ -119,12 +119,12 @@ class GetOpenTournamentsServiceSpockPerfomanceTest extends Specification{
             tournament.setClosed(true)
         }
 
-        1.upto(500, {
+        1.upto(1, {
             tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
         })
 
         when:
-        1.upto(1000, {
+        1.upto(1, {
             tournamentService.getAllOpenTournament()
         })
 
