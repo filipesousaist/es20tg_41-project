@@ -98,7 +98,7 @@ class GetStudentQuestionsServiceSpockTest extends Specification {
         result.size() == 2
         def resStudentQuestionDto = result.get(0)
         and: "user is correct"
-        resStudentQuestionDto.getUser().getId() == userId
+        resStudentQuestionDto.getUserDto().getId() == userId
         and: "question is correct"
         def resQuestionDto = resStudentQuestionDto.getQuestionDto()
         resQuestionDto != null

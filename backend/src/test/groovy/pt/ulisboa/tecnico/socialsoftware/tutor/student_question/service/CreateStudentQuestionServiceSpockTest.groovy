@@ -19,6 +19,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.Stude
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
+
 import java.time.LocalDateTime
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*
@@ -33,7 +34,7 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
     public static final String OPTION_CONTENT = "optionId content"
 
     @Autowired
-    StudentQuestionRepository StudentQuestionRepository
+    StudentQuestionRepository studentQuestionRepository
 
     @Autowired
     StudentQuestionService studentQuestionService
@@ -74,7 +75,7 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         questionDto.setContent(QUESTION_CONTENT)
         questionDto.setStatus(Question.Status.PROPOSED.name())
         questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter));
-        and: 'a optionId'
+        and: 'a optionDto'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)
         optionDto.setCorrect(true)
@@ -89,8 +90,8 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         studentQuestionService.createStudentQuestion(course.getId(), userId, studentQuestionDto)
 
         then: "the correct student question is inside the repository"
-        studentQuestionRepository.count() == 1L
-        def result = studentQuestionRepository.findAll().get(0)
+        this.studentQuestionRepository.count() == 1L
+        def result = this.studentQuestionRepository.findAll().get(0)
         result.getId() != null
         result.getQuestion().getKey() == 1
         result.getQuestion().getStatus() == Question.Status.PROPOSED
@@ -133,7 +134,7 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         then:
         TutorException exception = thrown()
         exception.getErrorMessage() == QUESTION_MISSING_DATA
-        studentQuestionRepository.findAll().size() == 0
+        this.studentQuestionRepository.findAll().size() == 0
     }
 
     def "student question is not created when question is null"(){
@@ -148,7 +149,7 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         then:
         TutorException exception = thrown()
         exception.getErrorMessage() == QUESTION_IS_MISSING
-        studentQuestionRepository.findAll().size() == 0
+        this.studentQuestionRepository.findAll().size() == 0
     }
 
     @TestConfiguration
