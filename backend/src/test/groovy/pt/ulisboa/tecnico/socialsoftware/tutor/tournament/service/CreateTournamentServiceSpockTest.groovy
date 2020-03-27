@@ -24,6 +24,7 @@ import spock.lang.Unroll
 
 import java.time.LocalDateTime
 import java.time.Month
+import java.time.format.DateTimeFormatter
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.EMPTY_TOPIC
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.END_BEFORE_BEGINS
@@ -61,6 +62,8 @@ class CreateTournamentServiceSpockTest extends Specification {
     static final String TOPIC_NAME1 = "Algorithms"
     static final String TOPIC_NAME2 = "Machine Learning"
     static final String TOPIC_NAME3 = "Security"
+
+    static final int ID = 1000
 
     @Autowired
     TournamentService tournamentService
@@ -120,18 +123,15 @@ class CreateTournamentServiceSpockTest extends Specification {
 
     def "a student exists and he creates a new tournament"() {
         given: "a student"
-        def studentDto = new UserDto(student)
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
-        tournamentDto.setUserDto(studentDto)
         tournamentDto.setTitles(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
+        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
-        tournamentDto.setCourseExecutionDto(courseEx1)
 
         when:
-        def result = tournamentService.createNewTournament(tournamentDto)
+        def result = tournamentService.createNewTournament(student.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then: "the returned data are correct"
 
@@ -139,8 +139,8 @@ class CreateTournamentServiceSpockTest extends Specification {
         for (int i = 0 ; i != topicList1.size() ; i++) {
             result.getTitles().get(i) == topicList1.get(i)
         }
-        result.getBeginningTime().isEqual(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
-        result.getEndingTime().isEqual(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
+        result.getBeginningTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        result.getEndingTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         result.getNumberOfQuestions() == NUMBEROFQUESTIONS
         and: 'is in the database'
         tournamentRepository.findAll().size() == 1
@@ -162,27 +162,24 @@ class CreateTournamentServiceSpockTest extends Specification {
         tournament.getBeginningTime().isEqual(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
         tournament.getEndingTime().isEqual(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
         tournament.getNumberOfQuestions() == NUMBEROFQUESTIONS
+        tournament.getCourseExecution().getCourse().getName() == COURSE_NAME1
+        tournament.getCourseExecution().getAcronym() == ACRONYM1
+        tournament.getCourseExecution().getAcademicTerm() == ACADEMIC_TERM1
     }
-    /*
-    def "a non student tries to create a tournament"() {
-    }*/
 
     @Unroll
     def "invalid arguments: numberOfQuestions=#numberOfQuestions || errorMessage=#errorMessage "() {
 
         given: "a student"
-        def studentDto = new UserDto(student)
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
-        tournamentDto.setUserDto(studentDto)
         tournamentDto.setTitles(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
+        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         tournamentDto.setNumberOfQuestions(numberOfQuestions)
-        tournamentDto.setCourseExecutionDto(courseEx1)
 
         when:
-        tournamentService.createNewTournament(tournamentDto)
+        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then:
         def error = thrown(TutorException)
@@ -199,19 +196,15 @@ class CreateTournamentServiceSpockTest extends Specification {
     def "A non existent course execution"() {
 
         given: "a student and a non existent course"
-        def studentDto = new UserDto(student)
-        def courseDto = new CourseDto(COURSE_NAME2, ACRONYM2, ACADEMIC_TERM2)
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
-        tournamentDto.setUserDto(studentDto)
         tournamentDto.setTitles(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
+        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
-        tournamentDto.setCourseExecutionDto(courseDto)
 
         when:
-        tournamentService.createNewTournament(tournamentDto)
+        tournamentService.createNewTournament(student.getId(), ID,  tournamentDto)
 
         then:
         def error = thrown(TutorException)
@@ -221,18 +214,15 @@ class CreateTournamentServiceSpockTest extends Specification {
     def "No topic in the course"() {
 
         given: "a student"
-        def studentDto = new UserDto(student)
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
-        tournamentDto.setUserDto(studentDto)
         tournamentDto.setTitles(topicList2)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
+        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
-        tournamentDto.setCourseExecutionDto(courseEx1)
 
         when:
-        tournamentService.createNewTournament(tournamentDto)
+        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then:
         def error = thrown(TutorException)
@@ -242,18 +232,15 @@ class CreateTournamentServiceSpockTest extends Specification {
     def "a tournament ending date happens before the beginning date"() {
 
         given: "a student"
-        def studentDto = new UserDto(student)
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
-        tournamentDto.setUserDto(studentDto)
         tournamentDto.setTitles(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
+        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
-        tournamentDto.setCourseExecutionDto(courseEx1)
 
         when:
-        tournamentService.createNewTournament(tournamentDto)
+        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then:
         def error = thrown(TutorException)
@@ -263,18 +250,15 @@ class CreateTournamentServiceSpockTest extends Specification {
     def "Empty topic List"() {
 
         given: "a student"
-        def studentDto = new UserDto(student)
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
-        tournamentDto.setUserDto(studentDto)
         tournamentDto.setTitles(new ArrayList<TopicDto>())
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
+        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
-        tournamentDto.setCourseExecutionDto(courseEx1)
 
         when:
-        tournamentService.createNewTournament(tournamentDto)
+        tournamentService.createNewTournament(student.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then:
         def error = thrown(TutorException)
@@ -285,18 +269,15 @@ class CreateTournamentServiceSpockTest extends Specification {
         given: "a teacher"
         def teacher = userService.createUser(NAME_2, USERNAME_2, User.Role.TEACHER)
         userRepository.save(teacher)
-        def teacherDto = new UserDto(teacher)
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
-        tournamentDto.setUserDto(teacherDto)
         tournamentDto.setTitles(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
+        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
-        tournamentDto.setCourseExecutionDto(courseEx1)
 
         when:
-        tournamentService.createNewTournament(tournamentDto)
+        tournamentService.createNewTournament(teacher.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         then:
         def error = thrown(TutorException)

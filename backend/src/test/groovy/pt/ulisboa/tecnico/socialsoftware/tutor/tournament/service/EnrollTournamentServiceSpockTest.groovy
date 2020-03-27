@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired
 
 import java.time.LocalDateTime
 import java.time.Month
+import java.time.format.DateTimeFormatter
+
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.STUDENT_ALREADY_ENROLLED
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_IS_CLOSED
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_NOT_FOUND
@@ -112,21 +114,19 @@ class EnrollTournamentServiceSpockTest extends Specification {
 
         userDto = new UserDto(user1)
         tournamentDto = new TournamentDto()
-        tournamentDto.setUserDto(userDto)
         tournamentDto.setTitles(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
+        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         tournamentDto.setNumberOfQuestions(NUMBER_OF_QUESTIONS)
-        tournamentDto.setCourseExecutionDto(courseEx1)
 
     }
 
     def "a student exists and enrolls in a tournament"() {
         given: "student creates a tournament"
-        tournamentDto = tournamentService.createNewTournament(tournamentDto)
+        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         when:
-        tournamentService.enrollTournament(userDto, tournamentDto)
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
 
         then:"is in the database"
         tournamentRepository.findAll().size() == 1
@@ -142,7 +142,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
 
     def "a student enrolling in a tournament that doesn't exists"() {
         when:
-        tournamentService.enrollTournament(userDto, tournamentDto)
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
 
         then:
         TutorException exception = thrown()
@@ -151,10 +151,10 @@ class EnrollTournamentServiceSpockTest extends Specification {
 
     def "a student enrolls in a tournament when he's already enrolled"() {
         given: "student creates a tournament"
-        tournamentDto = tournamentService.createNewTournament(tournamentDto)
+        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
         when:
-        tournamentService.enrollTournament(userDto, tournamentDto)
-        tournamentService.enrollTournament(userDto, tournamentDto)
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
 
         then:
         TutorException exception = thrown()
@@ -164,11 +164,11 @@ class EnrollTournamentServiceSpockTest extends Specification {
 
     def "a student enrolls in a tournament where the ending date already passed"() {
         given: "student creates a tournament"
-        tournamentDto = tournamentService.createNewTournament(tournamentDto)
+        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
         tournamentRepository.findAll().get(0).setClosed(true)
 
         when:
-        tournamentService.enrollTournament(userDto, tournamentDto)
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
 
         then:
         TutorException exception = thrown()
@@ -179,11 +179,10 @@ class EnrollTournamentServiceSpockTest extends Specification {
         given: "student creates a tournament"
         def user2 = userService.createUser(NAME_2, USERNAME_2, User.Role.TEACHER)
         userRepository.save(user2)
-        tournamentDto = tournamentService.createNewTournament(tournamentDto)
-        def user2Dto = new UserDto(user2)
+        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         when:
-        tournamentService.enrollTournament(user2Dto, tournamentDto)
+        tournamentService.enrollTournament(user2.getId(), tournamentDto.getId())
 
         then:
         TutorException exception = thrown()
