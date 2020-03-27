@@ -165,7 +165,7 @@ class GetClarificationServiceSpockPerformanceTest extends Specification{
         def clarificationDto = new ClarificationDto()
         clarificationDto.setText(CLARIFICATION_TEXT)
 
-        1.upto(1000, {
+        1.upto(1, {
             user1 = userService.createUser(NAME + it, USERNAME + it, ROLE)
             user1.addCourse(courseExecution)
             userRepository.save(user1)
@@ -184,8 +184,8 @@ class GetClarificationServiceSpockPerformanceTest extends Specification{
         })
 
         when:
-        for (int j = 1; j <= 100; j++) {
-            for (int i = 1; i <= 1000; i++) {
+        for (int j = 1; j <= 1; j++) {
+            for (int i = 1; i <= 1; i++) {
                 discussionService.getClarification(i)
             }
         }
