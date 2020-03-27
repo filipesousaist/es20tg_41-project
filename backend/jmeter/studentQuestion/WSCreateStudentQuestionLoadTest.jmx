@@ -108,17 +108,18 @@
 	&quot;questionDto&quot;:{&#xd;
 		&quot;title&quot;:&quot;question title&quot;,&#xd;
 		&quot;content&quot;:&quot;question content&quot;,&#xd;
+		&quot;creationDate&quot;:&quot;2019-10-22 20:19&quot;,&#xd;
 		&quot;status&quot;:&quot;PROPOSED&quot;,&#xd;
 		&quot;options&quot;: [{&#xd;
 			&quot;content&quot;:&quot;optionId content&quot;,&#xd;
 			&quot;correct&quot;:&quot;true&quot;&#xd;
 			}]&#xd;
 		},&#xd;
-	&quot;userDto&quot;:{&#xd;
+	&quot;user&quot;:{&#xd;
 		&quot;name&quot;:&quot;Demo Student&quot;,&#xd;
 		&quot;role&quot;:&quot;STUDENT&quot;,&#xd;
 		&quot;username&quot;:&quot;Demo-Student&quot;&#xd;
-		}&#xd;
+	}&#xd;
 }</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                   </elementProp>
@@ -250,9 +251,8 @@
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
-          <stringProp name="dataSource"></stringProp>
-          <stringProp name="query">delete from users_student_questions using users where users_student_questions.user_id= users.id;
-delete from student_question using users where student_question.user_id= users.id;</stringProp>
+          <stringProp name="dataSource">sampleReq</stringProp>
+          <stringProp name="query">delete from student_questions;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
