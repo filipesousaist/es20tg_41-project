@@ -75,7 +75,7 @@ public class TournamentService {
 
         return new TournamentDto(tournament);
     }
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     List<Topic> getTopics(TournamentDto tournamentDto, CourseExecution courseEx) {
         List<TopicDto> titlesDto = tournamentDto.getTitles();
         if (titlesDto == null || titlesDto.isEmpty()) {

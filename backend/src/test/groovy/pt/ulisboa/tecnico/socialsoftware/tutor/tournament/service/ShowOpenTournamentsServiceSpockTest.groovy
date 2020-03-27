@@ -69,9 +69,7 @@ class ShowOpenTournamentsServiceSpockTest extends Specification{
     CourseRepository courseRepository
 
     def user1
-    def userDto1
     def user2
-    def userDto2
     def tournamentDto1
     def tournamentDto2
     def courseDto1
