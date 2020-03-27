@@ -23,6 +23,7 @@ public class ClarificationRequest {
     @JoinColumn(name = "user_id")
     private User student;
 
+
     @OneToOne(mappedBy = "clarificationRequest")
     private Clarification clarification;
 
