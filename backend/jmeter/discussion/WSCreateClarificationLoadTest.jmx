@@ -1,0 +1,1395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.2.1">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Load Test Web Service createClarification" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="testHome" elementType="Argument">
+            <stringProp name="Argument.name">testHome</stringProp>
+            <stringProp name="Argument.value">${__BeanShell(import org.apache.jmeter.services.FileServer fileserver.getFileServer().getBaseDir();)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="server" elementType="Argument">
+            <stringProp name="Argument.name">server</stringProp>
+            <stringProp name="Argument.value">localhost</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="port" elementType="Argument">
+            <stringProp name="Argument.name">port</stringProp>
+            <stringProp name="Argument.value">8080</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </SetupThreadGroup>
+      <hashTree>
+        <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="JDBC Connection Configuration" enabled="true">
+          <stringProp name="dataSource">sampleReq</stringProp>
+          <stringProp name="poolMax">0</stringProp>
+          <stringProp name="timeout">10000</stringProp>
+          <stringProp name="trimInterval">60000</stringProp>
+          <boolProp name="autocommit">true</boolProp>
+          <stringProp name="transactionIsolation">DEFAULT</stringProp>
+          <boolProp name="preinit">false</boolProp>
+          <stringProp name="initQuery"></stringProp>
+          <boolProp name="keepAlive">true</boolProp>
+          <stringProp name="connectionAge">5000</stringProp>
+          <stringProp name="checkQuery"></stringProp>
+          <stringProp name="dbUrl">jdbc:postgresql://localhost:5432/tutordb?autoReconnect=true</stringProp>
+          <stringProp name="driver">org.postgresql.Driver</stringProp>
+          <stringProp name="username">filipe</stringProp>
+          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
+          <stringProp name="connectionProperties"></stringProp>
+        </JDBCDataSource>
+        <hashTree/>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
+          <stringProp name="dataSource">sampleReq</stringProp>
+          <stringProp name="queryType">Callable Statement</stringProp>
+          <stringProp name="query">INSERT INTO clarification_requests VALUES (1, &apos;Não sei o que se passa1&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (2, &apos;Não sei o que se passa2&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (3, &apos;Não sei o que se passa3&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (4, &apos;Não sei o que se passa4&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (5, &apos;Não sei o que se passa5&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (6, &apos;Não sei o que se passa6&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (7, &apos;Não sei o que se passa7&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (8, &apos;Não sei o que se passa8&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (9, &apos;Não sei o que se passa9&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (10, &apos;Não sei o que se passa10&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (11, &apos;Não sei o que se passa11&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (12, &apos;Não sei o que se passa12&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (13, &apos;Não sei o que se passa13&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (14, &apos;Não sei o que se passa14&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (15, &apos;Não sei o que se passa15&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (16, &apos;Não sei o que se passa16&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (17, &apos;Não sei o que se passa17&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (18, &apos;Não sei o que se passa18&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (19, &apos;Não sei o que se passa19&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (20, &apos;Não sei o que se passa20&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (21, &apos;Não sei o que se passa21&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (22, &apos;Não sei o que se passa22&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (23, &apos;Não sei o que se passa23&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (24, &apos;Não sei o que se passa24&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (25, &apos;Não sei o que se passa25&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (26, &apos;Não sei o que se passa26&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (27, &apos;Não sei o que se passa27&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (28, &apos;Não sei o que se passa28&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (29, &apos;Não sei o que se passa29&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (30, &apos;Não sei o que se passa30&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (31, &apos;Não sei o que se passa31&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (32, &apos;Não sei o que se passa32&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (33, &apos;Não sei o que se passa33&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (34, &apos;Não sei o que se passa34&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (35, &apos;Não sei o que se passa35&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (36, &apos;Não sei o que se passa36&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (37, &apos;Não sei o que se passa37&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (38, &apos;Não sei o que se passa38&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (39, &apos;Não sei o que se passa39&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (40, &apos;Não sei o que se passa40&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (41, &apos;Não sei o que se passa41&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (42, &apos;Não sei o que se passa42&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (43, &apos;Não sei o que se passa43&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (44, &apos;Não sei o que se passa44&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (45, &apos;Não sei o que se passa45&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (46, &apos;Não sei o que se passa46&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (47, &apos;Não sei o que se passa47&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (48, &apos;Não sei o que se passa48&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (49, &apos;Não sei o que se passa49&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (50, &apos;Não sei o que se passa50&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (51, &apos;Não sei o que se passa51&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (52, &apos;Não sei o que se passa52&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (53, &apos;Não sei o que se passa53&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (54, &apos;Não sei o que se passa54&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (55, &apos;Não sei o que se passa55&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (56, &apos;Não sei o que se passa56&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (57, &apos;Não sei o que se passa57&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (58, &apos;Não sei o que se passa58&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (59, &apos;Não sei o que se passa59&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (60, &apos;Não sei o que se passa60&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (61, &apos;Não sei o que se passa61&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (62, &apos;Não sei o que se passa62&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (63, &apos;Não sei o que se passa63&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (64, &apos;Não sei o que se passa64&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (65, &apos;Não sei o que se passa65&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (66, &apos;Não sei o que se passa66&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (67, &apos;Não sei o que se passa67&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (68, &apos;Não sei o que se passa68&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (69, &apos;Não sei o que se passa69&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (70, &apos;Não sei o que se passa70&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (71, &apos;Não sei o que se passa71&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (72, &apos;Não sei o que se passa72&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (73, &apos;Não sei o que se passa73&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (74, &apos;Não sei o que se passa74&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (75, &apos;Não sei o que se passa75&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (76, &apos;Não sei o que se passa76&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (77, &apos;Não sei o que se passa77&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (78, &apos;Não sei o que se passa78&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (79, &apos;Não sei o que se passa79&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (80, &apos;Não sei o que se passa80&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (81, &apos;Não sei o que se passa81&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (82, &apos;Não sei o que se passa82&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (83, &apos;Não sei o que se passa83&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (84, &apos;Não sei o que se passa84&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (85, &apos;Não sei o que se passa85&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (86, &apos;Não sei o que se passa86&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (87, &apos;Não sei o que se passa87&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (88, &apos;Não sei o que se passa88&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (89, &apos;Não sei o que se passa89&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (90, &apos;Não sei o que se passa90&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (91, &apos;Não sei o que se passa91&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (92, &apos;Não sei o que se passa92&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (93, &apos;Não sei o que se passa93&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (94, &apos;Não sei o que se passa94&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (95, &apos;Não sei o que se passa95&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (96, &apos;Não sei o que se passa96&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (97, &apos;Não sei o que se passa97&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (98, &apos;Não sei o que se passa98&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (99, &apos;Não sei o que se passa99&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (100, &apos;Não sei o que se passa100&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (101, &apos;Não sei o que se passa101&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (102, &apos;Não sei o que se passa102&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (103, &apos;Não sei o que se passa103&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (104, &apos;Não sei o que se passa104&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (105, &apos;Não sei o que se passa105&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (106, &apos;Não sei o que se passa106&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (107, &apos;Não sei o que se passa107&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (108, &apos;Não sei o que se passa108&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (109, &apos;Não sei o que se passa109&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (110, &apos;Não sei o que se passa110&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (111, &apos;Não sei o que se passa111&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (112, &apos;Não sei o que se passa112&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (113, &apos;Não sei o que se passa113&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (114, &apos;Não sei o que se passa114&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (115, &apos;Não sei o que se passa115&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (116, &apos;Não sei o que se passa116&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (117, &apos;Não sei o que se passa117&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (118, &apos;Não sei o que se passa118&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (119, &apos;Não sei o que se passa119&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (120, &apos;Não sei o que se passa120&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (121, &apos;Não sei o que se passa121&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (122, &apos;Não sei o que se passa122&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (123, &apos;Não sei o que se passa123&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (124, &apos;Não sei o que se passa124&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (125, &apos;Não sei o que se passa125&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (126, &apos;Não sei o que se passa126&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (127, &apos;Não sei o que se passa127&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (128, &apos;Não sei o que se passa128&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (129, &apos;Não sei o que se passa129&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (130, &apos;Não sei o que se passa130&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (131, &apos;Não sei o que se passa131&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (132, &apos;Não sei o que se passa132&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (133, &apos;Não sei o que se passa133&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (134, &apos;Não sei o que se passa134&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (135, &apos;Não sei o que se passa135&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (136, &apos;Não sei o que se passa136&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (137, &apos;Não sei o que se passa137&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (138, &apos;Não sei o que se passa138&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (139, &apos;Não sei o que se passa139&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (140, &apos;Não sei o que se passa140&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (141, &apos;Não sei o que se passa141&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (142, &apos;Não sei o que se passa142&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (143, &apos;Não sei o que se passa143&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (144, &apos;Não sei o que se passa144&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (145, &apos;Não sei o que se passa145&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (146, &apos;Não sei o que se passa146&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (147, &apos;Não sei o que se passa147&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (148, &apos;Não sei o que se passa148&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (149, &apos;Não sei o que se passa149&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (150, &apos;Não sei o que se passa150&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (151, &apos;Não sei o que se passa151&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (152, &apos;Não sei o que se passa152&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (153, &apos;Não sei o que se passa153&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (154, &apos;Não sei o que se passa154&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (155, &apos;Não sei o que se passa155&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (156, &apos;Não sei o que se passa156&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (157, &apos;Não sei o que se passa157&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (158, &apos;Não sei o que se passa158&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (159, &apos;Não sei o que se passa159&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (160, &apos;Não sei o que se passa160&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (161, &apos;Não sei o que se passa161&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (162, &apos;Não sei o que se passa162&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (163, &apos;Não sei o que se passa163&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (164, &apos;Não sei o que se passa164&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (165, &apos;Não sei o que se passa165&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (166, &apos;Não sei o que se passa166&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (167, &apos;Não sei o que se passa167&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (168, &apos;Não sei o que se passa168&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (169, &apos;Não sei o que se passa169&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (170, &apos;Não sei o que se passa170&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (171, &apos;Não sei o que se passa171&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (172, &apos;Não sei o que se passa172&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (173, &apos;Não sei o que se passa173&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (174, &apos;Não sei o que se passa174&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (175, &apos;Não sei o que se passa175&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (176, &apos;Não sei o que se passa176&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (177, &apos;Não sei o que se passa177&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (178, &apos;Não sei o que se passa178&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (179, &apos;Não sei o que se passa179&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (180, &apos;Não sei o que se passa180&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (181, &apos;Não sei o que se passa181&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (182, &apos;Não sei o que se passa182&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (183, &apos;Não sei o que se passa183&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (184, &apos;Não sei o que se passa184&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (185, &apos;Não sei o que se passa185&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (186, &apos;Não sei o que se passa186&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (187, &apos;Não sei o que se passa187&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (188, &apos;Não sei o que se passa188&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (189, &apos;Não sei o que se passa189&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (190, &apos;Não sei o que se passa190&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (191, &apos;Não sei o que se passa191&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (192, &apos;Não sei o que se passa192&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (193, &apos;Não sei o que se passa193&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (194, &apos;Não sei o que se passa194&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (195, &apos;Não sei o que se passa195&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (196, &apos;Não sei o que se passa196&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (197, &apos;Não sei o que se passa197&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (198, &apos;Não sei o que se passa198&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (199, &apos;Não sei o que se passa199&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (200, &apos;Não sei o que se passa200&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (201, &apos;Não sei o que se passa201&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (202, &apos;Não sei o que se passa202&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (203, &apos;Não sei o que se passa203&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (204, &apos;Não sei o que se passa204&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (205, &apos;Não sei o que se passa205&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (206, &apos;Não sei o que se passa206&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (207, &apos;Não sei o que se passa207&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (208, &apos;Não sei o que se passa208&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (209, &apos;Não sei o que se passa209&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (210, &apos;Não sei o que se passa210&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (211, &apos;Não sei o que se passa211&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (212, &apos;Não sei o que se passa212&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (213, &apos;Não sei o que se passa213&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (214, &apos;Não sei o que se passa214&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (215, &apos;Não sei o que se passa215&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (216, &apos;Não sei o que se passa216&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (217, &apos;Não sei o que se passa217&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (218, &apos;Não sei o que se passa218&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (219, &apos;Não sei o que se passa219&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (220, &apos;Não sei o que se passa220&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (221, &apos;Não sei o que se passa221&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (222, &apos;Não sei o que se passa222&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (223, &apos;Não sei o que se passa223&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (224, &apos;Não sei o que se passa224&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (225, &apos;Não sei o que se passa225&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (226, &apos;Não sei o que se passa226&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (227, &apos;Não sei o que se passa227&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (228, &apos;Não sei o que se passa228&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (229, &apos;Não sei o que se passa229&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (230, &apos;Não sei o que se passa230&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (231, &apos;Não sei o que se passa231&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (232, &apos;Não sei o que se passa232&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (233, &apos;Não sei o que se passa233&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (234, &apos;Não sei o que se passa234&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (235, &apos;Não sei o que se passa235&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (236, &apos;Não sei o que se passa236&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (237, &apos;Não sei o que se passa237&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (238, &apos;Não sei o que se passa238&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (239, &apos;Não sei o que se passa239&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (240, &apos;Não sei o que se passa240&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (241, &apos;Não sei o que se passa241&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (242, &apos;Não sei o que se passa242&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (243, &apos;Não sei o que se passa243&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (244, &apos;Não sei o que se passa244&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (245, &apos;Não sei o que se passa245&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (246, &apos;Não sei o que se passa246&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (247, &apos;Não sei o que se passa247&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (248, &apos;Não sei o que se passa248&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (249, &apos;Não sei o que se passa249&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (250, &apos;Não sei o que se passa250&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (251, &apos;Não sei o que se passa251&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (252, &apos;Não sei o que se passa252&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (253, &apos;Não sei o que se passa253&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (254, &apos;Não sei o que se passa254&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (255, &apos;Não sei o que se passa255&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (256, &apos;Não sei o que se passa256&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (257, &apos;Não sei o que se passa257&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (258, &apos;Não sei o que se passa258&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (259, &apos;Não sei o que se passa259&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (260, &apos;Não sei o que se passa260&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (261, &apos;Não sei o que se passa261&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (262, &apos;Não sei o que se passa262&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (263, &apos;Não sei o que se passa263&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (264, &apos;Não sei o que se passa264&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (265, &apos;Não sei o que se passa265&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (266, &apos;Não sei o que se passa266&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (267, &apos;Não sei o que se passa267&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (268, &apos;Não sei o que se passa268&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (269, &apos;Não sei o que se passa269&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (270, &apos;Não sei o que se passa270&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (271, &apos;Não sei o que se passa271&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (272, &apos;Não sei o que se passa272&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (273, &apos;Não sei o que se passa273&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (274, &apos;Não sei o que se passa274&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (275, &apos;Não sei o que se passa275&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (276, &apos;Não sei o que se passa276&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (277, &apos;Não sei o que se passa277&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (278, &apos;Não sei o que se passa278&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (279, &apos;Não sei o que se passa279&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (280, &apos;Não sei o que se passa280&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (281, &apos;Não sei o que se passa281&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (282, &apos;Não sei o que se passa282&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (283, &apos;Não sei o que se passa283&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (284, &apos;Não sei o que se passa284&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (285, &apos;Não sei o que se passa285&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (286, &apos;Não sei o que se passa286&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (287, &apos;Não sei o que se passa287&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (288, &apos;Não sei o que se passa288&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (289, &apos;Não sei o que se passa289&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (290, &apos;Não sei o que se passa290&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (291, &apos;Não sei o que se passa291&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (292, &apos;Não sei o que se passa292&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (293, &apos;Não sei o que se passa293&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (294, &apos;Não sei o que se passa294&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (295, &apos;Não sei o que se passa295&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (296, &apos;Não sei o que se passa296&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (297, &apos;Não sei o que se passa297&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (298, &apos;Não sei o que se passa298&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (299, &apos;Não sei o que se passa299&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (300, &apos;Não sei o que se passa300&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (301, &apos;Não sei o que se passa301&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (302, &apos;Não sei o que se passa302&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (303, &apos;Não sei o que se passa303&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (304, &apos;Não sei o que se passa304&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (305, &apos;Não sei o que se passa305&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (306, &apos;Não sei o que se passa306&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (307, &apos;Não sei o que se passa307&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (308, &apos;Não sei o que se passa308&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (309, &apos;Não sei o que se passa309&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (310, &apos;Não sei o que se passa310&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (311, &apos;Não sei o que se passa311&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (312, &apos;Não sei o que se passa312&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (313, &apos;Não sei o que se passa313&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (314, &apos;Não sei o que se passa314&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (315, &apos;Não sei o que se passa315&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (316, &apos;Não sei o que se passa316&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (317, &apos;Não sei o que se passa317&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (318, &apos;Não sei o que se passa318&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (319, &apos;Não sei o que se passa319&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (320, &apos;Não sei o que se passa320&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (321, &apos;Não sei o que se passa321&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (322, &apos;Não sei o que se passa322&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (323, &apos;Não sei o que se passa323&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (324, &apos;Não sei o que se passa324&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (325, &apos;Não sei o que se passa325&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (326, &apos;Não sei o que se passa326&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (327, &apos;Não sei o que se passa327&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (328, &apos;Não sei o que se passa328&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (329, &apos;Não sei o que se passa329&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (330, &apos;Não sei o que se passa330&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (331, &apos;Não sei o que se passa331&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (332, &apos;Não sei o que se passa332&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (333, &apos;Não sei o que se passa333&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (334, &apos;Não sei o que se passa334&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (335, &apos;Não sei o que se passa335&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (336, &apos;Não sei o que se passa336&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (337, &apos;Não sei o que se passa337&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (338, &apos;Não sei o que se passa338&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (339, &apos;Não sei o que se passa339&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (340, &apos;Não sei o que se passa340&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (341, &apos;Não sei o que se passa341&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (342, &apos;Não sei o que se passa342&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (343, &apos;Não sei o que se passa343&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (344, &apos;Não sei o que se passa344&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (345, &apos;Não sei o que se passa345&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (346, &apos;Não sei o que se passa346&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (347, &apos;Não sei o que se passa347&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (348, &apos;Não sei o que se passa348&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (349, &apos;Não sei o que se passa349&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (350, &apos;Não sei o que se passa350&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (351, &apos;Não sei o que se passa351&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (352, &apos;Não sei o que se passa352&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (353, &apos;Não sei o que se passa353&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (354, &apos;Não sei o que se passa354&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (355, &apos;Não sei o que se passa355&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (356, &apos;Não sei o que se passa356&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (357, &apos;Não sei o que se passa357&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (358, &apos;Não sei o que se passa358&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (359, &apos;Não sei o que se passa359&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (360, &apos;Não sei o que se passa360&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (361, &apos;Não sei o que se passa361&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (362, &apos;Não sei o que se passa362&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (363, &apos;Não sei o que se passa363&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (364, &apos;Não sei o que se passa364&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (365, &apos;Não sei o que se passa365&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (366, &apos;Não sei o que se passa366&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (367, &apos;Não sei o que se passa367&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (368, &apos;Não sei o que se passa368&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (369, &apos;Não sei o que se passa369&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (370, &apos;Não sei o que se passa370&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (371, &apos;Não sei o que se passa371&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (372, &apos;Não sei o que se passa372&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (373, &apos;Não sei o que se passa373&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (374, &apos;Não sei o que se passa374&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (375, &apos;Não sei o que se passa375&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (376, &apos;Não sei o que se passa376&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (377, &apos;Não sei o que se passa377&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (378, &apos;Não sei o que se passa378&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (379, &apos;Não sei o que se passa379&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (380, &apos;Não sei o que se passa380&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (381, &apos;Não sei o que se passa381&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (382, &apos;Não sei o que se passa382&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (383, &apos;Não sei o que se passa383&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (384, &apos;Não sei o que se passa384&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (385, &apos;Não sei o que se passa385&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (386, &apos;Não sei o que se passa386&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (387, &apos;Não sei o que se passa387&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (388, &apos;Não sei o que se passa388&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (389, &apos;Não sei o que se passa389&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (390, &apos;Não sei o que se passa390&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (391, &apos;Não sei o que se passa391&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (392, &apos;Não sei o que se passa392&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (393, &apos;Não sei o que se passa393&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (394, &apos;Não sei o que se passa394&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (395, &apos;Não sei o que se passa395&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (396, &apos;Não sei o que se passa396&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (397, &apos;Não sei o que se passa397&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (398, &apos;Não sei o que se passa398&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (399, &apos;Não sei o que se passa399&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (400, &apos;Não sei o que se passa400&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (401, &apos;Não sei o que se passa401&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (402, &apos;Não sei o que se passa402&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (403, &apos;Não sei o que se passa403&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (404, &apos;Não sei o que se passa404&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (405, &apos;Não sei o que se passa405&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (406, &apos;Não sei o que se passa406&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (407, &apos;Não sei o que se passa407&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (408, &apos;Não sei o que se passa408&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (409, &apos;Não sei o que se passa409&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (410, &apos;Não sei o que se passa410&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (411, &apos;Não sei o que se passa411&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (412, &apos;Não sei o que se passa412&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (413, &apos;Não sei o que se passa413&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (414, &apos;Não sei o que se passa414&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (415, &apos;Não sei o que se passa415&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (416, &apos;Não sei o que se passa416&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (417, &apos;Não sei o que se passa417&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (418, &apos;Não sei o que se passa418&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (419, &apos;Não sei o que se passa419&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (420, &apos;Não sei o que se passa420&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (421, &apos;Não sei o que se passa421&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (422, &apos;Não sei o que se passa422&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (423, &apos;Não sei o que se passa423&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (424, &apos;Não sei o que se passa424&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (425, &apos;Não sei o que se passa425&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (426, &apos;Não sei o que se passa426&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (427, &apos;Não sei o que se passa427&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (428, &apos;Não sei o que se passa428&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (429, &apos;Não sei o que se passa429&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (430, &apos;Não sei o que se passa430&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (431, &apos;Não sei o que se passa431&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (432, &apos;Não sei o que se passa432&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (433, &apos;Não sei o que se passa433&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (434, &apos;Não sei o que se passa434&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (435, &apos;Não sei o que se passa435&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (436, &apos;Não sei o que se passa436&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (437, &apos;Não sei o que se passa437&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (438, &apos;Não sei o que se passa438&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (439, &apos;Não sei o que se passa439&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (440, &apos;Não sei o que se passa440&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (441, &apos;Não sei o que se passa441&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (442, &apos;Não sei o que se passa442&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (443, &apos;Não sei o que se passa443&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (444, &apos;Não sei o que se passa444&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (445, &apos;Não sei o que se passa445&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (446, &apos;Não sei o que se passa446&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (447, &apos;Não sei o que se passa447&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (448, &apos;Não sei o que se passa448&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (449, &apos;Não sei o que se passa449&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (450, &apos;Não sei o que se passa450&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (451, &apos;Não sei o que se passa451&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (452, &apos;Não sei o que se passa452&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (453, &apos;Não sei o que se passa453&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (454, &apos;Não sei o que se passa454&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (455, &apos;Não sei o que se passa455&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (456, &apos;Não sei o que se passa456&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (457, &apos;Não sei o que se passa457&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (458, &apos;Não sei o que se passa458&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (459, &apos;Não sei o que se passa459&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (460, &apos;Não sei o que se passa460&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (461, &apos;Não sei o que se passa461&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (462, &apos;Não sei o que se passa462&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (463, &apos;Não sei o que se passa463&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (464, &apos;Não sei o que se passa464&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (465, &apos;Não sei o que se passa465&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (466, &apos;Não sei o que se passa466&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (467, &apos;Não sei o que se passa467&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (468, &apos;Não sei o que se passa468&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (469, &apos;Não sei o que se passa469&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (470, &apos;Não sei o que se passa470&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (471, &apos;Não sei o que se passa471&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (472, &apos;Não sei o que se passa472&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (473, &apos;Não sei o que se passa473&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (474, &apos;Não sei o que se passa474&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (475, &apos;Não sei o que se passa475&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (476, &apos;Não sei o que se passa476&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (477, &apos;Não sei o que se passa477&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (478, &apos;Não sei o que se passa478&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (479, &apos;Não sei o que se passa479&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (480, &apos;Não sei o que se passa480&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (481, &apos;Não sei o que se passa481&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (482, &apos;Não sei o que se passa482&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (483, &apos;Não sei o que se passa483&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (484, &apos;Não sei o que se passa484&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (485, &apos;Não sei o que se passa485&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (486, &apos;Não sei o que se passa486&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (487, &apos;Não sei o que se passa487&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (488, &apos;Não sei o que se passa488&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (489, &apos;Não sei o que se passa489&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (490, &apos;Não sei o que se passa490&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (491, &apos;Não sei o que se passa491&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (492, &apos;Não sei o que se passa492&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (493, &apos;Não sei o que se passa493&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (494, &apos;Não sei o que se passa494&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (495, &apos;Não sei o que se passa495&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (496, &apos;Não sei o que se passa496&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (497, &apos;Não sei o que se passa497&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (498, &apos;Não sei o que se passa498&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (499, &apos;Não sei o que se passa499&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (500, &apos;Não sei o que se passa500&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (501, &apos;Não sei o que se passa501&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (502, &apos;Não sei o que se passa502&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (503, &apos;Não sei o que se passa503&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (504, &apos;Não sei o que se passa504&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (505, &apos;Não sei o que se passa505&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (506, &apos;Não sei o que se passa506&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (507, &apos;Não sei o que se passa507&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (508, &apos;Não sei o que se passa508&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (509, &apos;Não sei o que se passa509&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (510, &apos;Não sei o que se passa510&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (511, &apos;Não sei o que se passa511&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (512, &apos;Não sei o que se passa512&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (513, &apos;Não sei o que se passa513&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (514, &apos;Não sei o que se passa514&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (515, &apos;Não sei o que se passa515&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (516, &apos;Não sei o que se passa516&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (517, &apos;Não sei o que se passa517&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (518, &apos;Não sei o que se passa518&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (519, &apos;Não sei o que se passa519&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (520, &apos;Não sei o que se passa520&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (521, &apos;Não sei o que se passa521&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (522, &apos;Não sei o que se passa522&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (523, &apos;Não sei o que se passa523&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (524, &apos;Não sei o que se passa524&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (525, &apos;Não sei o que se passa525&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (526, &apos;Não sei o que se passa526&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (527, &apos;Não sei o que se passa527&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (528, &apos;Não sei o que se passa528&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (529, &apos;Não sei o que se passa529&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (530, &apos;Não sei o que se passa530&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (531, &apos;Não sei o que se passa531&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (532, &apos;Não sei o que se passa532&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (533, &apos;Não sei o que se passa533&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (534, &apos;Não sei o que se passa534&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (535, &apos;Não sei o que se passa535&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (536, &apos;Não sei o que se passa536&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (537, &apos;Não sei o que se passa537&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (538, &apos;Não sei o que se passa538&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (539, &apos;Não sei o que se passa539&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (540, &apos;Não sei o que se passa540&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (541, &apos;Não sei o que se passa541&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (542, &apos;Não sei o que se passa542&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (543, &apos;Não sei o que se passa543&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (544, &apos;Não sei o que se passa544&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (545, &apos;Não sei o que se passa545&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (546, &apos;Não sei o que se passa546&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (547, &apos;Não sei o que se passa547&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (548, &apos;Não sei o que se passa548&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (549, &apos;Não sei o que se passa549&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (550, &apos;Não sei o que se passa550&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (551, &apos;Não sei o que se passa551&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (552, &apos;Não sei o que se passa552&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (553, &apos;Não sei o que se passa553&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (554, &apos;Não sei o que se passa554&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (555, &apos;Não sei o que se passa555&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (556, &apos;Não sei o que se passa556&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (557, &apos;Não sei o que se passa557&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (558, &apos;Não sei o que se passa558&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (559, &apos;Não sei o que se passa559&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (560, &apos;Não sei o que se passa560&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (561, &apos;Não sei o que se passa561&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (562, &apos;Não sei o que se passa562&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (563, &apos;Não sei o que se passa563&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (564, &apos;Não sei o que se passa564&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (565, &apos;Não sei o que se passa565&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (566, &apos;Não sei o que se passa566&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (567, &apos;Não sei o que se passa567&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (568, &apos;Não sei o que se passa568&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (569, &apos;Não sei o que se passa569&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (570, &apos;Não sei o que se passa570&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (571, &apos;Não sei o que se passa571&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (572, &apos;Não sei o que se passa572&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (573, &apos;Não sei o que se passa573&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (574, &apos;Não sei o que se passa574&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (575, &apos;Não sei o que se passa575&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (576, &apos;Não sei o que se passa576&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (577, &apos;Não sei o que se passa577&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (578, &apos;Não sei o que se passa578&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (579, &apos;Não sei o que se passa579&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (580, &apos;Não sei o que se passa580&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (581, &apos;Não sei o que se passa581&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (582, &apos;Não sei o que se passa582&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (583, &apos;Não sei o que se passa583&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (584, &apos;Não sei o que se passa584&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (585, &apos;Não sei o que se passa585&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (586, &apos;Não sei o que se passa586&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (587, &apos;Não sei o que se passa587&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (588, &apos;Não sei o que se passa588&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (589, &apos;Não sei o que se passa589&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (590, &apos;Não sei o que se passa590&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (591, &apos;Não sei o que se passa591&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (592, &apos;Não sei o que se passa592&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (593, &apos;Não sei o que se passa593&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (594, &apos;Não sei o que se passa594&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (595, &apos;Não sei o que se passa595&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (596, &apos;Não sei o que se passa596&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (597, &apos;Não sei o que se passa597&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (598, &apos;Não sei o que se passa598&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (599, &apos;Não sei o que se passa599&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (600, &apos;Não sei o que se passa600&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (601, &apos;Não sei o que se passa601&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (602, &apos;Não sei o que se passa602&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (603, &apos;Não sei o que se passa603&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (604, &apos;Não sei o que se passa604&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (605, &apos;Não sei o que se passa605&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (606, &apos;Não sei o que se passa606&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (607, &apos;Não sei o que se passa607&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (608, &apos;Não sei o que se passa608&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (609, &apos;Não sei o que se passa609&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (610, &apos;Não sei o que se passa610&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (611, &apos;Não sei o que se passa611&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (612, &apos;Não sei o que se passa612&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (613, &apos;Não sei o que se passa613&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (614, &apos;Não sei o que se passa614&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (615, &apos;Não sei o que se passa615&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (616, &apos;Não sei o que se passa616&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (617, &apos;Não sei o que se passa617&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (618, &apos;Não sei o que se passa618&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (619, &apos;Não sei o que se passa619&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (620, &apos;Não sei o que se passa620&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (621, &apos;Não sei o que se passa621&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (622, &apos;Não sei o que se passa622&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (623, &apos;Não sei o que se passa623&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (624, &apos;Não sei o que se passa624&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (625, &apos;Não sei o que se passa625&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (626, &apos;Não sei o que se passa626&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (627, &apos;Não sei o que se passa627&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (628, &apos;Não sei o que se passa628&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (629, &apos;Não sei o que se passa629&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (630, &apos;Não sei o que se passa630&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (631, &apos;Não sei o que se passa631&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (632, &apos;Não sei o que se passa632&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (633, &apos;Não sei o que se passa633&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (634, &apos;Não sei o que se passa634&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (635, &apos;Não sei o que se passa635&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (636, &apos;Não sei o que se passa636&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (637, &apos;Não sei o que se passa637&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (638, &apos;Não sei o que se passa638&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (639, &apos;Não sei o que se passa639&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (640, &apos;Não sei o que se passa640&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (641, &apos;Não sei o que se passa641&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (642, &apos;Não sei o que se passa642&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (643, &apos;Não sei o que se passa643&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (644, &apos;Não sei o que se passa644&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (645, &apos;Não sei o que se passa645&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (646, &apos;Não sei o que se passa646&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (647, &apos;Não sei o que se passa647&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (648, &apos;Não sei o que se passa648&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (649, &apos;Não sei o que se passa649&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (650, &apos;Não sei o que se passa650&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (651, &apos;Não sei o que se passa651&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (652, &apos;Não sei o que se passa652&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (653, &apos;Não sei o que se passa653&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (654, &apos;Não sei o que se passa654&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (655, &apos;Não sei o que se passa655&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (656, &apos;Não sei o que se passa656&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (657, &apos;Não sei o que se passa657&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (658, &apos;Não sei o que se passa658&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (659, &apos;Não sei o que se passa659&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (660, &apos;Não sei o que se passa660&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (661, &apos;Não sei o que se passa661&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (662, &apos;Não sei o que se passa662&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (663, &apos;Não sei o que se passa663&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (664, &apos;Não sei o que se passa664&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (665, &apos;Não sei o que se passa665&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (666, &apos;Não sei o que se passa666&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (667, &apos;Não sei o que se passa667&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (668, &apos;Não sei o que se passa668&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (669, &apos;Não sei o que se passa669&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (670, &apos;Não sei o que se passa670&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (671, &apos;Não sei o que se passa671&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (672, &apos;Não sei o que se passa672&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (673, &apos;Não sei o que se passa673&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (674, &apos;Não sei o que se passa674&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (675, &apos;Não sei o que se passa675&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (676, &apos;Não sei o que se passa676&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (677, &apos;Não sei o que se passa677&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (678, &apos;Não sei o que se passa678&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (679, &apos;Não sei o que se passa679&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (680, &apos;Não sei o que se passa680&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (681, &apos;Não sei o que se passa681&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (682, &apos;Não sei o que se passa682&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (683, &apos;Não sei o que se passa683&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (684, &apos;Não sei o que se passa684&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (685, &apos;Não sei o que se passa685&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (686, &apos;Não sei o que se passa686&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (687, &apos;Não sei o que se passa687&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (688, &apos;Não sei o que se passa688&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (689, &apos;Não sei o que se passa689&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (690, &apos;Não sei o que se passa690&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (691, &apos;Não sei o que se passa691&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (692, &apos;Não sei o que se passa692&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (693, &apos;Não sei o que se passa693&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (694, &apos;Não sei o que se passa694&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (695, &apos;Não sei o que se passa695&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (696, &apos;Não sei o que se passa696&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (697, &apos;Não sei o que se passa697&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (698, &apos;Não sei o que se passa698&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (699, &apos;Não sei o que se passa699&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (700, &apos;Não sei o que se passa700&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (701, &apos;Não sei o que se passa701&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (702, &apos;Não sei o que se passa702&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (703, &apos;Não sei o que se passa703&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (704, &apos;Não sei o que se passa704&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (705, &apos;Não sei o que se passa705&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (706, &apos;Não sei o que se passa706&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (707, &apos;Não sei o que se passa707&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (708, &apos;Não sei o que se passa708&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (709, &apos;Não sei o que se passa709&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (710, &apos;Não sei o que se passa710&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (711, &apos;Não sei o que se passa711&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (712, &apos;Não sei o que se passa712&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (713, &apos;Não sei o que se passa713&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (714, &apos;Não sei o que se passa714&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (715, &apos;Não sei o que se passa715&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (716, &apos;Não sei o que se passa716&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (717, &apos;Não sei o que se passa717&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (718, &apos;Não sei o que se passa718&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (719, &apos;Não sei o que se passa719&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (720, &apos;Não sei o que se passa720&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (721, &apos;Não sei o que se passa721&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (722, &apos;Não sei o que se passa722&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (723, &apos;Não sei o que se passa723&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (724, &apos;Não sei o que se passa724&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (725, &apos;Não sei o que se passa725&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (726, &apos;Não sei o que se passa726&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (727, &apos;Não sei o que se passa727&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (728, &apos;Não sei o que se passa728&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (729, &apos;Não sei o que se passa729&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (730, &apos;Não sei o que se passa730&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (731, &apos;Não sei o que se passa731&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (732, &apos;Não sei o que se passa732&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (733, &apos;Não sei o que se passa733&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (734, &apos;Não sei o que se passa734&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (735, &apos;Não sei o que se passa735&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (736, &apos;Não sei o que se passa736&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (737, &apos;Não sei o que se passa737&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (738, &apos;Não sei o que se passa738&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (739, &apos;Não sei o que se passa739&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (740, &apos;Não sei o que se passa740&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (741, &apos;Não sei o que se passa741&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (742, &apos;Não sei o que se passa742&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (743, &apos;Não sei o que se passa743&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (744, &apos;Não sei o que se passa744&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (745, &apos;Não sei o que se passa745&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (746, &apos;Não sei o que se passa746&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (747, &apos;Não sei o que se passa747&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (748, &apos;Não sei o que se passa748&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (749, &apos;Não sei o que se passa749&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (750, &apos;Não sei o que se passa750&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (751, &apos;Não sei o que se passa751&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (752, &apos;Não sei o que se passa752&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (753, &apos;Não sei o que se passa753&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (754, &apos;Não sei o que se passa754&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (755, &apos;Não sei o que se passa755&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (756, &apos;Não sei o que se passa756&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (757, &apos;Não sei o que se passa757&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (758, &apos;Não sei o que se passa758&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (759, &apos;Não sei o que se passa759&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (760, &apos;Não sei o que se passa760&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (761, &apos;Não sei o que se passa761&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (762, &apos;Não sei o que se passa762&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (763, &apos;Não sei o que se passa763&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (764, &apos;Não sei o que se passa764&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (765, &apos;Não sei o que se passa765&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (766, &apos;Não sei o que se passa766&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (767, &apos;Não sei o que se passa767&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (768, &apos;Não sei o que se passa768&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (769, &apos;Não sei o que se passa769&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (770, &apos;Não sei o que se passa770&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (771, &apos;Não sei o que se passa771&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (772, &apos;Não sei o que se passa772&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (773, &apos;Não sei o que se passa773&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (774, &apos;Não sei o que se passa774&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (775, &apos;Não sei o que se passa775&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (776, &apos;Não sei o que se passa776&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (777, &apos;Não sei o que se passa777&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (778, &apos;Não sei o que se passa778&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (779, &apos;Não sei o que se passa779&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (780, &apos;Não sei o que se passa780&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (781, &apos;Não sei o que se passa781&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (782, &apos;Não sei o que se passa782&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (783, &apos;Não sei o que se passa783&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (784, &apos;Não sei o que se passa784&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (785, &apos;Não sei o que se passa785&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (786, &apos;Não sei o que se passa786&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (787, &apos;Não sei o que se passa787&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (788, &apos;Não sei o que se passa788&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (789, &apos;Não sei o que se passa789&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (790, &apos;Não sei o que se passa790&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (791, &apos;Não sei o que se passa791&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (792, &apos;Não sei o que se passa792&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (793, &apos;Não sei o que se passa793&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (794, &apos;Não sei o que se passa794&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (795, &apos;Não sei o que se passa795&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (796, &apos;Não sei o que se passa796&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (797, &apos;Não sei o que se passa797&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (798, &apos;Não sei o que se passa798&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (799, &apos;Não sei o que se passa799&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (800, &apos;Não sei o que se passa800&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (801, &apos;Não sei o que se passa801&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (802, &apos;Não sei o que se passa802&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (803, &apos;Não sei o que se passa803&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (804, &apos;Não sei o que se passa804&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (805, &apos;Não sei o que se passa805&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (806, &apos;Não sei o que se passa806&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (807, &apos;Não sei o que se passa807&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (808, &apos;Não sei o que se passa808&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (809, &apos;Não sei o que se passa809&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (810, &apos;Não sei o que se passa810&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (811, &apos;Não sei o que se passa811&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (812, &apos;Não sei o que se passa812&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (813, &apos;Não sei o que se passa813&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (814, &apos;Não sei o que se passa814&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (815, &apos;Não sei o que se passa815&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (816, &apos;Não sei o que se passa816&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (817, &apos;Não sei o que se passa817&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (818, &apos;Não sei o que se passa818&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (819, &apos;Não sei o que se passa819&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (820, &apos;Não sei o que se passa820&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (821, &apos;Não sei o que se passa821&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (822, &apos;Não sei o que se passa822&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (823, &apos;Não sei o que se passa823&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (824, &apos;Não sei o que se passa824&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (825, &apos;Não sei o que se passa825&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (826, &apos;Não sei o que se passa826&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (827, &apos;Não sei o que se passa827&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (828, &apos;Não sei o que se passa828&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (829, &apos;Não sei o que se passa829&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (830, &apos;Não sei o que se passa830&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (831, &apos;Não sei o que se passa831&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (832, &apos;Não sei o que se passa832&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (833, &apos;Não sei o que se passa833&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (834, &apos;Não sei o que se passa834&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (835, &apos;Não sei o que se passa835&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (836, &apos;Não sei o que se passa836&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (837, &apos;Não sei o que se passa837&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (838, &apos;Não sei o que se passa838&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (839, &apos;Não sei o que se passa839&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (840, &apos;Não sei o que se passa840&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (841, &apos;Não sei o que se passa841&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (842, &apos;Não sei o que se passa842&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (843, &apos;Não sei o que se passa843&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (844, &apos;Não sei o que se passa844&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (845, &apos;Não sei o que se passa845&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (846, &apos;Não sei o que se passa846&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (847, &apos;Não sei o que se passa847&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (848, &apos;Não sei o que se passa848&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (849, &apos;Não sei o que se passa849&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (850, &apos;Não sei o que se passa850&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (851, &apos;Não sei o que se passa851&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (852, &apos;Não sei o que se passa852&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (853, &apos;Não sei o que se passa853&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (854, &apos;Não sei o que se passa854&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (855, &apos;Não sei o que se passa855&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (856, &apos;Não sei o que se passa856&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (857, &apos;Não sei o que se passa857&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (858, &apos;Não sei o que se passa858&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (859, &apos;Não sei o que se passa859&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (860, &apos;Não sei o que se passa860&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (861, &apos;Não sei o que se passa861&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (862, &apos;Não sei o que se passa862&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (863, &apos;Não sei o que se passa863&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (864, &apos;Não sei o que se passa864&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (865, &apos;Não sei o que se passa865&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (866, &apos;Não sei o que se passa866&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (867, &apos;Não sei o que se passa867&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (868, &apos;Não sei o que se passa868&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (869, &apos;Não sei o que se passa869&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (870, &apos;Não sei o que se passa870&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (871, &apos;Não sei o que se passa871&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (872, &apos;Não sei o que se passa872&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (873, &apos;Não sei o que se passa873&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (874, &apos;Não sei o que se passa874&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (875, &apos;Não sei o que se passa875&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (876, &apos;Não sei o que se passa876&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (877, &apos;Não sei o que se passa877&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (878, &apos;Não sei o que se passa878&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (879, &apos;Não sei o que se passa879&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (880, &apos;Não sei o que se passa880&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (881, &apos;Não sei o que se passa881&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (882, &apos;Não sei o que se passa882&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (883, &apos;Não sei o que se passa883&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (884, &apos;Não sei o que se passa884&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (885, &apos;Não sei o que se passa885&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (886, &apos;Não sei o que se passa886&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (887, &apos;Não sei o que se passa887&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (888, &apos;Não sei o que se passa888&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (889, &apos;Não sei o que se passa889&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (890, &apos;Não sei o que se passa890&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (891, &apos;Não sei o que se passa891&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (892, &apos;Não sei o que se passa892&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (893, &apos;Não sei o que se passa893&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (894, &apos;Não sei o que se passa894&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (895, &apos;Não sei o que se passa895&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (896, &apos;Não sei o que se passa896&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (897, &apos;Não sei o que se passa897&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (898, &apos;Não sei o que se passa898&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (899, &apos;Não sei o que se passa899&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (900, &apos;Não sei o que se passa900&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (901, &apos;Não sei o que se passa901&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (902, &apos;Não sei o que se passa902&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (903, &apos;Não sei o que se passa903&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (904, &apos;Não sei o que se passa904&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (905, &apos;Não sei o que se passa905&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (906, &apos;Não sei o que se passa906&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (907, &apos;Não sei o que se passa907&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (908, &apos;Não sei o que se passa908&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (909, &apos;Não sei o que se passa909&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (910, &apos;Não sei o que se passa910&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (911, &apos;Não sei o que se passa911&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (912, &apos;Não sei o que se passa912&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (913, &apos;Não sei o que se passa913&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (914, &apos;Não sei o que se passa914&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (915, &apos;Não sei o que se passa915&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (916, &apos;Não sei o que se passa916&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (917, &apos;Não sei o que se passa917&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (918, &apos;Não sei o que se passa918&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (919, &apos;Não sei o que se passa919&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (920, &apos;Não sei o que se passa920&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (921, &apos;Não sei o que se passa921&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (922, &apos;Não sei o que se passa922&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (923, &apos;Não sei o que se passa923&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (924, &apos;Não sei o que se passa924&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (925, &apos;Não sei o que se passa925&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (926, &apos;Não sei o que se passa926&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (927, &apos;Não sei o que se passa927&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (928, &apos;Não sei o que se passa928&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (929, &apos;Não sei o que se passa929&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (930, &apos;Não sei o que se passa930&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (931, &apos;Não sei o que se passa931&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (932, &apos;Não sei o que se passa932&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (933, &apos;Não sei o que se passa933&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (934, &apos;Não sei o que se passa934&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (935, &apos;Não sei o que se passa935&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (936, &apos;Não sei o que se passa936&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (937, &apos;Não sei o que se passa937&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (938, &apos;Não sei o que se passa938&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (939, &apos;Não sei o que se passa939&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (940, &apos;Não sei o que se passa940&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (941, &apos;Não sei o que se passa941&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (942, &apos;Não sei o que se passa942&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (943, &apos;Não sei o que se passa943&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (944, &apos;Não sei o que se passa944&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (945, &apos;Não sei o que se passa945&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (946, &apos;Não sei o que se passa946&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (947, &apos;Não sei o que se passa947&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (948, &apos;Não sei o que se passa948&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (949, &apos;Não sei o que se passa949&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (950, &apos;Não sei o que se passa950&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (951, &apos;Não sei o que se passa951&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (952, &apos;Não sei o que se passa952&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (953, &apos;Não sei o que se passa953&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (954, &apos;Não sei o que se passa954&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (955, &apos;Não sei o que se passa955&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (956, &apos;Não sei o que se passa956&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (957, &apos;Não sei o que se passa957&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (958, &apos;Não sei o que se passa958&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (959, &apos;Não sei o que se passa959&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (960, &apos;Não sei o que se passa960&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (961, &apos;Não sei o que se passa961&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (962, &apos;Não sei o que se passa962&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (963, &apos;Não sei o que se passa963&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (964, &apos;Não sei o que se passa964&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (965, &apos;Não sei o que se passa965&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (966, &apos;Não sei o que se passa966&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (967, &apos;Não sei o que se passa967&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (968, &apos;Não sei o que se passa968&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (969, &apos;Não sei o que se passa969&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (970, &apos;Não sei o que se passa970&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (971, &apos;Não sei o que se passa971&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (972, &apos;Não sei o que se passa972&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (973, &apos;Não sei o que se passa973&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (974, &apos;Não sei o que se passa974&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (975, &apos;Não sei o que se passa975&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (976, &apos;Não sei o que se passa976&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (977, &apos;Não sei o que se passa977&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (978, &apos;Não sei o que se passa978&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (979, &apos;Não sei o que se passa979&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (980, &apos;Não sei o que se passa980&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (981, &apos;Não sei o que se passa981&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (982, &apos;Não sei o que se passa982&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (983, &apos;Não sei o que se passa983&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (984, &apos;Não sei o que se passa984&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (985, &apos;Não sei o que se passa985&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (986, &apos;Não sei o que se passa986&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (987, &apos;Não sei o que se passa987&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (988, &apos;Não sei o que se passa988&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (989, &apos;Não sei o que se passa989&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (990, &apos;Não sei o que se passa990&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (991, &apos;Não sei o que se passa991&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (992, &apos;Não sei o que se passa992&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (993, &apos;Não sei o que se passa993&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (994, &apos;Não sei o que se passa994&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (995, &apos;Não sei o que se passa995&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (996, &apos;Não sei o que se passa996&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (997, &apos;Não sei o que se passa997&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (998, &apos;Não sei o que se passa998&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (999, &apos;Não sei o que se passa999&apos;,&apos;ola&apos;, 1339, 676);
+INSERT INTO clarification_requests VALUES (1000, &apos;Não sei o que se passa1000&apos;,&apos;ola&apos;, 1339, 676);</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+        </JDBCSampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="100 Users Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Login as Demo Teacher" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${server}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/auth/demo/teacher</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">token</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.token</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Authenticated Requests" enabled="true"/>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${token}</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/json</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">10</stringProp>
+          </LoopController>
+          <hashTree>
+            <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Data to create clarification" enabled="true">
+              <stringProp name="delimiter">,</stringProp>
+              <stringProp name="fileEncoding"></stringProp>
+              <stringProp name="filename">ClarificationsData.csv</stringProp>
+              <boolProp name="ignoreFirstLine">false</boolProp>
+              <boolProp name="quotedData">false</boolProp>
+              <boolProp name="recycle">true</boolProp>
+              <stringProp name="shareMode">shareMode.all</stringProp>
+              <boolProp name="stopThread">false</boolProp>
+              <stringProp name="variableNames">text,username</stringProp>
+            </CSVDataSet>
+            <hashTree/>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request to create clarification" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+	&quot;text&quot;: &quot;${text}&quot;,&#xd;
+	&quot;username&quot;: &quot;${username}&quot;&#xd;
+}&#xd;
+</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain">${server}</stringProp>
+              <stringProp name="HTTPSampler.port">${port}</stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/clarificationRequests/${clarificationRequestId}/clarifications</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
+                <stringProp name="CounterConfig.start">1</stringProp>
+                <stringProp name="CounterConfig.end">1000</stringProp>
+                <stringProp name="CounterConfig.incr">1</stringProp>
+                <stringProp name="CounterConfig.name">clarificationRequestId</stringProp>
+                <stringProp name="CounterConfig.format">000</stringProp>
+                <boolProp name="CounterConfig.per_user">false</boolProp>
+              </CounterConfig>
+              <hashTree/>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="tearDown Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </PostThreadGroup>
+      <hashTree>
+        <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="JDBC Connection Configuration" enabled="true">
+          <stringProp name="dataSource">sampleReq</stringProp>
+          <stringProp name="poolMax">0</stringProp>
+          <stringProp name="timeout">10000</stringProp>
+          <stringProp name="trimInterval">60000</stringProp>
+          <boolProp name="autocommit">true</boolProp>
+          <stringProp name="transactionIsolation">DEFAULT</stringProp>
+          <boolProp name="preinit">false</boolProp>
+          <stringProp name="initQuery"></stringProp>
+          <boolProp name="keepAlive">true</boolProp>
+          <stringProp name="connectionAge">5000</stringProp>
+          <stringProp name="checkQuery"></stringProp>
+          <stringProp name="dbUrl">jdbc:postgresql://localhost:5432/tutordb?autoReconnect=true</stringProp>
+          <stringProp name="driver">org.postgresql.Driver</stringProp>
+          <stringProp name="username">filipe</stringProp>
+          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
+          <stringProp name="connectionProperties"></stringProp>
+        </JDBCDataSource>
+        <hashTree/>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
+          <stringProp name="dataSource">sampleReq</stringProp>
+          <stringProp name="queryType">Callable Statement</stringProp>
+          <stringProp name="query">DELETE FROM users_clarifications WHERE user_id = 677;
+DELETE FROM clarifications WHERE text LIKE &apos;Passa-se isto%&apos;;
+DELETE FROM clarification_requests WHERE text LIKE &apos;Não sei o que se passa%&apos;;</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+        </JDBCSampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

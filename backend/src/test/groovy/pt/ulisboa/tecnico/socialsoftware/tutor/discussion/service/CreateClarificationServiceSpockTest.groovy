@@ -15,6 +15,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionRepository
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
@@ -37,7 +38,7 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 @DataJpaTest
-class createClarificationServiceSpockTest extends Specification {
+class CreateClarificationServiceSpockTest extends Specification {
     static final String COURSE_NAME_1 = "Software Architecture"
     static final String ACRONYM_1 = "AS1"
     static final String COURSE_NAME_2 = "CourseTwo"
@@ -72,6 +73,9 @@ class createClarificationServiceSpockTest extends Specification {
 
     @Autowired
     DiscussionRepository discussionRepository
+
+    @Autowired
+    ClarificationRequestRepository clarificationRequestRepository
 
     @Autowired
     CourseRepository courseRepository
@@ -130,7 +134,6 @@ class createClarificationServiceSpockTest extends Specification {
 
 
         clarificationDto = new ClarificationDto()
-        clarificationDto.setKey(discussionService.getMaxClarificationKey()+1)
 
         def quiz = new Quiz()
         quiz.setKey(1)
@@ -159,23 +162,22 @@ class createClarificationServiceSpockTest extends Specification {
         quizAnswerRepository.save(quizAnswer)
 
         request = new ClarificationRequest()
-        request.setKey(1)
         request.setQuestion(question)
         request.setStudent(user)
-        discussionRepository.save(request)
+        clarificationRequestRepository.save(request)
     }
 
     def "create Clarification" (){
         given:"A clarificationRequest"
         clarificationDto.setText(CLARIFICATION_TEXT)
+        clarificationDto.setUsername(teacher1.getUsername())
 
         when:
-        discussionService.createClarification(teacher1.getId(), request.getId(), clarificationDto)
+        discussionService.createClarification(request.getId(), clarificationDto)
 
         then:"the values of the clarification are correct"
         def result = discussionRepository.findAll().get(0)
         result.getId() != null
-        result.getKey() != null
         result.getText() == CLARIFICATION_TEXT
         result.getTeacher() == teacher1
         result.getClarificationRequest() == request
@@ -192,9 +194,10 @@ class createClarificationServiceSpockTest extends Specification {
     def "the request does not exist" (){
         given:"createClarification a clarification"
         clarificationDto.setText(CLARIFICATION_TEXT)
+        clarificationDto.setUsername(teacher1.getUsername())
 
         when:
-        discussionService.createClarification(teacher1.getId(), -1, clarificationDto)
+        discussionService.createClarification(-1, clarificationDto)
 
         then: "check for exceptions"
         def exception = thrown(TutorException)
@@ -210,9 +213,10 @@ class createClarificationServiceSpockTest extends Specification {
     def "the teacher does not exist" (){
         given:"createClarification a clarification"
         clarificationDto.setText(CLARIFICATION_TEXT)
+        clarificationDto.setUsername("Eu não existo")
 
         when:
-        discussionService.createClarification(-1, request.getId(), clarificationDto)
+        discussionService.createClarification(request.getId(), clarificationDto)
 
         then:
         def exception = thrown(TutorException)
@@ -233,9 +237,10 @@ class createClarificationServiceSpockTest extends Specification {
         teacher2.setCourseExecutions(courses)
         userRepository.save(teacher2)
         clarificationDto.setText(CLARIFICATION_TEXT)
+        clarificationDto.setUsername(teacher2.getUsername())
 
         when:
-        discussionService.createClarification(teacher2.getId(), request.getId(), clarificationDto)
+        discussionService.createClarification(request.getId(), clarificationDto)
 
         then:
         def exception = thrown(TutorException)
@@ -255,9 +260,10 @@ class createClarificationServiceSpockTest extends Specification {
     def "invalid argument: text=#text" (){
         given: "a clarification dto"
         clarificationDto.setText(text)
+        clarificationDto.setUsername(teacher1.getUsername())
 
         when:
-        discussionService.createClarification(teacher1.getId(), request.getId(), clarificationDto)
+        discussionService.createClarification(request.getId(), clarificationDto)
 
         then: "check for exceptions"
         def error = thrown(TutorException)

@@ -121,7 +121,7 @@ class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification 
         questionEvaluationDto = new QuestionEvaluationDto()
 
         when: "a question evaluation is created"
-        1.upto(10000, {
+        1.upto(/*10000*/1, {
             questionEvaluationDto.setJustification(JUSTIFICATION + it);
             questionEvaluationDto.setApproved(it % 3 == 0);
             studentQuestionService.createQuestionEvaluation(

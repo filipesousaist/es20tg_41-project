@@ -82,7 +82,7 @@ class GetStudentQuestionsServiceSpockPerformanceTest extends Specification {
         })
 
         when:
-        1.upto(10000, {studentQuestionService.getStudentQuestions(userID)})
+        1.upto(/*10000*/1, {studentQuestionService.getStudentQuestions(userID)})
 
         then:
         true
