@@ -60,18 +60,22 @@
           <stringProp name="checkQuery"></stringProp>
           <stringProp name="dbUrl">jdbc:postgresql://localhost:5432/tutordb?autoReconnect=true</stringProp>
           <stringProp name="driver">org.postgresql.Driver</stringProp>
-          <stringProp name="username">pedro</stringProp>
-          <stringProp name="password">123456</stringProp>
+          <stringProp name="username">filipe</stringProp>
+          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
           <stringProp name="connectionProperties"></stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq_1</stringProp>
           <stringProp name="queryType">Callable Statement</stringProp>
-          <stringProp name="query">INSERT INTO users(username, name, role) VALUES (&apos;Demo-Student1&apos;, &apos;Demo-Student1&apos;, &apos;STUDENT&apos;);
+          <stringProp name="query">/*INSERT INTO users(username, name, role) VALUES (&apos;Demo-Student1&apos;, &apos;Demo-Student1&apos;, &apos;STUDENT&apos;);
 INSERT INTO quiz_answers (completed, user_id, quiz_id, used_in_statistics) VALUES (true, (select max(id) from users), 5370, true);
 INSERT INTO question_answers (quiz_answer_id, quiz_question_id) VALUES ((select max(id) from quiz_answers), 40900);
-</stringProp>
+INSERT INTO quiz_questions(sequence, question_id, quiz_id) VALUES (5, 1984, 5370);*/
+
+INSERT INTO quiz_answers (completed, user_id, quiz_id, used_in_statistics) VALUES (true, 576, 5370, true);
+INSERT INTO quiz_questions(sequence, question_id, quiz_id) VALUES (5, 1984, 5370);
+INSERT INTO question_answers (quiz_answer_id, quiz_question_id) VALUES ((select max(id) from quiz_answers), (select max(id) from quiz_answers));</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="variableNames"></stringProp>
@@ -333,13 +337,13 @@ INSERT INTO question_answers (quiz_answer_id, quiz_question_id) VALUES ((select 
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">123456</stringProp>
+          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">pedro</stringProp>
+          <stringProp name="username">filipe</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
