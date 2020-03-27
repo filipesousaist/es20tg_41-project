@@ -118,6 +118,8 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent("")
         questionDto.setStatus(Question.Status.AVAILABLE.name())
+        def time = LocalDateTime.now().format(Course.formatter)
+        questionDto.setCreationDate(time)
         and: 'a optionId'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)
