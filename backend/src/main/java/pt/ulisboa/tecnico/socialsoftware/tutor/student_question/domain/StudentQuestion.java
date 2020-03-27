@@ -1,9 +1,9 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain;
+package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuestionDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
@@ -13,6 +13,7 @@ import java.util.Set;
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
 @Entity
+@Table(name = "student_questions")
 public class StudentQuestion {
 
     @Id
@@ -24,6 +25,7 @@ public class StudentQuestion {
     private User user;
 
     @OneToOne
+    @JoinColumn(name = "question_id")
     private Question question;
 
     @OneToMany
