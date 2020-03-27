@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.service
+package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -13,9 +13,9 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.StudentQuestionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.StudentQuestionDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.repository.StudentQuestionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.StudentQuestionService
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.StudentQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
@@ -34,7 +34,7 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
     public static final String OPTION_CONTENT = "optionId content"
 
     @Autowired
-    StudentQuestionRepository StudentQuestionRepository
+    StudentQuestionRepository studentQuestionRepository
 
     @Autowired
     StudentQuestionService studentQuestionService
@@ -48,11 +48,9 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
     @Autowired
     UserRepository userRepository
 
-
     def course
     def courseExecution
     def user
-
 
     def setup(){
         course = new Course(COURSE_NAME, Course.Type.TECNICO)
@@ -75,10 +73,9 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         questionDto.setKey(1)
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
-        questionDto.setStatus(Question.Status.AVAILABLE.name())
-        def time = LocalDateTime.now().format(Course.formatter)
-        questionDto.setCreationDate(time)
-        and: 'a optionId'
+        questionDto.setStatus(Question.Status.PROPOSED.name())
+        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter));
+        and: 'a optionDto'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)
         optionDto.setCorrect(true)
@@ -93,11 +90,11 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         studentQuestionService.createStudentQuestion(course.getId(), userId, studentQuestionDto)
 
         then: "the correct student question is inside the repository"
-        studentQuestionRepository.count() == 1L
-        def result = studentQuestionRepository.findAll().get(0)
+        this.studentQuestionRepository.count() == 1L
+        def result = this.studentQuestionRepository.findAll().get(0)
         result.getId() != null
         result.getQuestion().getKey() == 1
-        result.getQuestion().getStatus() == Question.Status.AVAILABLE
+        result.getQuestion().getStatus() == Question.Status.PROPOSED
         result.getQuestion().getTitle() == QUESTION_TITLE
         result.getQuestion().getContent() == QUESTION_CONTENT
         result.getQuestion().getImage() == null
@@ -118,9 +115,8 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         questionDto.setKey(1)
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent("")
-        questionDto.setStatus(Question.Status.AVAILABLE.name())
-        def time = LocalDateTime.now().format(Course.formatter)
-        questionDto.setCreationDate(time)
+        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter))
+        questionDto.setStatus(Question.Status.PROPOSED.name())
         and: 'a optionId'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)
@@ -138,7 +134,7 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         then:
         TutorException exception = thrown()
         exception.getErrorMessage() == QUESTION_MISSING_DATA
-        studentQuestionRepository.findAll().size() == 0
+        this.studentQuestionRepository.findAll().size() == 0
     }
 
     def "student question is not created when question is null"(){
@@ -153,7 +149,7 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         then:
         TutorException exception = thrown()
         exception.getErrorMessage() == QUESTION_IS_MISSING
-        studentQuestionRepository.findAll().size() == 0
+        this.studentQuestionRepository.findAll().size() == 0
     }
 
     @TestConfiguration

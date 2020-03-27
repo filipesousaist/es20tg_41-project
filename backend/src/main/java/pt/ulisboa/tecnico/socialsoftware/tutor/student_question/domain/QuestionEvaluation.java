@@ -1,8 +1,7 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.domain;
-
+package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentQuestion.dto.QuestionEvaluationDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.QuestionEvaluationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 
@@ -18,6 +17,7 @@ import javax.persistence.Id;
 
 
 @Entity
+@Table(name = "question_evaluations")
 public class QuestionEvaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +41,7 @@ public class QuestionEvaluation {
     }
 
     public QuestionEvaluation(User teacher, StudentQuestion studentQuestion, QuestionEvaluationDto questionEvaluationDto) {
-        String justification = checkAndGetJustification(questionEvaluationDto);
+        String just = checkAndGetJustification(questionEvaluationDto);
 
         checkTeacherInCourse(teacher, studentQuestion);
 
@@ -51,21 +51,21 @@ public class QuestionEvaluation {
         studentQuestion.addQuestionEvaluation(this);
 
         this.approved = questionEvaluationDto.isApproved();
-        this.justification = justification;
+        this.justification = just;
     }
 
     private String checkAndGetJustification(QuestionEvaluationDto questionEvaluationDto) {
-        String justification = questionEvaluationDto.getJustification();
-        if (justification == null || justification.trim().isEmpty()) {
+        String just = questionEvaluationDto.getJustification();
+        if (just == null || just.trim().isEmpty()) {
             throw new TutorException(QUESTION_EVALUATION_MISSING_JUSTIFICATION);
         }
-        return justification;
+        return just;
     }
 
     private void checkTeacherInCourse(User teacher, StudentQuestion studentQuestion) {
         Course questionCourse = studentQuestion.getQuestion().getCourse();
-        if (!teacher.getCourseExecutions().stream()
-                .anyMatch(courseExecution -> courseExecution.getCourse().getId() == questionCourse.getId())) {
+        if (teacher.getCourseExecutions().stream()
+                .noneMatch(courseExecution -> courseExecution.getCourse().getId().equals(questionCourse.getId()))) {
             throw new TutorException(STUDENT_QUESTION_TEACHER_NOT_IN_COURSE);
         }
     }
