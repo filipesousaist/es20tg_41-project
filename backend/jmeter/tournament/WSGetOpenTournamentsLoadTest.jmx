@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.2.1">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Load Test Web Service createTournament" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Load Test Web Service getOpenTournaments" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
@@ -52,7 +52,7 @@
         </collectionProp>
       </Arguments>
       <hashTree/>
-      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="SetUp Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -100,17 +100,17 @@ INSERT INTO course_executions(id, acronym, academic_term, course_id) VALUES (${c
 								(${courseExecutionId}+3, &apos;ACRONYM&apos;, &apos;ACADEMIC_TERM&apos;, ${courseId}+3),
 								(${courseExecutionId}+4, &apos;ACRONYM&apos;, &apos;ACADEMIC_TERM&apos;, ${courseId}+4);
 
-INSERT INTO topics(id, name, course_id) VALUES (${topicId}, &apos;TOPIC_NAME_1&apos;, ${courseId}), 
+INSERT INTO topics(id, name, course_id) VALUES (${topicId}, &apos;TOPIC_NAME_1&apos;, ${courseId}),
 									(${topicId}+1,&apos;TOPIC_NAME_2&apos;, ${courseId}),
-									(${topicId}+2, &apos;TOPIC_NAME_1&apos;, ${courseId}+1), 
+									(${topicId}+2, &apos;TOPIC_NAME_1&apos;, ${courseId}+1),
 									(${topicId}+3,&apos;TOPIC_NAME_2&apos;, ${courseId}+1),
-									(${topicId}+4, &apos;TOPIC_NAME_1&apos;, ${courseId}+2), 
+									(${topicId}+4, &apos;TOPIC_NAME_1&apos;, ${courseId}+2),
 									(${topicId}+5,&apos;TOPIC_NAME_2&apos;, ${courseId}+2),
 									(${topicId}+6,&apos;TOPIC_NAME_1&apos;, ${courseId}+3),
-									(${topicId}+7, &apos;TOPIC_NAME_2&apos;, ${courseId}+3), 
-									(${topicId}+8,&apos;TOPIC_NAME_1&apos;, ${courseId}+4),									
+									(${topicId}+7, &apos;TOPIC_NAME_2&apos;, ${courseId}+3),
+									(${topicId}+8,&apos;TOPIC_NAME_1&apos;, ${courseId}+4),
 									(${topicId}+9, &apos;TOPIC_NAME_2&apos;, ${courseId}+4);
-									
+
 INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId}),
 								(${userId}, ${courseExecutionId}+1),
 								(${userId}, ${courseExecutionId}+2),
@@ -163,7 +163,7 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId}),
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="1 User Thread Group" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Create tournaments" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -220,7 +220,7 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId}),
           <hashTree/>
           <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
             <boolProp name="LoopController.continue_forever">true</boolProp>
-            <stringProp name="LoopController.loops">25</stringProp>
+            <stringProp name="LoopController.loops">50</stringProp>
           </LoopController>
           <hashTree>
             <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Data to create tornament" enabled="true">
@@ -349,13 +349,13 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId}),
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="50 Users Thread Group" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="100 Users Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">50</stringProp>
+        <stringProp name="ThreadGroup.num_threads">100</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -409,46 +409,16 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId}),
             <stringProp name="LoopController.loops">10</stringProp>
           </LoopController>
           <hashTree>
-            <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Data to create tornament" enabled="true">
-              <stringProp name="delimiter">,</stringProp>
-              <stringProp name="fileEncoding"></stringProp>
-              <stringProp name="filename">TournamentData.csv</stringProp>
-              <boolProp name="ignoreFirstLine">false</boolProp>
-              <boolProp name="quotedData">false</boolProp>
-              <boolProp name="recycle">true</boolProp>
-              <stringProp name="shareMode">shareMode.all</stringProp>
-              <boolProp name="stopThread">false</boolProp>
-              <stringProp name="variableNames">courseExId</stringProp>
-            </CSVDataSet>
-            <hashTree/>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request to create tornament" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&#xd;
-	&quot;beginningTime&quot; : &quot;2020-03-26 12:00:00&quot;,&#xd;
-	&quot;endingTime&quot; : &quot;2020-03-26 13:00:00&quot;,&#xd;
-	&quot;numberOfQuestions&quot;: 5,&#xd;
-		&quot;titles&quot;: [&#xd;
-		{&#xd;
-		 &quot;name&quot;: &quot;TOPIC_NAME_1&quot;&#xd;
-		}, {&#xd;
-		 &quot;name&quot;: &quot;TOPIC_NAME_2&quot;&#xd;
-		}&#xd;
-	]&#xd;
-}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request to get open tournaments" enabled="true">
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+                <collectionProp name="Arguments.arguments"/>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${server}</stringProp>
               <stringProp name="HTTPSampler.port">${port}</stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/courseExecution/${__intSum(${courseExecutionId},${courseExId})}/tournament/createTournament</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <stringProp name="HTTPSampler.path">/tournament/getAllOpenTournament</stringProp>
+              <stringProp name="HTTPSampler.method">GET</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>

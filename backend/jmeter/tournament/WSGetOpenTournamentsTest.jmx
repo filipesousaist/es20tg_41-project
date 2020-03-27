@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.2.1">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Load Test Web Service createTournament" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Web Service GetOpenTournaments" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
@@ -29,11 +29,6 @@
             <stringProp name="Argument.value">8080</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="userId" elementType="Argument">
-            <stringProp name="Argument.name">userId</stringProp>
-            <stringProp name="Argument.value">676</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
           <elementProp name="courseId" elementType="Argument">
             <stringProp name="Argument.name">courseId</stringProp>
             <stringProp name="Argument.value">9000</stringProp>
@@ -47,6 +42,16 @@
           <elementProp name="topicId" elementType="Argument">
             <stringProp name="Argument.name">topicId</stringProp>
             <stringProp name="Argument.value">11000</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="userId" elementType="Argument">
+            <stringProp name="Argument.name">userId</stringProp>
+            <stringProp name="Argument.value">676</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="tournamentId" elementType="Argument">
+            <stringProp name="Argument.name">tournamentId</stringProp>
+            <stringProp name="Argument.value">12000</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -88,34 +93,26 @@
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq_1</stringProp>
           <stringProp name="queryType">Callable Statement</stringProp>
-          <stringProp name="query">INSERT INTO courses(id, name, type) VALUES (${courseId},&apos;COURSE_NAME1&apos;, &apos;TECNICO&apos;),
-								(${courseId}+1,&apos;COURSE_NAME2&apos;, &apos;TECNICO&apos;),
-								(${courseId}+2,&apos;COURSE_NAME3&apos;, &apos;TECNICO&apos;),
-								(${courseId}+3,&apos;COURSE_NAME4&apos;, &apos;TECNICO&apos;),
-								(${courseId}+4,&apos;COURSE_NAME5&apos;, &apos;TECNICO&apos;);
+          <stringProp name="query">INSERT INTO courses(id, name, type) VALUES (${courseId},&apos;COURSE_NAME1&apos;, &apos;TECNICO&apos;);
 
-INSERT INTO course_executions(id, acronym, academic_term, course_id) VALUES (${courseExecutionId}, &apos;ACRONYM&apos;, &apos;ACADEMIC_TERM&apos;, ${courseId}),
-								(${courseExecutionId}+1, &apos;ACRONYM&apos;, &apos;ACADEMIC_TERM&apos;, ${courseId}+1),
-								(${courseExecutionId}+2, &apos;ACRONYM&apos;, &apos;ACADEMIC_TERM&apos;, ${courseId}+2),
-								(${courseExecutionId}+3, &apos;ACRONYM&apos;, &apos;ACADEMIC_TERM&apos;, ${courseId}+3),
-								(${courseExecutionId}+4, &apos;ACRONYM&apos;, &apos;ACADEMIC_TERM&apos;, ${courseId}+4);
+INSERT INTO course_executions(id, acronym, academic_term, course_id) VALUES (${courseExecutionId}, &apos;ACRONYM&apos;, &apos;ACADEMIC_TERM&apos;, ${courseId});
 
-INSERT INTO topics(id, name, course_id) VALUES (${topicId}, &apos;TOPIC_NAME_1&apos;, ${courseId}), 
-									(${topicId}+1,&apos;TOPIC_NAME_2&apos;, ${courseId}),
-									(${topicId}+2, &apos;TOPIC_NAME_1&apos;, ${courseId}+1), 
-									(${topicId}+3,&apos;TOPIC_NAME_2&apos;, ${courseId}+1),
-									(${topicId}+4, &apos;TOPIC_NAME_1&apos;, ${courseId}+2), 
-									(${topicId}+5,&apos;TOPIC_NAME_2&apos;, ${courseId}+2),
-									(${topicId}+6,&apos;TOPIC_NAME_1&apos;, ${courseId}+3),
-									(${topicId}+7, &apos;TOPIC_NAME_2&apos;, ${courseId}+3), 
-									(${topicId}+8,&apos;TOPIC_NAME_1&apos;, ${courseId}+4),									
-									(${topicId}+9, &apos;TOPIC_NAME_2&apos;, ${courseId}+4);
+INSERT INTO topics(id, name, course_id) VALUES (${topicId}, &apos;TOPIC_NAME_1&apos;, ${courseId}),
+									(${topicId}+1,&apos;TOPIC_NAME_2&apos;, ${courseId}); 
 									
-INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId}),
-								(${userId}, ${courseExecutionId}+1),
-								(${userId}, ${courseExecutionId}+2),
-								(${userId}, ${courseExecutionId}+3),
-								(${userId}, ${courseExecutionId}+4);</stringProp>
+INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId});
+
+
+INSERT INTO tournaments VALUES (${tournamentId}, &apos;2020-03-26 18:30:00&apos;, &apos;2020-03-26 19:00:00&apos;, False, 4, ${courseExecutionId}, ${userId}),
+						(${tournamentId}+1, &apos;2020-03-26 14:30:00&apos;, &apos;2020-03-26 15:00:00&apos;, True, 6, ${courseExecutionId}, ${userId}),
+						(${tournamentId}+2, &apos;2020-03-26 15:30:00&apos;, &apos;2020-03-26 17:30:00&apos;, False, 7, ${courseExecutionId}, ${userId});
+
+INSERT INTO topics_tournaments VALUES (${topicId}, ${tournamentId}), 
+							(${topicId}+1, ${tournamentId}+1),
+							(${topicId}, ${tournamentId}+2), 
+							(${topicId}+1, ${tournamentId}+2);
+
+INSERT INTO tournaments_students_enrolled VALUES (${tournamentId}+2, ${userId});</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="variableNames"></stringProp>
@@ -163,7 +160,7 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId}),
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="1 User Thread Group" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Users Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -218,245 +215,87 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId}),
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-            <boolProp name="LoopController.continue_forever">true</boolProp>
-            <stringProp name="LoopController.loops">25</stringProp>
-          </LoopController>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request to get open tournaments" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${server}</stringProp>
+            <stringProp name="HTTPSampler.port">${port}</stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/tournament/getAllOpenTournament</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          </HTTPSamplerProxy>
           <hashTree>
-            <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Data to create tornament" enabled="true">
-              <stringProp name="delimiter">,</stringProp>
-              <stringProp name="fileEncoding"></stringProp>
-              <stringProp name="filename">TournamentData.csv</stringProp>
-              <boolProp name="ignoreFirstLine">false</boolProp>
-              <boolProp name="quotedData">false</boolProp>
-              <boolProp name="recycle">true</boolProp>
-              <stringProp name="shareMode">shareMode.all</stringProp>
-              <boolProp name="stopThread">false</boolProp>
-              <stringProp name="variableNames">courseExId</stringProp>
-            </CSVDataSet>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert that it is in the right order" enabled="true">
+              <stringProp name="JSON_PATH">$[1].id</stringProp>
+              <stringProp name="EXPECTED_VALUE">12000</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
             <hashTree/>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request to create tornament" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&#xd;
-	&quot;beginningTime&quot; : &quot;2020-03-26 12:00:00&quot;,&#xd;
-	&quot;endingTime&quot; : &quot;2020-03-26 13:00:00&quot;,&#xd;
-	&quot;numberOfQuestions&quot;: 5,&#xd;
-		&quot;titles&quot;: [&#xd;
-		{&#xd;
-		 &quot;name&quot;: &quot;TOPIC_NAME_1&quot;&#xd;
-		}, {&#xd;
-		 &quot;name&quot;: &quot;TOPIC_NAME_2&quot;&#xd;
-		}&#xd;
-	]&#xd;
-}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain">${server}</stringProp>
-              <stringProp name="HTTPSampler.port">${port}</stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/courseExecution/${__intSum(${courseExecutionId},${courseExId})}/tournament/createTournament</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert Tournament Id" enabled="true">
+              <stringProp name="JSON_PATH">$[0].id</stringProp>
+              <stringProp name="EXPECTED_VALUE">12002</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
             <hashTree/>
-          </hashTree>
-        </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
-          <boolProp name="ResultCollector.error_logging">false</boolProp>
-          <objProp>
-            <name>saveConfig</name>
-            <value class="SampleSaveConfiguration">
-              <time>true</time>
-              <latency>true</latency>
-              <timestamp>true</timestamp>
-              <success>true</success>
-              <label>true</label>
-              <code>true</code>
-              <message>true</message>
-              <threadName>true</threadName>
-              <dataType>true</dataType>
-              <encoding>false</encoding>
-              <assertions>true</assertions>
-              <subresults>true</subresults>
-              <responseData>false</responseData>
-              <samplerData>false</samplerData>
-              <xml>false</xml>
-              <fieldNames>true</fieldNames>
-              <responseHeaders>false</responseHeaders>
-              <requestHeaders>false</requestHeaders>
-              <responseDataOnError>false</responseDataOnError>
-              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-              <assertionsResultsToSave>0</assertionsResultsToSave>
-              <bytes>true</bytes>
-              <sentBytes>true</sentBytes>
-              <url>true</url>
-              <threadCounts>true</threadCounts>
-              <idleTime>true</idleTime>
-              <connectTime>true</connectTime>
-            </value>
-          </objProp>
-          <stringProp name="filename"></stringProp>
-        </ResultCollector>
-        <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
-          <boolProp name="ResultCollector.error_logging">false</boolProp>
-          <objProp>
-            <name>saveConfig</name>
-            <value class="SampleSaveConfiguration">
-              <time>true</time>
-              <latency>true</latency>
-              <timestamp>true</timestamp>
-              <success>true</success>
-              <label>true</label>
-              <code>true</code>
-              <message>true</message>
-              <threadName>true</threadName>
-              <dataType>true</dataType>
-              <encoding>false</encoding>
-              <assertions>true</assertions>
-              <subresults>true</subresults>
-              <responseData>false</responseData>
-              <samplerData>false</samplerData>
-              <xml>false</xml>
-              <fieldNames>true</fieldNames>
-              <responseHeaders>false</responseHeaders>
-              <requestHeaders>false</requestHeaders>
-              <responseDataOnError>false</responseDataOnError>
-              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-              <assertionsResultsToSave>0</assertionsResultsToSave>
-              <bytes>true</bytes>
-              <sentBytes>true</sentBytes>
-              <url>true</url>
-              <threadCounts>true</threadCounts>
-              <idleTime>true</idleTime>
-              <connectTime>true</connectTime>
-            </value>
-          </objProp>
-          <stringProp name="filename"></stringProp>
-        </ResultCollector>
-        <hashTree/>
-      </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="50 Users Thread Group" enabled="true">
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
-        </elementProp>
-        <stringProp name="ThreadGroup.num_threads">50</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <boolProp name="ThreadGroup.scheduler">false</boolProp>
-        <stringProp name="ThreadGroup.duration"></stringProp>
-        <stringProp name="ThreadGroup.delay"></stringProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
-      </ThreadGroup>
-      <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Login as Demo Student" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain">${server}</stringProp>
-          <stringProp name="HTTPSampler.port">${port}</stringProp>
-          <stringProp name="HTTPSampler.protocol"></stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/auth/demo/student</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">token</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">$.token</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
-          </JSONPostProcessor>
-          <hashTree/>
-        </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Authenticated Requests" enabled="true"/>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">${token}</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-            <boolProp name="LoopController.continue_forever">true</boolProp>
-            <stringProp name="LoopController.loops">10</stringProp>
-          </LoopController>
-          <hashTree>
-            <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Data to create tornament" enabled="true">
-              <stringProp name="delimiter">,</stringProp>
-              <stringProp name="fileEncoding"></stringProp>
-              <stringProp name="filename">TournamentData.csv</stringProp>
-              <boolProp name="ignoreFirstLine">false</boolProp>
-              <boolProp name="quotedData">false</boolProp>
-              <boolProp name="recycle">true</boolProp>
-              <stringProp name="shareMode">shareMode.all</stringProp>
-              <boolProp name="stopThread">false</boolProp>
-              <stringProp name="variableNames">courseExId</stringProp>
-            </CSVDataSet>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert Begginning Time" enabled="true">
+              <stringProp name="JSON_PATH">$[0].beginningTime</stringProp>
+              <stringProp name="EXPECTED_VALUE">2020-03-26 15:30:00</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
             <hashTree/>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request to create tornament" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&#xd;
-	&quot;beginningTime&quot; : &quot;2020-03-26 12:00:00&quot;,&#xd;
-	&quot;endingTime&quot; : &quot;2020-03-26 13:00:00&quot;,&#xd;
-	&quot;numberOfQuestions&quot;: 5,&#xd;
-		&quot;titles&quot;: [&#xd;
-		{&#xd;
-		 &quot;name&quot;: &quot;TOPIC_NAME_1&quot;&#xd;
-		}, {&#xd;
-		 &quot;name&quot;: &quot;TOPIC_NAME_2&quot;&#xd;
-		}&#xd;
-	]&#xd;
-}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain">${server}</stringProp>
-              <stringProp name="HTTPSampler.port">${port}</stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/courseExecution/${__intSum(${courseExecutionId},${courseExId})}/tournament/createTournament</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert Ending Time" enabled="true">
+              <stringProp name="JSON_PATH">$[0].endingTime</stringProp>
+              <stringProp name="EXPECTED_VALUE">2020-03-26 17:30:00</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert Number of Questions" enabled="true">
+              <stringProp name="JSON_PATH">$[0].numberOfQuestions</stringProp>
+              <stringProp name="EXPECTED_VALUE">7</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert Topics" enabled="true">
+              <stringProp name="JSON_PATH">$[0].titles</stringProp>
+              <stringProp name="EXPECTED_VALUE">[{&quot;id&quot;:11000,&quot;name&quot;:&quot;TOPIC_NAME_1&quot;,&quot;numberOfQuestions&quot;:0},{&quot;id&quot;:11001,&quot;name&quot;:&quot;TOPIC_NAME_2&quot;,&quot;numberOfQuestions&quot;:0}]</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert Students Enrolled" enabled="true">
+              <stringProp name="JSON_PATH">$[0].studentsUsername</stringProp>
+              <stringProp name="EXPECTED_VALUE">[&quot;Demo-Student&quot;]</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
             <hashTree/>
           </hashTree>
         </hashTree>
@@ -570,13 +409,16 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId}),
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">DELETE FROM users_tournaments_created_by_me WHERE user_id = ${userId};
-DELETE FROM topics_tournaments WHERE titles_id BETWEEN (${topicId}) and (${topicId}+9) ;
-DELETE FROM tournaments WHERE course_executions_id BETWEEN ${courseExecutionId} and ${courseExecutionId}+4;
+          <stringProp name="query">
+DELETE FROM users_tournaments_created_by_me WHERE user_id = ${userId};
+DELETE FROM topics_tournaments WHERE tournaments_id BETWEEN ${tournamentId} and ${tournamentId}+2;
 DELETE FROM topics WHERE name = &apos;TOPIC_NAME_1&apos; or name = &apos;TOPIC_NAME_2&apos;;
-DELETE FROM users_course_executions WHERE course_executions_id BETWEEN ${courseExecutionId} and ${courseExecutionId}+4;
-DELETE FROM course_executions WHERE id BETWEEN ${courseExecutionId} and ${courseExecutionId}+4;
-DELETE FROM courses WHERE id BETWEEN ${courseId} and ${courseId}+4;</stringProp>
+DELETE FROM users_course_executions WHERE course_executions_id = ${courseExecutionId};
+DELETE FROM tournaments_students_enrolled where tournaments_enrolled_id BETWEEN ${tournamentId} and ${tournamentId}+2;
+DELETE FROM tournaments WHERE id BETWEEN ${tournamentId} and ${tournamentId}+2;
+DELETE FROM course_executions WHERE id = ${courseExecutionId};
+DELETE FROM courses WHERE name = &apos;COURSE_NAME1&apos;;
+</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>

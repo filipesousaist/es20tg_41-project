@@ -112,6 +112,7 @@ public class TournamentService {
         user.addTournamentEnrolled(tournament);
         return new TournamentDto(tournament);
     }
+    /*
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void removeTournament(Integer tournamentId) {
 
@@ -121,20 +122,17 @@ public class TournamentService {
 
         entityManager.remove(tournament);
 
-    }
+    }*/
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<TournamentDto> getAllOpenTournament() {
         return tournamentRepository.findAll().stream()
                 .filter(tournament -> !tournament.getClosed())
                 .map(TournamentDto::new)
-                /*
                 .sorted(Comparator
-                        .comparing(TournamentDto::getCourseExecutionDtoName)
+                        .comparing(TournamentDto::getBeginningTime)
                         .thenComparing(TournamentDto::getEndingTime)
-                        .thenComparing(TournamentDto::getBeginningTime)
                         .thenComparing(TournamentDto::getNumberOfQuestions))
-                 */
                 .collect(Collectors.toList());
     }
 }

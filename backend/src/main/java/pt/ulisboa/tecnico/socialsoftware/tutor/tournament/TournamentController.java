@@ -20,7 +20,7 @@ public class TournamentController {
     @Autowired
     private TournamentService tournamentService;
 
-    @PostMapping("/courseExecution/{courseExecutionId}/tournament/createtournament")
+    @PostMapping("/courseExecution/{courseExecutionId}/tournament/createTournament")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseExecutionId, 'EXECUTION.ACCESS')")
     public TournamentDto createTournament(Principal principal, @PathVariable Integer courseExecutionId, @RequestBody TournamentDto tournamentDto) {
         User user = (User) ((Authentication) principal).getPrincipal();
