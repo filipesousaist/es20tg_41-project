@@ -86,7 +86,7 @@ class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
         def userId = userRepository.findAll().get(0).getId()
 
         when:
-        1.upto(10000, {studentQuestionService.createStudentQuestion(course.getId(), userId, studentQuestionDto)})
+        1.upto(/*10000*/1, {studentQuestionService.createStudentQuestion(course.getId(), userId, studentQuestionDto)})
 
         then: true
     }

@@ -104,7 +104,6 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
                 .anyMatch(course -> course.getCourseExecutionId() == id);
     }
 
-
     private boolean userHasExecutionOfStudentQuestion(String username, int studentQuestionId) {
         int questionId = studentQuestionRepository.findById(studentQuestionId)
                 .orElseThrow(() -> new TutorException(ErrorMessage.STUDENT_QUESTION_NOT_FOUND, studentQuestionId))
@@ -119,9 +118,8 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
                 .anyMatch(question -> question.getId() == id);
     }
 
-     @Override
+    @Override
     public boolean hasPermission(Authentication authentication, Serializable serializable, String s, Object o) {
         return false;
     }
-
 }
