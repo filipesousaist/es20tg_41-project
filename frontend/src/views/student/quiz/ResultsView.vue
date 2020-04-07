@@ -38,6 +38,10 @@
         ><i class="fas fa-chevron-right"
       /></span>
     </div>
+
+     
+
+
     <result-component
       v-model="questionOrder"
       :answer="statementManager.statementQuiz.answers[questionOrder]"
@@ -47,6 +51,16 @@
       @increase-order="increaseOrder"
       @decrease-order="decreaseOrder"
     />
+
+    <clarification-request-dialog
+      v-model="clarificationRequestDialog"
+      v-on:close-dialog="onCloseDialog"
+
+    />
+
+    <v-btn color="primary" dark @click="createClarificationRequest" data-cy="createButton"
+            >Request Clarification</v-btn>
+
   </div>
 </template>
 
@@ -54,15 +68,18 @@
 import { Component, Vue } from 'vue-property-decorator';
 import StatementManager from '@/models/statement/StatementManager';
 import ResultComponent from '@/views/student/quiz/ResultComponent.vue';
+import ClarificationRequestDialog from '@/views/student/quiz/ClarificationRequestDialog.vue';
 
 @Component({
   components: {
-    'result-component': ResultComponent
+    'result-component': ResultComponent,
+    'clarification-request-dialog': ClarificationRequestDialog
   }
 })
 export default class ResultsView extends Vue {
   statementManager: StatementManager = StatementManager.getInstance;
   questionOrder: number = 0;
+  clarificationRequestDialog: boolean = false;
 
   async created() {
     if (this.statementManager.isEmpty()) {
@@ -96,6 +113,14 @@ export default class ResultsView extends Vue {
     if (n >= 0 && n < +this.statementManager.statementQuiz!.questions.length) {
       this.questionOrder = n;
     }
+  }
+
+  createClarificationRequest(): void{
+    this.clarificationRequestDialog = true;
+  }
+
+  onCloseDialog(): void{
+    this.clarificationRequestDialog = false;
   }
 }
 </script>
