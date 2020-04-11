@@ -12,6 +12,8 @@ import TopicsView from './views/teacher/TopicsView.vue';
 import QuizzesView from './views/teacher/quizzes/QuizzesView.vue';
 import StudentsView from './views/teacher/students/StudentsView.vue';
 import StudentView from '@/views/student/StudentView.vue';
+import CreateStudentQuestionsView from './views/student/CreateStudentQuestionsView.vue';
+import ProposedStudentQuestionsView from'./views/student/ProposedStudentQuestionsView.vue';
 import AvailableQuizzesView from './views/student/AvailableQuizzesView.vue';
 import SolvedQuizzesView from './views/student/SolvedQuizzesView.vue';
 import QuizView from './views/student/quiz/QuizView.vue';
@@ -122,6 +124,24 @@ let router = new Router({
       name: 'student',
       component: StudentView,
       children: [
+        {
+          path: 'studentQuestion/create',
+          name: 'create-studentQuestion',
+          component: CreateStudentQuestionsView,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Create Student Question',
+            requiredAuth: 'Student'
+          }
+        },
+        {
+          path: 'proposed',
+          name: 'proposed-studentQuestions',
+          component: ProposedStudentQuestionsView,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Proposed Student Questions',
+            requiredAuth: 'Student'
+          }
+        },
         {
           path: 'available',
           name: 'available-quizzes',
