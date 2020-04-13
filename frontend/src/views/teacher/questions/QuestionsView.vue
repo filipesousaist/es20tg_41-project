@@ -99,6 +99,18 @@
               small
               class="mr-2"
               v-on="on"
+              @click="clarificationRequestDialog(item)"
+              >card-text</v-icon>
+            >
+          </template>
+          <span>Clarification Requests</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon
+              small
+              class="mr-2"
+              v-on="on"
               @click="duplicateQuestion(item)"
               >cached</v-icon
             >
@@ -159,6 +171,7 @@ export default class QuestionsView extends Vue {
   currentQuestion: Question | null = null;
   editQuestionDialog: boolean = false;
   questionDialog: boolean = false;
+  requestDialog: boolean = false;
   search: string = '';
   statusList = ['DISABLED', 'AVAILABLE', 'REMOVED'];
 
@@ -298,6 +311,15 @@ export default class QuestionsView extends Vue {
   newQuestion() {
     this.currentQuestion = new Question();
     this.editQuestionDialog = true;
+  }
+
+  clarificationRequestDialog(question : Question) {
+    this.currentQuestion = question;
+    this.requestDialog = true;
+  }
+
+  onCloseClarificationRequestDialog() {
+    this.requestDialog = false;
   }
 
   editQuestion(question: Question) {
