@@ -61,8 +61,8 @@
           >Cancel</v-btn
         >
         <v-btn color="blue darken-1" @click="saveCourse" data-cy="saveButton"
-          >Save</v-btn
-        >
+          >Save
+          </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -87,6 +87,7 @@ export default class EditCourseDialog extends Vue {
   }
 
   async saveCourse() {
+    
     if (
       this.editCourse &&
       (!this.editCourse.name ||
