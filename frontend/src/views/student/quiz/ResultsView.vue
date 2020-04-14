@@ -53,9 +53,10 @@
     />
 
     <clarification-request-dialog
+      v-if="clarificationRequest"
       v-model="clarificationRequestDialog"
+      :question="statementManager.statementQuiz.questions[questionOrder]"
       v-on:close-dialog="onCloseDialog"
-
     />
 
     <v-btn color="primary" dark @click="createClarificationRequest" data-cy="createButton"
@@ -69,6 +70,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import StatementManager from '@/models/statement/StatementManager';
 import ResultComponent from '@/views/student/quiz/ResultComponent.vue';
 import ClarificationRequestDialog from '@/views/student/quiz/ClarificationRequestDialog.vue';
+import ClarificationRequest from '@/models/discussion/ClarificationRequest';
 
 @Component({
   components: {
@@ -80,6 +82,7 @@ export default class ResultsView extends Vue {
   statementManager: StatementManager = StatementManager.getInstance;
   questionOrder: number = 0;
   clarificationRequestDialog: boolean = false;
+  clarificationRequest: ClarificationRequest | null = null;
 
   async created() {
     if (this.statementManager.isEmpty()) {
@@ -117,10 +120,12 @@ export default class ResultsView extends Vue {
 
   createClarificationRequest(): void{
     this.clarificationRequestDialog = true;
+    this.clarificationRequest = new ClarificationRequest();
   }
 
   onCloseDialog(): void{
     this.clarificationRequestDialog = false;
+    this.clarificationRequest = null;
   }
 }
 </script>
