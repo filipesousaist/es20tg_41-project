@@ -101,6 +101,14 @@
                 <v-list-item-title>ImpExp</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+            <v-list-item to="/management/requests">
+              <v-list-item-action>
+                <v-icon>mdi-comment-question</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Clarification Requests</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
         </v-menu>
 
@@ -263,6 +271,14 @@
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>ImpExp</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/management/requests">
+            <v-list-item-action>
+              <v-icon>comment_question</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Clarification Requests</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-group>

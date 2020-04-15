@@ -93,15 +93,9 @@
           </template>
           <span>Edit Question</span>
         </v-tooltip>
-        <v-tooltip bottom>
+        <v-tooltip to="/management/questions/requests" bottom>
           <template v-slot:activator="{ on }">
-            <v-icon
-              small
-              class="mr-2"
-              v-on="on"
-              @click="clarificationRequestDialog(item)"
-              >card-text</v-icon>
-            >
+            <v-icon small class="mr-2" v-on="on">edit</v-icon>
           </template>
           <span>Clarification Requests</span>
         </v-tooltip>

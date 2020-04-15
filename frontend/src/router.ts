@@ -19,6 +19,7 @@ import ResultsView from './views/student/quiz/ResultsView.vue';
 import StatsView from './views/student/StatsView.vue';
 import ScanView from './views/student/ScanView.vue';
 
+import ClarificationRequestView from './views/teacher/requests/ClarificationRequestsView.vue';
 import ClarificationRequestsView from './views/student/clarificationRequest/ClarificationRequestsView.vue';
 
 import AdminManagementView from './views/admin/AdminManagementView.vue';
@@ -114,6 +115,15 @@ let router = new Router({
           component: ImpExpView,
           meta: {
             title: process.env.VUE_APP_NAME + ' - ImpExp',
+            requiredAuth: 'Teacher'
+          }
+        },
+        {
+          path: 'requests',
+          name: 'requests-management',
+          component: ClarificationRequestView,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Requests',
             requiredAuth: 'Teacher'
           }
         }
