@@ -29,7 +29,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Model } from 'vue-property-decorator';
 import Question from '@/models/management/Question';
-import ShowRequests from '@/views/teacher/questions/ShowRequests.vue';
+import ShowRequests from '@/views/teacher/requests/ShowRequests.vue';
 
 @Component({
   components: {
