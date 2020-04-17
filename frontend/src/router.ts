@@ -19,6 +19,10 @@ import ResultsView from './views/student/quiz/ResultsView.vue';
 import StatsView from './views/student/StatsView.vue';
 import ScanView from './views/student/ScanView.vue';
 
+/*Create*/
+import EnrollTournament from './views/student/tournament/EnrollTournament.vue';
+/*Show*/
+
 import AdminManagementView from './views/admin/AdminManagementView.vue';
 import NotFoundView from './views/NotFoundView.vue';
 import ImpExpView from '@/views/teacher/impexp/ImpExpView.vue';
@@ -184,7 +188,16 @@ let router = new Router({
             title: process.env.VUE_APP_NAME + ' - Scan',
             requiredAuth: 'Student'
           }
-        }
+        },
+        {
+          path: 'enrollTournament',
+          name: 'enrolltournament',
+          component: EnrollTournament,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Enroll Tournament',
+            requiredAuth: 'Student'
+          }
+        },
       ]
     },
     {
