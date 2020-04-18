@@ -9,6 +9,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
@@ -31,6 +32,8 @@ public class StudentQuestion {
     @OneToMany
     private Set<QuestionEvaluation> questionEvaluations = new HashSet<>();
 
+    public static Logger logger=Logger.getLogger("global");
+
     public StudentQuestion(){
     }
 
@@ -43,6 +46,7 @@ public class StudentQuestion {
 
         user.addStudentQuestion(this);
     }
+
 
     private void checkQuestion(StudentQuestionDto studentQuestionDto) {
         if (studentQuestionDto.getQuestionDto() == null){

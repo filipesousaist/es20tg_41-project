@@ -19,6 +19,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +49,10 @@ public class StudentQuestionService {
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new TutorException(COURSE_NOT_FOUND, courseId));
 
         User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
+
+        if (studentQuestionDto.getQuestionDto().getCreationDate() == null) {
+            studentQuestionDto.getQuestionDto().setCreationDate(LocalDateTime.now().format(Course.formatter));
+        }
 
         StudentQuestion studentQuestion = new StudentQuestion(course, user,studentQuestionDto);
         entityManager.persist(studentQuestion);
