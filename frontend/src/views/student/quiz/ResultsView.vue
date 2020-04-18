@@ -59,7 +59,7 @@
       v-on:close-dialog="onCloseDialog"
     />
 
-    <v-btn color="primary" dark @click="createClarificationRequest" data-cy="createButton"
+    <v-btn color="primary" dark @click="createClarificationRequest" data-cy="requestButton"
             >Request Clarification</v-btn>
 
   </div>

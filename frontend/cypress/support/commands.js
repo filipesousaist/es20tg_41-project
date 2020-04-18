@@ -31,6 +31,11 @@ Cypress.Commands.add('demoAdminLogin', () => {
     cy.contains('Manage Courses').click()
 })
 
+Cypress.Commands.add('demoStudentLogin', () => {
+    cy.visit('/')
+    cy.get('[data-cy="studentButton"]').click()
+})
+
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
     cy.get('[data-cy="createButton"]').click()
     cy.get('[data-cy="Name"]').type(name)
@@ -68,4 +73,20 @@ Cypress.Commands.add('createFromCourseExecution', (name, acronym, academicTerm) 
     cy.get('[data-cy="AcademicTerm"]').type(academicTerm)
     cy.get('[data-cy="saveButton"]').click()
 })
-zz
+
+Cypress.Commands.add('answerQuiz', (title) => {
+    cy.contains(title).click()
+    cy.contains("End Quiz").click()
+    //cy.get(['data-cy=endQuizSure']).click()
+    cy.contains("I'm sure").click()
+
+})
+
+Cypress.Commands.add('createClarificationRequest', (title, text) => {
+    //cy.get(['data-cy="requestButton"']).click()
+    cy.contains("Request Clarification").click()
+    cy.get('[data-cy="clarificationRequestTitle"]').invoke('val', title)
+    cy.get('[data-cy="clarificationRequestText"]').invoke('val', text)
+    cy.get('[data-cy="submitClarificationRequest"').click()
+})
+
