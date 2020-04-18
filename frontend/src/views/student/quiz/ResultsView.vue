@@ -59,6 +59,11 @@
       v-on:close-dialog="onCloseDialog"
     />
 
+    <view-clarification-request-dialog
+      v-model="viewClarificationRequestDialog"
+      v-on:close-view-clarreq-dialog="onCloseViewClarReqDialog"
+    />
+
     <v-btn color="primary" dark @click="createClarificationRequest" data-cy="requestButton"
             >Request Clarification</v-btn>
 
@@ -70,12 +75,14 @@ import { Component, Vue } from 'vue-property-decorator';
 import StatementManager from '@/models/statement/StatementManager';
 import ResultComponent from '@/views/student/quiz/ResultComponent.vue';
 import ClarificationRequestDialog from '@/views/student/quiz/ClarificationRequestDialog.vue';
+import ViewClarificationRequestDialog from '@views/student/quiz/ViewClarificationRequestDialog.vue';
 import ClarificationRequest from '@/models/discussion/ClarificationRequest';
 
 @Component({
   components: {
     'result-component': ResultComponent,
-    'clarification-request-dialog': ClarificationRequestDialog
+    'clarification-request-dialog': ClarificationRequestDialog,
+    'view-clarification-request-dialog': ViewClarificationRequestDialog
   }
 })
 export default class ResultsView extends Vue {

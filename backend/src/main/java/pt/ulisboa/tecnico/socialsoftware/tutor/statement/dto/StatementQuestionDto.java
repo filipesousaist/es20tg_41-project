@@ -19,7 +19,7 @@ public class StatementQuestionDto implements Serializable {
     private ImageDto image;
     private Integer sequence;
     private Integer questionId;
-
+    
     public StatementQuestionDto(QuestionAnswer questionAnswer) {
         this.content = questionAnswer.getQuizQuestion().getQuestion().getContent();
         if (questionAnswer.getQuizQuestion().getQuestion().getImage() != null) {
