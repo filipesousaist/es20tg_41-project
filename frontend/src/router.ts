@@ -20,6 +20,7 @@ import StatsView from './views/student/StatsView.vue';
 import ScanView from './views/student/ScanView.vue';
 
 /*Create*/
+import CreateTournament from './views/student/tournament/CreateTournament.vue';
 import EnrollTournament from './views/student/tournament/EnrollTournament.vue';
 /*Show*/
 
@@ -186,6 +187,15 @@ let router = new Router({
           component: ScanView,
           meta: {
             title: process.env.VUE_APP_NAME + ' - Scan',
+            requiredAuth: 'Student'
+          }
+        },
+        {
+          path: 'createTournament',
+          name: 'createTournament',
+          component: CreateTournament,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Tournament',
             requiredAuth: 'Student'
           }
         },

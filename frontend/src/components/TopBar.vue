@@ -163,6 +163,15 @@
                 <v-list-item-title>Enroll</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+
+            <v-list-item to="/student/createTournament">
+              <v-list-item-action>
+                <v-icon>create</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Create</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
         </v-menu>
 
