@@ -155,15 +155,6 @@
             </v-btn>
           </template>
           <v-list dense>
-            <v-list-item to="/student/enrollTournament">
-              <v-list-item-action>
-                <v-icon>fas fa-user-check</v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title>Enroll</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-
             <v-list-item to="/student/createTournament">
               <v-list-item-action>
                 <v-icon>create</v-icon>
@@ -172,7 +163,24 @@
                 <v-list-item-title>Create</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+            <v-list-item to="/student/enrollTournament">
+              <v-list-item-action>
+                <v-icon>fas fa-user-check</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Enroll</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item to="/student/showTournaments">
+              <v-list-item-action>
+                <v-icon>fas fa-list-ul</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Show</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
+
         </v-menu>
 
         <v-btn to="/student/stats" v-if="isStudent && currentCourse" text dark>

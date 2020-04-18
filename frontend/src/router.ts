@@ -193,7 +193,7 @@ let router = new Router({
           name: 'createTournament',
           component: CreateTournament,
           meta: {
-            title: process.env.VUE_APP_NAME + ' - Tournament',
+            title: process.env.VUE_APP_NAME + ' - Create Tournament',
             requiredAuth: 'Student'
           }
         },

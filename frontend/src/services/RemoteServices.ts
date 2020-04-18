@@ -612,7 +612,6 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
-/*
   static getAllOpenTournaments(): Promise<Tournament[]> {
     return httpClient
       .get(
@@ -626,5 +625,5 @@ export default class RemoteServices {
       .catch(async error => {
         throw Error(await this.errorMessage(error));
       });
-  }*/
+  }
 }
