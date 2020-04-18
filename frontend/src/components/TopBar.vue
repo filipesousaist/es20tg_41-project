@@ -112,34 +112,10 @@
           </v-list>
         </v-menu>
 
-        <v-menu offset-y v-if="isStudent && currentCourse" open-on-hover>
-
-        <template v-slot:activator="{ on }">
-          <v-btn v-on="on" text dark>
-            Student Questions
-            <v-icon>fas fa-file-alt</v-icon>
-          </v-btn>
-        </template>
-        <v-list dense>
-          <v-list-item to="/student/studentQuestion/create">
-            <v-list-item-action>
-              <v-icon>create</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Create</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item to="/student/proposed">
-            <v-list-item-action>
-              <v-icon>assignment</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Proposed</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-
-        </v-menu>
+        <v-btn to="/student/studentQuestions/" v-if="isStudent && currentCourse" text dark>
+          Student Questions
+          <v-icon>fas fa-file-alt</v-icon>
+        </v-btn>
 
         <v-menu offset-y v-if="isStudent && currentCourse" open-on-hover>
           <template v-slot:activator="{ on }">
@@ -337,12 +313,7 @@
             <v-list-item-content>Student Questions</v-list-item-content>
           </v-list-item>
 
-          <v-list-item to="/student/studentQuestions/create">
-            <v-list-item-action>
-              <v-icon>create</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>Create Student Question</v-list-item-content>
-          </v-list-item>
+
 
           <v-list-item to="/student/create">
             <v-list-item-action>
