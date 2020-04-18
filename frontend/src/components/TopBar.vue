@@ -93,6 +93,14 @@
                 <v-list-item-title>Students</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+            <v-list-item to="/management/proposed-questions">
+              <v-list-item-action>
+                <v-icon>live_help</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Proposed Questions</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
             <v-list-item to="/management/impexp">
               <v-list-item-action>
                 <v-icon>cloud</v-icon>
@@ -282,6 +290,14 @@
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>Students</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item to="/management/proposed-questions">
+            <v-list-item-action>
+              <v-icon>live_help</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Proposed Questions</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item to="/management/impexp">
