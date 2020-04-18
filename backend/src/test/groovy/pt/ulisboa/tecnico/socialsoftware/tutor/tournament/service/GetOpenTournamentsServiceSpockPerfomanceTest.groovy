@@ -103,7 +103,7 @@ class GetOpenTournamentsServiceSpockPerfomanceTest extends Specification{
 
         given:"A TournamentDto where 500 are opened and 500 are closed"
         tournamentDto = new TournamentDto()
-        tournamentDto.setTitles(topicList1)
+        tournamentDto.setTopics(topicList1)
         tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
         tournamentDto.setNumberOfQuestions(NUMBER_OF_QUESTIONS)

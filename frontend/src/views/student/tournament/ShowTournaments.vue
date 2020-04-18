@@ -1,18 +1,24 @@
 <template>
   <div class="container">
-    <h2>List of All Tournaments</h2>
+    <h2>List of All Tournaments in {{ course }}</h2>
     <ul>
       <li class="list-header">
-        <div class="col">Courses</div>
-        <div class="col">Available since</div>
-        <div class="col">Available until</div>
+        <div class="col">Topics</div>
+        <div class="col">Beggining Date</div>
+        <div class="col">Ending Date</div>
         <div class="col">Number of Questions</div>
+        <div class="col">Status</div>
       </li>
       <li
         class="list-row"
         v-for="tournament in tournaments"
         :key="tournament.id"
       >
+        <div class="col">
+          <div v-for="topic in tournament.topics" :key="topic.id" style="padding-bottom:2px;padding-top: 2px;">
+            <v-chip>{{ topic.name }}</v-chip>
+          </div>
+        </div>
         <div class="col">
           {{ tournament.beginningTime }}
         </div>
@@ -21,6 +27,9 @@
         </div>
         <div class="col">
           {{ tournament.numberOfQuestions }}
+        </div>
+        <div class="col">
+          <span>{{ tournament.isClosed ? 'Closed' : 'Open' }}</span>
         </div>
       </li>
     </ul>
@@ -34,13 +43,14 @@ import RemoteServices from '@/services/RemoteServices';
 
 @Component
 export default class ShowTournaments extends Vue {
+  course = this.$store.getters.getCurrentCourse.name;
   tournaments: Tournament[] = [];
 
   async created() {
     await this.$store.dispatch('loading');
     try {
       this.tournaments = (
-        await RemoteServices.getAllOpenTournaments()
+        await RemoteServices.getAllTournaments()
       ).reverse();
     } catch (error) {
       await this.$store.dispatch('error', error);

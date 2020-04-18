@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
-import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
@@ -77,7 +75,7 @@ public class TournamentService {
     }
     @Transactional(isolation = Isolation.READ_COMMITTED)
     List<Topic> getTopics(TournamentDto tournamentDto, CourseExecution courseEx) {
-        List<TopicDto> titlesDto = tournamentDto.getTitles();
+        List<TopicDto> titlesDto = tournamentDto.getTopics();
         if (titlesDto == null || titlesDto.isEmpty()) {
             throw new TutorException(EMPTY_TOPIC);
         }
@@ -125,9 +123,8 @@ public class TournamentService {
     }*/
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public List<TournamentDto> getAllOpenTournament() {
+    public List<TournamentDto> getAllTournaments() {
         return tournamentRepository.findAll().stream()
-                .filter(tournament -> !tournament.getClosed())
                 .map(TournamentDto::new)
                 .sorted(Comparator
                         .comparing(TournamentDto::getBeginningTime)
@@ -137,9 +134,9 @@ public class TournamentService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public List<TournamentDto> getAvailableTournaments(Integer courseExId) {
+    public List<TournamentDto> getAllOpenTournament() {
 
-        return tournamentRepository.findAvailableTournaments(courseExId).stream()
+        return tournamentRepository.findAll().stream()
                 .filter(tournament -> !tournament.getClosed())
                 .map(TournamentDto::new)
                 .sorted(Comparator

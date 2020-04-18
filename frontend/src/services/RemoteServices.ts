@@ -599,10 +599,10 @@ export default class RemoteServices {
       });
   }
 
-  static getAvailableTournaments(): Promise<Tournament[]> {
+  static getAllOpenTournament(): Promise<Tournament[]> {
     return httpClient
       .get(
-        `/courseExecution/${Store.getters.getCurrentCourse.courseId}/tournament/getAvailableTournaments`)
+        'tournament/getAllOpenTournament')
       .then(response => {
         return response.data.map((tournament: any) => {
           return new Tournament(tournament);
@@ -612,10 +612,10 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
-  static getAllOpenTournaments(): Promise<Tournament[]> {
+  static getAllTournaments(): Promise<Tournament[]> {
     return httpClient
       .get(
-        '/tournament/getAllOpenTournament'
+        '/tournament/getAllTournaments'
       )
       .then(response => {
         return response.data.map((tournament: any) => {

@@ -5,6 +5,8 @@ export default class Tournament{
   beginningTime!: string | undefined;
   endingTime!: string | undefined;
   numberOfQuestions!: number;
+  isClosed!:boolean;
+  createdByUser!: number;
 
   topics: Topic[] = [];
 
@@ -14,6 +16,8 @@ export default class Tournament{
       this.beginningTime = jsonObj.beginningTime;
       this.endingTime = jsonObj.endingTime;
       this.numberOfQuestions = jsonObj.numberOfQuestions;
+      this.isClosed = jsonObj.isClosed;
+      this.createdByUser = jsonObj.createdByUser;
 
       if (jsonObj.topics) {
         this.topics = jsonObj.topics.map(

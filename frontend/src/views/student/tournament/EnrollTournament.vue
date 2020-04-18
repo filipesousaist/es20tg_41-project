@@ -1,9 +1,9 @@
 <template>
   <div class="container">
-    <h2>Available Tournaments</h2>
+    <h2>Available Tournaments in {{ course }}</h2>
     <ul>
       <li class="list-header">
-        <div class="col">Courses</div>
+        <div class="col">Topics</div>
         <div class="col">Available since</div>
         <div class="col">Available until</div>
         <div class="col">Number of Questions</div>
@@ -13,7 +13,13 @@
         class="list-row"
         v-for="tournament in tournaments"
         :key="tournament.id"
+        @click="enrollTournament(tournament.id)"
       >
+        <div class="col">
+          <div v-for="topic in tournament.topics" :key="topic.id" style="padding-bottom:2px;padding-top: 2px;">
+            <v-chip>{{ topic.name }}</v-chip>
+          </div>
+        </div>
         <div class="col">
           {{ tournament.beginningTime }}
         </div>
@@ -35,17 +41,30 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Tournament from '@/models/tournament/Tournament';
 import RemoteServices from '@/services/RemoteServices';
+import StatementQuiz from '@/models/statement/StatementQuiz';
+import StatementManager from '@/models/statement/StatementManager';
 
 @Component
 export default class EnrollTournament extends Vue {
+  course = this.$store.getters.getCurrentCourse.name;
   tournaments: Tournament[] = [];
 
   async created() {
     await this.$store.dispatch('loading');
     try {
       this.tournaments = (
-        await RemoteServices.getAvailableTournaments()
+        await RemoteServices.getAllOpenTournament()
       ).reverse();
+    } catch (error) {
+      await this.$store.dispatch('error', error);
+    }
+    await this.$store.dispatch('clearLoading');
+  }
+
+  async enrollTournament(id: Number) {
+    await this.$store.dispatch('loading');
+    try {
+      await RemoteServices.enrollTournament(id);
     } catch (error) {
       await this.$store.dispatch('error', error);
     }

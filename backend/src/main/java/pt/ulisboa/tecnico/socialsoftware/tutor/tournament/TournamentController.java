@@ -59,6 +59,17 @@ public class TournamentController {
         return ResponseEntity.ok().build();
     }
 */
+    @GetMapping("/tournament/getAllTournaments")
+    public List<TournamentDto> getAllTournaments(Principal principal) {
+
+        User user = (User) ((Authentication) principal).getPrincipal();
+
+        if(user == null){
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+        return tournamentService.getAllTournaments();
+    }
+
     @GetMapping("/tournament/getAllOpenTournament")
     public List<TournamentDto> getAllOpenTournament(Principal principal) {
 
@@ -68,16 +79,5 @@ public class TournamentController {
             throw new TutorException(AUTHENTICATION_ERROR);
         }
         return tournamentService.getAllOpenTournament();
-    }
-
-    @GetMapping("/courseExecution/{courseExecutionId}/tournament/getAvailableTournaments")
-    public List<TournamentDto> getAvailableTournaments(Principal principal, @PathVariable Integer courseExecutionId) {
-
-        User user = (User) ((Authentication) principal).getPrincipal();
-
-        if(user == null){
-            throw new TutorException(AUTHENTICATION_ERROR);
-        }
-        return tournamentService.getAvailableTournaments(courseExecutionId);
     }
 }
