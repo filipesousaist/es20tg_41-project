@@ -1,6 +1,6 @@
 import Topic from '../management/Topic';
 
-export default class TournamentRequest{
+export default class Tournament{
   id!: number;
   beginningTime!: string | undefined;
   endingTime!: string | undefined;
@@ -8,7 +8,7 @@ export default class TournamentRequest{
 
   topics: Topic[] = [];
 
-  constructor(jsonObj?: TournamentRequest){
+  constructor(jsonObj?: Tournament){
     if(jsonObj) {
       this.id = jsonObj.id;
       this.beginningTime = jsonObj.beginningTime;

@@ -19,10 +19,9 @@ import ResultsView from './views/student/quiz/ResultsView.vue';
 import StatsView from './views/student/StatsView.vue';
 import ScanView from './views/student/ScanView.vue';
 
-/*Create*/
 import CreateTournament from './views/student/tournament/CreateTournament.vue';
 import EnrollTournament from './views/student/tournament/EnrollTournament.vue';
-/*Show*/
+import ShowTournaments from './views/student/tournament/ShowTournaments.vue';
 
 import AdminManagementView from './views/admin/AdminManagementView.vue';
 import NotFoundView from './views/NotFoundView.vue';
@@ -30,7 +29,6 @@ import ImpExpView from '@/views/teacher/impexp/ImpExpView.vue';
 import AssessmentsView from '@/views/teacher/assessments/AssessmentsView.vue';
 import CreateQuizzesView from '@/views/student/CreateQuizzesView.vue';
 import CoursesView from '@/views/admin/Courses/CoursesView.vue';
-
 Vue.use(Router);
 
 let router = new Router({
@@ -208,6 +206,15 @@ let router = new Router({
             requiredAuth: 'Student'
           }
         },
+        {
+          path: 'showTournaments',
+          name: 'showTournaments',
+          component: ShowTournaments,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Show Tournament',
+            requiredAuth: 'Student'
+          }
+        }
       ]
     },
     {

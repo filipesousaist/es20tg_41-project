@@ -135,4 +135,17 @@ public class TournamentService {
                         .thenComparing(TournamentDto::getNumberOfQuestions))
                 .collect(Collectors.toList());
     }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<TournamentDto> getAvailableTournaments(Integer courseExId) {
+
+        return tournamentRepository.findAvailableTournaments(courseExId).stream()
+                .filter(tournament -> !tournament.getClosed())
+                .map(TournamentDto::new)
+                .sorted(Comparator
+                        .comparing(TournamentDto::getBeginningTime)
+                        .thenComparing(TournamentDto::getEndingTime)
+                        .thenComparing(TournamentDto::getNumberOfQuestions))
+                .collect(Collectors.toList());
+    }
 }

@@ -69,4 +69,15 @@ public class TournamentController {
         }
         return tournamentService.getAllOpenTournament();
     }
+
+    @GetMapping("/courseExecution/{courseExecutionId}/tournament/getAvailableTournaments")
+    public List<TournamentDto> getAvailableTournaments(Principal principal, @PathVariable Integer courseExecutionId) {
+
+        User user = (User) ((Authentication) principal).getPrincipal();
+
+        if(user == null){
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+        return tournamentService.getAvailableTournaments(courseExecutionId);
+    }
 }
