@@ -3,8 +3,8 @@
     :value="dialog"
     @input="$emit('close-dialog')"
     @keydown.esc="$emit('close-dialog')"
-    max-width="75%"
-    max-height="80%"
+    max-width="50%"
+    max-height="50%"
   >
     <v-card>
       <v-card-title>
@@ -18,9 +18,9 @@
           <v-layout column wrap>
             <v-flex xs24 sm12 md8>
               <v-text-field
-                  v-model="editStudentQuestion.questionDto.title"
-                  label="Title"
-                  data-cy="Title"
+                v-model="editStudentQuestion.questionDto.title"
+                label="Title"
+                data-cy="Title"
               />
             </v-flex>
             <v-flex xs24 sm12 md12>
@@ -29,6 +29,7 @@
                 rows="10"
                 v-model="editStudentQuestion.questionDto.content"
                 label="Content"
+                data-cy="Question"
               ></v-textarea>
             </v-flex>
             <v-flex
@@ -44,6 +45,7 @@
                 "
                 class="ma-4"
                 label="Correct"
+                data-cy="Correct"
               />
               <v-textarea
                 outline
@@ -52,6 +54,7 @@
                   editStudentQuestion.questionDto.options[index - 1].content
                 "
                 label="Content"
+                data-cy="Content"
               ></v-textarea>
             </v-flex>
           </v-layout>
@@ -60,10 +63,10 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn color="blue darken-1" @click="$emit('close-dialog')"
+        <v-btn color="blue darken-1" @click="$emit('close-dialog')" data-cy="cancelButton"
           >Cancel</v-btn
         >
-        <v-btn color="blue darken-1" @click="saveStudentQuestion">Save</v-btn>
+        <v-btn color="blue darken-1" @click="saveStudentQuestion" data-cy="saveButton">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -87,9 +90,9 @@ export default class EditStudentQuestionDialog extends Vue {
   }
 
   async saveStudentQuestion() {
-      console.log(this.editStudentQuestion.questionDto.title);
+    console.log(this.editStudentQuestion.questionDto.title);
 
-      this.editStudentQuestion.ser = 123;
+    this.editStudentQuestion.ser = 123;
     if (this.editStudentQuestion && !this.editStudentQuestion.questionDto) {
       await this.$store.dispatch(
         'error',
@@ -98,7 +101,7 @@ export default class EditStudentQuestionDialog extends Vue {
       return;
     }
 
-    if (this.editStudentQuestion ) {
+    if (this.editStudentQuestion) {
       try {
         const result = await RemoteServices.createStudentQuestion(
           this.editStudentQuestion

@@ -39,6 +39,21 @@
           accept="image/*"
         />
       </template>
+
+      <template v-slot:item.action="{ item }">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon
+              small
+              class="mr-2"
+              v-on="on"
+              @click="showStudentQuestionDialog(item)"
+              >visibility</v-icon
+            >
+          </template>
+          <span>Show Question</span>
+        </v-tooltip>
+      </template>
     </v-data-table>
 
     <edit-student-question-dialog
@@ -47,6 +62,13 @@
       :studentQuestion="currentStudentQuestion"
       v-on:save-student-question="onSaveStudentQuestion"
       v-on:close-dialog="onCloseDialog"
+    />
+
+    <show-student-question-dialog
+      v-if="currentStudentQuestion"
+      :dialog="studentQuestionDialog"
+      :studentQuestion="currentStudentQuestion"
+      v-on:close-show-student-question-dialog="onCloseShowStudentQuestionDialog"
     />
   </v-card>
 </template>
@@ -57,17 +79,19 @@ import RemoteServices from '@/services/RemoteServices';
 import StudentQuestion from '@/models/management/StudentQuestion';
 import EditStudentQuestionDialog from '@/views/student/EditStudentQuestionDialog.vue';
 import Image from '@/models/management/Image';
-
+import ShowStudentQuestionDialog from '@/views/student/ShowStudentQuestionDialog.vue';
 
 @Component({
   components: {
-    'edit-student-question-dialog': EditStudentQuestionDialog
+    'edit-student-question-dialog': EditStudentQuestionDialog,
+    'show-student-question-dialog': ShowStudentQuestionDialog
   }
 })
 export default class CreateStudentQuestionsView extends Vue {
   studentQuestions: StudentQuestion[] = [];
   currentStudentQuestion: StudentQuestion | null = null;
   editStudentQuestionDialog: boolean = false;
+  studentQuestionDialog: boolean = false;
   search: string = '';
   headers: object = [
     { text: 'Title', value: 'questionDto.title', align: 'left', width: '30%' },
@@ -85,7 +109,13 @@ export default class CreateStudentQuestionsView extends Vue {
     {
       text: 'Image',
       value: 'questionDto.image',
-      align: 'right',
+      align: 'center',
+      sortable: false
+    },
+    {
+      text: 'Actions',
+      value: 'action',
+      align: 'center',
       sortable: false
     }
   ];
@@ -135,6 +165,15 @@ export default class CreateStudentQuestionsView extends Vue {
         await this.$store.dispatch('error', error);
       }
     }
+  }
+
+  showStudentQuestionDialog(studentQuestion: StudentQuestion) {
+    this.currentStudentQuestion = studentQuestion;
+    this.studentQuestionDialog = true;
+  }
+
+  onCloseShowStudentQuestionDialog() {
+    this.studentQuestionDialog = false;
   }
 
   onCloseDialog() {

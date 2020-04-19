@@ -31,6 +31,33 @@ Cypress.Commands.add('demoAdminLogin', () => {
     cy.contains('Manage Courses').click()
 })
 
+Cypress.Commands.add('demoStudentLogin', () => {
+    cy.visit('/')
+    cy.get('[data-cy="studentButton"]').click()
+    cy.contains('Student Questions').click()
+})
+
+Cypress.Commands.add('createStudentQuestion', (title, question, pergunta1, pergunta2, pergunta3, pergunta4) => {
+    cy.get('[data-cy="createButton"]').click()
+    cy.get('[data-cy="Title"]').scrollIntoView().type(title,{force:true})
+    cy.get('[data-cy="Question"]').type(question)
+    cy.get('[data-cy="Content"]').eq(0).type(pergunta1)
+    cy.get('[data-cy="Correct"]').eq(1).check({force:true})
+    cy.get('[data-cy="Content"]').eq(1).type(pergunta2)
+    cy.get('[data-cy="Content"]').eq(2).type(pergunta3)
+    cy.get('[data-cy="Content"]').eq(3).type(pergunta4)
+    cy.get('[data-cy="saveButton"]').click()
+})
+
+Cypress.Commands.add('createStudentQuestionWithOneOption', (title, question, pergunta1) => {
+    cy.get('[data-cy="createButton"]').click()
+    cy.get('[data-cy="Title"]').scrollIntoView().type(title,{force:true})
+    cy.get('[data-cy="Question"]').type(question)
+    cy.get('[data-cy="Content"]').eq(0).type(pergunta1)
+    cy.get('[data-cy="Correct"]').eq(0).check({force:true})
+    cy.get('[data-cy="saveButton"]').click()
+})
+
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
     cy.get('[data-cy="createButton"]').click()
     cy.get('[data-cy="Name"]').type(name)
