@@ -132,18 +132,15 @@ class createClarificationRequestServiceSpockTest extends Specification {
 
 
         def quiz = new Quiz()
-        quiz.setKey(1)
         quiz.setKey(quizService.getMaxQuizKey()+1)
         quiz.setCourseExecution(courseExecution);
         quiz.setType(Quiz.QuizType.GENERATED)
         quizRepository.save(quiz)
 
         question1 = new Question()
-        question1.setKey(1)
         question1.setTitle(QUESTION_TITLE)
         question1.setContent(QUESTION_CONTENT)
         question1.setCourse(course)
-        question1.setKey(questionService.getMaxQuestionKey()+1)
         questionRepository.save(question1)
 
         def option = new Option()
