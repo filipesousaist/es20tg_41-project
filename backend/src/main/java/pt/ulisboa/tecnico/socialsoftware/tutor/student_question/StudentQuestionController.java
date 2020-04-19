@@ -58,4 +58,10 @@ public class StudentQuestionController {
         }
         return studentQuestionService.getStudentQuestions(user.getId());
     }
+
+    @GetMapping("courses/{courseId}/studentQuestions/proposed")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#courseId, 'COURSE.ACCESS')")
+    public List<StudentQuestionDto> getProposedStudentQuestions(@PathVariable int courseId) {
+        return studentQuestionService.getProposedStudentQuestions(courseId);
+    }
 }
