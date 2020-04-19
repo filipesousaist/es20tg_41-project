@@ -116,15 +116,6 @@ let router = new Router({
             requiredAuth: 'Teacher'
           }
         },
-        {
-          path: 'requests',
-          name: 'requests-management',
-          component: ClarificationRequestView,
-          meta: {
-            title: process.env.VUE_APP_NAME + ' - Requests',
-            requiredAuth: 'Teacher'
-          }
-        }
       ]
     },
     {
