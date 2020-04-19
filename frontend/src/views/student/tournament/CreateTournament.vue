@@ -18,16 +18,14 @@
             <v-datetime-picker
               label="Select beginning"
               v-model="currentTournament.beginningTime"
+              data-cy="Select beginning"
             >
-              format: "yyyy/MM/dd HH:mm" date-format="yyyy-MM-dd"
-              time-format="HH:mm"
             </v-datetime-picker>
             <v-datetime-picker
               label="Select ending"
               v-model="currentTournament.endingTime"
+              data-cy="Select ending"
             >
-              format: "yyyy/MM/dd HH:mm" date-format="yyyy-MM-dd"
-              time-format="HH:mm" data-cy="Select ending"
             </v-datetime-picker>
             <v-text-field
               v-model="currentTournament.numberOfQuestions"

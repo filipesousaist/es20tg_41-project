@@ -31,6 +31,12 @@ Cypress.Commands.add('demoAdminLogin', () => {
   cy.contains('Manage Courses').click();
 });
 
+Cypress.Commands.add('demoStudentLogin', () => {
+  cy.visit('/');
+  cy.get('[data-cy="demoStudentButton"]').click();
+  cy.contains('Tournaments').click();
+});
+
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
   cy.get('[data-cy="Name"]').type(name);
@@ -38,6 +44,45 @@ Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="AcademicTerm"]').type(academicTerm);
   cy.get('[data-cy="saveButton"]').click();
 });
+
+Cypress.Commands.add('createTournament',
+  (name, numberOfQuestions, day1, day2, hour1, hour2, minute1, minute2) => {
+  cy.contains('Create').click();
+  cy.get('[data-cy="Name of the tournament"]').type(name);
+  cy.get('[data-cy="Select beginning"]').click();
+  cy.contains(day1).click();
+  cy.contains(hour1).click();
+  cy.contains(minute1).click();
+  cy.contains('OK').click();
+  cy.get('[data-cy="Select ending"]').click();
+  cy.contains(day2).click();
+  cy.contains(hour2).click();
+  cy.contains(minute2).click();
+  cy.contains('OK').click();
+  cy.get('[data-cy="Number of questions"]').type(numberOfQuestions);
+  cy.get('[data-cy="Topics"]').click();
+  cy.contains('Github').click();
+  cy.contains('Chrome').click();
+  cy.get('[data-cy="saveButton"]').click();
+});
+
+Cypress.Commands.add('createTournamentEmptyTopics',
+  (name, numberOfQuestions, day1, day2, hour1, hour2, minute1, minute2) => {
+    cy.contains('Create').click();
+    cy.get('[data-cy="Name of the tournament"]').type(name);
+    cy.get('[data-cy="Select beginning"]').click();
+    cy.contains(day1).click();
+    cy.contains(hour1).click();
+    cy.contains(minute1).click();
+    cy.contains('OK').click();
+    cy.get('[data-cy="Select ending"]').click();
+    cy.contains(day2).click();
+    cy.contains(hour2).click();
+    cy.contains(minute2).click();
+    cy.contains('OK').click();
+    cy.get('[data-cy="Number of questions"]').type(numberOfQuestions);
+    cy.get('[data-cy="saveButton"]').click();
+  });
 
 Cypress.Commands.add('closeErrorMessage', (name, acronym, academicTerm) => {
   cy.contains('Error')
