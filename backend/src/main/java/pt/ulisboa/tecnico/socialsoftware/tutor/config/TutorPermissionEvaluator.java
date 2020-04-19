@@ -87,6 +87,8 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
                     return userHasAnsweredQuestion(username, id);
                 case "CLARIFICATION.REQUEST.ACCESS":
                     return userHasAnExecutionOfTheCourse(username, discussionService.findClarificationRequestCourse(id).getCourseId());
+                case "CLARIFICATION.ACCESS":
+                    return userHasThisClarificationRequest(username, id);
                 default: return false;
             }
         }
@@ -116,6 +118,11 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
     private boolean userHasAnsweredQuestion(String username, int id){
         return userService.getAnsweredQuestions(username).stream()
                 .anyMatch(question -> question.getId() == id);
+    }
+
+    private boolean userHasThisClarificationRequest(String username, int id){
+        return userService.getClarificationRequests(username).stream()
+                .anyMatch(clarificationRequest -> clarificationRequest.getId() == id);
     }
 
     @Override

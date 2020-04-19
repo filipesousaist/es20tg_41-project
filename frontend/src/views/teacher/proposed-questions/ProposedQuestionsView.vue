@@ -28,7 +28,7 @@
               v-on="on"
               @click="evaluateQuestion(item)"
             >
-              edit
+              book
             </v-icon>
           </template>
           <span>Evaluate Question</span>
@@ -39,7 +39,7 @@
       v-if="currentStudentQuestion"
       v-model="evaluateQuestionDialog"
       :studentQuestion="currentStudentQuestion"
-      v-on:submit-evaluation="onSubmitEvaluation"
+      v-on:submit-evaluation="onSubmitEvaluation()"
     />
   </v-card>
 </template>
