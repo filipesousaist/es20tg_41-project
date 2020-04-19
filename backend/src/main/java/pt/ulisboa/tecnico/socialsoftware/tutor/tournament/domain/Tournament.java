@@ -37,6 +37,7 @@ public class Tournament {
     @JoinColumn(name = "course_executions_id")
     private CourseExecution courseExecution;
 
+    private String name;
     private LocalDateTime beginningTime;
     private LocalDateTime endingTime;
     private int numberOfQuestions;
@@ -45,10 +46,11 @@ public class Tournament {
 
     public Tournament() {}
 
-    public Tournament(User student, List<Topic> titlesList, LocalDateTime initialTime, LocalDateTime endTime, int nQuestions, CourseExecution courseEx) {
+    public Tournament(User student, String tournamentName, List<Topic> titlesList, LocalDateTime initialTime, LocalDateTime endTime, int nQuestions, CourseExecution courseEx) {
 
         checkParameters(titlesList, initialTime, endTime, nQuestions);
 
+        name = tournamentName;
         createdByUser = student;
         titles = titlesList;
         beginningTime = initialTime;
@@ -125,11 +127,11 @@ public class Tournament {
         return id;
     }
 
-    public Boolean getClosed() {
+    public Boolean getIsClosed() {
         return isClosed;
     }
 
-    public void setClosed(Boolean closed) {
+    public void setIsClosed(Boolean closed) {
         isClosed = closed;
     }
 
@@ -143,6 +145,14 @@ public class Tournament {
 
     public void setCourseExecution(CourseExecution courseExecution) {
         this.courseExecution = courseExecution;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void remove() {

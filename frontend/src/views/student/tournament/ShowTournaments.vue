@@ -3,17 +3,22 @@
     <h2>List of All Tournaments in {{ course }}</h2>
     <ul>
       <li class="list-header">
+        <div class="col">Name</div>
         <div class="col">Topics</div>
         <div class="col">Beggining Date</div>
         <div class="col">Ending Date</div>
         <div class="col">Number of Questions</div>
         <div class="col">Status</div>
+
       </li>
       <li
         class="list-row"
         v-for="tournament in tournaments"
         :key="tournament.id"
       >
+        <div class="col">
+          {{ tournament.name }}
+        </div>
         <div class="col">
           <div v-for="topic in tournament.topics" :key="topic.id" style="padding-bottom:2px;padding-top: 2px;">
             <v-chip>{{ topic.name }}</v-chip>

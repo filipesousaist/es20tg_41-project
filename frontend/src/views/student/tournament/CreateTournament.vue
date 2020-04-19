@@ -10,25 +10,35 @@
         <v-container grid-list-md fluid>
           <v-layout column wrap>
             <v-flex xs24 sm12 md8>
+                <v-text-field
+                    v-model="currentTournament.name"
+                    label="Name of the tournament"
+                    data-cy="Name of the tournament"
+                />
               <v-datetime-picker
                   label="Select beginning"
                   v-model="currentTournament.beginningTime">
-                  format: "yyyy/MM/dd hh:mm tt"
+                  format: "yyyy/MM/dd HH:mm"
+                  date-format="yyyy-MM-dd"
+                  time-format="HH:mm"
               </v-datetime-picker>
               <v-datetime-picker
                   label="Select ending"
                   v-model="currentTournament.endingTime">
-                  format: "yyyy/MM/dd hh:mm tt"
+                  format: "yyyy/MM/dd HH:mm"
+                  date-format="yyyy-MM-dd"
+                  time-format="HH:mm"
+                  data-cy="Select ending"
               </v-datetime-picker>
               <v-text-field
                   v-model="currentTournament.numberOfQuestions"
-                  label="Number of questions"
+                  label="Number of questions (Maximum of 25)"
                   data-cy="Number of questions"
               />
               <v-row>
                 <v-col cols="12" sm="12">
                   <v-select
-                      label="Topics"
+                      label="Select topics (Maximum of 5)"
                       v-model="currentTournament.topics"
                       :items="allTopics"
                       item-text="name"
@@ -36,6 +46,8 @@
                       multiple
                       solo
                       return-object
+                      v-on:input="limiter"
+                      data-cy="Topics"
                   ></v-select>
                 </v-col>
               </v-row>
@@ -70,11 +82,6 @@ import RemoteServices from '@/services/RemoteServices';
 @Component
 export default class CreateTournament extends Vue {
   currentTournament: Tournament = new Tournament();
-
-  currentTopicsSearch: string = '';
-  currentTopicsSearchText: string = '';
-  allTopicsSearch: string = '';
-  allTopicsSearchText: string = '';
   allTopics: Topic[] = [];
 
   async created() {
@@ -87,24 +94,29 @@ export default class CreateTournament extends Vue {
     await this.$store.dispatch('clearLoading');
   }
 
-  async cancel() {
+  limiter(topics: Topic[]) {
+      if (topics.length > 5) {
+          topics.pop();
+      }
     return;
   }
 
+  async cancel() {
+      await this.$router.push('/student');
+  }
+
   async saveTournament() {
-    if (this.currentTournament && !this.currentTournament.numberOfQuestions &&
-        !this.currentTournament.beginningTime && !this.currentTournament.endingTime) {
+    if (this.currentTournament && ( !this.currentTournament.name || !this.currentTournament.numberOfQuestions &&
+        !this.currentTournament.beginningTime || !this.currentTournament.endingTime || !this.currentTournament.topics.length)) {
       await this.$store.dispatch(
           'error',
-          'Course must have name, acronym and academicTerm'
+          'Tournament must have a name, a beginning and a ending time, the number of questions and topics'
       );
       return;
     }
     if (this.currentTournament) {
       debugger;
       try {
-        this.currentTournament.beginningTime = "2013-02-12 23:00:00";
-        this.currentTournament.endingTime = "2013-02-13 23:00:00";
         const result = await RemoteServices.createTournament(
             this.currentTournament
         );
@@ -113,6 +125,7 @@ export default class CreateTournament extends Vue {
         await this.$store.dispatch('error', error);
       }
     }
+    await this.$router.push('enrollTournament');
   }
 }
 </script>
@@ -120,10 +133,10 @@ export default class CreateTournament extends Vue {
 <style lang="scss" scoped>
   .container {
     max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 10px;
-    padding-right: 10px;
+      margin: auto;
+      padding-left: 10px;
+        padding-right: 10px;
+
 
     h2 {
       font-size: 26px;

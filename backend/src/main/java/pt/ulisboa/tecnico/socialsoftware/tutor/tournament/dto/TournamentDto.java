@@ -14,6 +14,7 @@ import java.util.Set;
 public class TournamentDto implements Serializable {
 
     Integer id;
+    String name;
     List<TopicDto> topics = new ArrayList<>();
     String beginningTime;
     String endingTime;
@@ -21,16 +22,18 @@ public class TournamentDto implements Serializable {
     List<String> studentsUsername = new ArrayList<>();
     boolean isClosed;
     Integer createdByUser;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
 
     public TournamentDto() {}
 
     public TournamentDto(Tournament tournament) {
         id = tournament.getId();
-        isClosed = tournament.getClosed();
+        isClosed = tournament.getIsClosed();
         if (tournament.getBeginningTime() != null)
-            beginningTime = tournament.getBeginningTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            beginningTime = tournament.getBeginningTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
         if (tournament.getEndingTime() != null)
-            endingTime = tournament.getEndingTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            endingTime = tournament.getEndingTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
         numberOfQuestions = tournament.getNumberOfQuestions();
 
         List<Topic> tournamentTitles= tournament.getTitles();
@@ -38,7 +41,7 @@ public class TournamentDto implements Serializable {
             TopicDto topicDto = new TopicDto(var);
             topics.add(topicDto);
         }
-
+        name = tournament.getName();
         createdByUser = tournament.getCreatedByUser().getId();
 
         Set<User> users = tournament.getStudentsEnrolled();
@@ -101,5 +104,13 @@ public class TournamentDto implements Serializable {
 
     public void setClosed(boolean closed) {
         isClosed = closed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

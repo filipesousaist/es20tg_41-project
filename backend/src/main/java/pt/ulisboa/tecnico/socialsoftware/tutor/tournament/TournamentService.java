@@ -54,15 +54,15 @@ public class TournamentService {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        LocalDateTime begin = LocalDateTime.parse(tournamentDto.getBeginningTime(), formatter);
-        LocalDateTime end = LocalDateTime.parse(tournamentDto.getEndingTime(), formatter);
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        LocalDateTime begin = LocalDateTime.parse(tournamentDto.getBeginningTime(), inputFormatter);
+        LocalDateTime end = LocalDateTime.parse(tournamentDto.getEndingTime(), inputFormatter);
         int numberOfQuestions = tournamentDto.getNumberOfQuestions();
 
         CourseExecution courseEx = courseExecutionRepository.findById(courseExId).orElseThrow(() -> new TutorException(INVALID_COURSE_EXECUTION));
         List<Topic> topics = getTopics(tournamentDto, courseEx);
-        Tournament tournament = new Tournament(user, topics, begin, end, numberOfQuestions, courseEx);
+        String name = tournamentDto.getName();
+        Tournament tournament = new Tournament(user, name, topics, begin, end, numberOfQuestions, courseEx);
         user.addTournamentCreatedByMe(tournament);
 
         entityManager.persist(tournament);
@@ -137,7 +137,7 @@ public class TournamentService {
     public List<TournamentDto> getAllOpenTournament() {
 
         return tournamentRepository.findAll().stream()
-                .filter(tournament -> !tournament.getClosed())
+                .filter(tournament -> !tournament.getIsClosed())
                 .map(TournamentDto::new)
                 .sorted(Comparator
                         .comparing(TournamentDto::getBeginningTime)

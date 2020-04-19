@@ -3,6 +3,7 @@
     <h2>Available Tournaments in {{ course }}</h2>
     <ul>
       <li class="list-header">
+        <div class="col">Name</div>
         <div class="col">Topics</div>
         <div class="col">Available since</div>
         <div class="col">Available until</div>
@@ -15,6 +16,9 @@
         :key="tournament.id"
         @click="enrollTournament(tournament.id)"
       >
+        <div class="col">
+          {{ tournament.name }}
+        </div>
         <div class="col">
           <div v-for="topic in tournament.topics" :key="topic.id" style="padding-bottom:2px;padding-top: 2px;">
             <v-chip>{{ topic.name }}</v-chip>

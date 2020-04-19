@@ -109,16 +109,12 @@ class EnrollTournamentServiceSpockTest extends Specification {
         topicList2.add(topicDto2)
         topicList2.add(topicDto3)
 
-
-
-
         userDto = new UserDto(user1)
         tournamentDto = new TournamentDto()
         tournamentDto.setTopics(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
         tournamentDto.setNumberOfQuestions(NUMBER_OF_QUESTIONS)
-
     }
 
     def "a student exists and enrolls in a tournament"() {
@@ -165,7 +161,7 @@ class EnrollTournamentServiceSpockTest extends Specification {
     def "a student enrolls in a tournament where the ending date already passed"() {
         given: "student creates a tournament"
         tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
-        tournamentRepository.findAll().get(0).setClosed(true)
+        tournamentRepository.findAll().get(0).setIsClosed(true)
 
         when:
         tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())

@@ -375,6 +375,7 @@ export default class QuizForm extends Vue {
   async save() {
     try {
       this.quiz.questions = this.quizQuestions;
+      debugger;
       let updatedQuiz = await RemoteServices.saveQuiz(this.quiz);
       this.cleanQuizQuestions();
       this.$emit('updateQuiz', updatedQuiz);
