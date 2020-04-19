@@ -15,7 +15,6 @@
         class="list-row"
         v-for="tournament in tournaments"
         :key="tournament.id"
-        @click="enrollTournament(tournament)"
       >
         <div class="col">
           {{ tournament.name }}
@@ -42,8 +41,8 @@
           {{ tournament.studentsUsername.length }}
         </div>
         <div class="col last-col">
-          <li v-if="!tournament.studentsUsername.includes(username)"><v-btn color="primary" v-on="on">Enroll</v-btn></li>
-          <li v-else><v-btn color="error" v-on="on">Withdraw</v-btn></li>
+          <li v-if="!tournament.studentsUsername.includes(username)"><v-btn color="primary" @click="enrollTournament(tournament)" v-on="on">Enroll</v-btn></li>
+          <li v-else><v-btn color="error" @click="enrollTournament(tournament)"  v-on="on">Withdraw</v-btn></li>
         </div>
       </li>
     </ul>
