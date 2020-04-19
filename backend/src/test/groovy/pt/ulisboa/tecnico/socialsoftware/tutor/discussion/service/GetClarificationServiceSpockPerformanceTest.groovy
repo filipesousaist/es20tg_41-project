@@ -146,7 +146,6 @@ class GetClarificationServiceSpockPerformanceTest extends Specification{
         question1.setTitle(QUESTION_TITLE)
         question1.setContent(QUESTION_CONTENT)
         question1.setCourse(course)
-        question1.setKey(questionService.getMaxQuestionKey() + 1)
         questionRepository.save(question1)
 
         def option = new Option()
