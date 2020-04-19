@@ -70,6 +70,7 @@ export default class ClarificationRequestDialog extends Vue {
   }
 
   async saveClarificationRequest(){
+    let result;
     this.clarificationRequest.username = this.$store.getters.getUser.username;
     if(this.clarificationRequest 
     && !this.clarificationRequest.title 
@@ -81,12 +82,13 @@ export default class ClarificationRequestDialog extends Vue {
 
     if(this.clarificationRequest){
       try{
-        const result = await RemoteServices.createClarificationRequest(this.clarificationRequest, this.question.questionId);
+        result = await RemoteServices.createClarificationRequest(this.clarificationRequest, this.question.questionId);
         this.$emit('new-clarification-request', result);
       }catch(error){
         await this.$store.dispatch('error', error);
       }
     }
+    if(result) this.question.clarificationRequest = result;
     this.$emit('close-dialog');
   }
 }

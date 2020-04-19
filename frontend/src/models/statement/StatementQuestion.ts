@@ -10,6 +10,7 @@ export default class StatementQuestion {
   image: Image | null = null;
 
   options: StatementOption[] = [];
+  clarificationRequest!: ClarificationRequest;
 
   constructor(jsonObj?: StatementQuestion) {
     if (jsonObj) {
@@ -25,6 +26,10 @@ export default class StatementQuestion {
             (option: StatementOption) => new StatementOption(option)
           )
         );
+      }
+
+      if(jsonObj.clarificationRequest){
+        this.clarificationRequest = new ClarificationRequest(jsonObj.clarificationRequest);
       }
     }
   }
