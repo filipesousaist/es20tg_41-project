@@ -5,7 +5,6 @@ export default class StudentQuestion {
   id: number | null = null;
   user: User | null = null;
   questionDto: Question = new Question();
-  ser: number | null = null;
 
   constructor(jsonObj?: StudentQuestion) {
     if (jsonObj) {

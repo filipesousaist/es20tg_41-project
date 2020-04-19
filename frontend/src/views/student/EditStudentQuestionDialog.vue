@@ -4,7 +4,7 @@
     @input="$emit('close-dialog')"
     @keydown.esc="$emit('close-dialog')"
     max-width="50%"
-    max-height="50%"
+    max-height="10%"
   >
     <v-card>
       <v-card-title>
@@ -28,7 +28,7 @@
                 outline
                 rows="10"
                 v-model="editStudentQuestion.questionDto.content"
-                label="Content"
+                label="Question"
                 data-cy="Question"
               ></v-textarea>
             </v-flex>
@@ -63,10 +63,18 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn color="blue darken-1" @click="$emit('close-dialog')" data-cy="cancelButton"
+        <v-btn
+          color="blue darken-1"
+          @click="$emit('close-dialog')"
+          data-cy="cancelButton"
           >Cancel</v-btn
         >
-        <v-btn color="blue darken-1" @click="saveStudentQuestion" data-cy="saveButton">Save</v-btn>
+        <v-btn
+          color="blue darken-1"
+          @click="saveStudentQuestion"
+          data-cy="saveButton"
+          >Save</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -75,7 +83,6 @@
 import { Component, Model, Prop, Vue } from 'vue-property-decorator';
 import StudentQuestion from '@/models/management/StudentQuestion';
 import RemoteServices from '@/services/RemoteServices';
-import Question from '@/models/management/Question';
 
 @Component
 export default class EditStudentQuestionDialog extends Vue {
@@ -90,9 +97,6 @@ export default class EditStudentQuestionDialog extends Vue {
   }
 
   async saveStudentQuestion() {
-    console.log(this.editStudentQuestion.questionDto.title);
-
-    this.editStudentQuestion.ser = 123;
     if (this.editStudentQuestion && !this.editStudentQuestion.questionDto) {
       await this.$store.dispatch(
         'error',

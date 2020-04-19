@@ -106,9 +106,9 @@ export default class RemoteServices {
       });
   }
 
-  static createStudentQuestion(studentQuestion: StudentQuestion): Promise<StudentQuestion> {
-    console.log(studentQuestion.questionDto);
-    console.log(studentQuestion.ser);
+  static createStudentQuestion(
+    studentQuestion: StudentQuestion
+  ): Promise<StudentQuestion> {
     return httpClient
       .post(
         `/courses/${Store.getters.getCurrentCourse.courseId}/studentQuestions/`,

@@ -57,7 +57,7 @@
     </v-data-table>
 
     <edit-student-question-dialog
-      v-if="currentStudentQuestion"
+      v-if="currentStudentQuestion && !studentQuestionDialog"
       v-model="editStudentQuestionDialog"
       :studentQuestion="currentStudentQuestion"
       v-on:save-student-question="onSaveStudentQuestion"
@@ -65,7 +65,7 @@
     />
 
     <show-student-question-dialog
-      v-if="currentStudentQuestion"
+      v-if="currentStudentQuestion && !editStudentQuestionDialog"
       :dialog="studentQuestionDialog"
       :studentQuestion="currentStudentQuestion"
       v-on:close-show-student-question-dialog="onCloseShowStudentQuestionDialog"
@@ -138,6 +138,7 @@ export default class CreateStudentQuestionsView extends Vue {
   }
 
   newStudentQuestion() {
+    this.studentQuestionDialog = false;
     this.currentStudentQuestion = new StudentQuestion();
     this.editStudentQuestionDialog = true;
   }
@@ -168,12 +169,14 @@ export default class CreateStudentQuestionsView extends Vue {
   }
 
   showStudentQuestionDialog(studentQuestion: StudentQuestion) {
+    this.editStudentQuestionDialog = false;
     this.currentStudentQuestion = studentQuestion;
     this.studentQuestionDialog = true;
   }
 
   onCloseShowStudentQuestionDialog() {
     this.studentQuestionDialog = false;
+    this.currentStudentQuestion = null;
   }
 
   onCloseDialog() {
