@@ -2,6 +2,8 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.tournament;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
@@ -15,10 +17,15 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto.TournamentDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.repository.TournamentRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
-import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
@@ -37,23 +44,30 @@ public class TournamentService {
     @Autowired
     private CourseExecutionRepository courseExecutionRepository;
 
-    public TournamentDto createNewTournament(TournamentDto tournamentDto){
+    @PersistenceContext
+    EntityManager entityManager;
 
-        if (!tournamentDto.getUserDto().getRole().equals(User.Role.STUDENT)) {
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public TournamentDto createNewTournament(Integer userId, Integer courseExId, TournamentDto tournamentDto){
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
+
+        if (!user.getRole().equals(User.Role.STUDENT)) {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
 
-        User user = userRepository.findById(tournamentDto.getUserDto().getId()).orElseThrow(() -> new TutorException(USER_NOT_FOUND, tournamentDto.getUserDto().getId()));
-        LocalDateTime begin = tournamentDto.getBeginningTime();
-        LocalDateTime end = tournamentDto.getEndingTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        LocalDateTime begin = LocalDateTime.parse(tournamentDto.getBeginningTime(), formatter);
+        LocalDateTime end = LocalDateTime.parse(tournamentDto.getEndingTime(), formatter);
         int numberOfQuestions = tournamentDto.getNumberOfQuestions();
 
-        CourseExecution courseEx = getCourseExecution(tournamentDto);
+        CourseExecution courseEx = courseExecutionRepository.findById(courseExId).orElseThrow(() -> new TutorException(INVALID_COURSE_EXECUTION));
         List<Topic> topics = getTopics(tournamentDto, courseEx);
-
         Tournament tournament = new Tournament(user, topics, begin, end, numberOfQuestions, courseEx);
         user.addTournamentCreatedByMe(tournament);
-        tournamentRepository.save(tournament);
+
+        entityManager.persist(tournament);
         courseEx.addTournament(tournament);
         for (Topic topic : topics) {
             topic.addTournament(tournament);
@@ -61,54 +75,64 @@ public class TournamentService {
 
         return new TournamentDto(tournament);
     }
-
-    private List<Topic> getTopics(TournamentDto tournamentDto, CourseExecution courseEx) {
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    List<Topic> getTopics(TournamentDto tournamentDto, CourseExecution courseEx) {
         List<TopicDto> titlesDto = tournamentDto.getTitles();
         if (titlesDto == null || titlesDto.isEmpty()) {
             throw new TutorException(EMPTY_TOPIC);
         }
         List<Topic> topics = new ArrayList<>();
         for (TopicDto dto : titlesDto) {
-            Topic topic = topicRepository.optionalFindTopicByName(courseEx.getId(), dto.getName()).orElseThrow(() -> new TutorException(NO_SUCH_TOPIC));
+            Topic topic = topicRepository.optionalFindTopicByName(courseEx.getCourse().getId(), dto.getName()).orElseThrow(() -> new TutorException(NO_SUCH_TOPIC));
             topics.add(topic);
 
         }
         return topics;
     }
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public TournamentDto enrollTournament(Integer studentId, Integer tournamentId) {
 
-    private CourseExecution getCourseExecution(TournamentDto tournamentDto) {
-        CourseDto courseDto =  tournamentDto.getCourseExecutionDto();
-        CourseExecution courseEx;
-        if (courseDto.getCourseType() == null) {
-            throw new TutorException(INVALID_COURSE_EXECUTION);
-        }
-        if (courseDto.getCourseType().equals(Course.Type.EXTERNAL)) {
-            courseEx = courseExecutionRepository.findByAcronymAcademicTermType(
-                    courseDto.getAcronym(), courseDto.getAcademicTerm(), Course.Type.EXTERNAL.name()).orElse(null);
-        } else {
-            courseEx = courseExecutionRepository.findByAcronymAcademicTermType(
-                    courseDto.getAcronym(), courseDto.getAcademicTerm(), Course.Type.TECNICO.name()).orElse(null);        }
-        if (courseEx == null) {
-            throw new TutorException(INVALID_COURSE_EXECUTION);
-        }
-        return courseEx;
-    }
-
-    public TournamentDto enrollTournament(UserDto student, TournamentDto tournamentdto) {
-
-        if (tournamentdto.getId() == null) {
+        if (tournamentId == null) {
             throw new TutorException(TOURNAMENT_NOT_FOUND);
         }
 
-        if (!student.getRole().equals(User.Role.STUDENT)) {
+        if (studentId == null) {
+            throw new TutorException(USER_NOT_FOUND, studentId);
+        }
+
+        User user = userRepository.findById(studentId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, studentId));
+
+        if (!user.getRole().equals(User.Role.STUDENT)) {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
 
-        Tournament tournament = tournamentRepository.findTournamentById(tournamentdto.getId()).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
-        User user = userRepository.findById(student.getId()).orElseThrow(() -> new TutorException(USER_NOT_FOUND, student.getId()));
+        Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
 
         tournament.addStudentEnrolled(user);
         user.addTournamentEnrolled(tournament);
         return new TournamentDto(tournament);
+    }
+    /*
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void removeTournament(Integer tournamentId) {
+
+        Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
+
+        tournament.remove();
+
+        entityManager.remove(tournament);
+
+    }*/
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<TournamentDto> getAllOpenTournament() {
+        return tournamentRepository.findAll().stream()
+                .filter(tournament -> !tournament.getClosed())
+                .map(TournamentDto::new)
+                .sorted(Comparator
+                        .comparing(TournamentDto::getBeginningTime)
+                        .thenComparing(TournamentDto::getEndingTime)
+                        .thenComparing(TournamentDto::getNumberOfQuestions))
+                .collect(Collectors.toList());
     }
 }

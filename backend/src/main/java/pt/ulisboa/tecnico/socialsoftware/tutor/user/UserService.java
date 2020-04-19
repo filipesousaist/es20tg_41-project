@@ -11,6 +11,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.UsersXmlExport;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.UsersXmlImport;
@@ -18,7 +19,9 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -100,6 +103,11 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<ClarificationRequest> getClarificationRequests(String username){
+        return new ArrayList<>(findByUsername(username).getClarificationRequests());
+    }
+
 
     @Retryable(
       value = { SQLException.class },
@@ -111,19 +119,45 @@ public class UserService {
         xmlImporter.importUsers(usersXML, this);
     }
 
-    public Optional<User> findUserById(Integer id){
-        return this.userRepository.findById(id);
-    }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public User getDemoTeacher() {
-        return this.userRepository.findByUsername("Demo-Teacher");
+        User user = this.userRepository.findByUsername("Demo-Teacher");
+        if (user == null)
+            return createUser("Demo Teacher", "Demo-Teacher", User.Role.TEACHER);
+        return user;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public User getDemoStudent() {
-        return this.userRepository.findByUsername("Demo-Student");
+        User user = this.userRepository.findByUsername("Demo-Student");
+        if (user == null)
+            return createUser("Demo Student", "Demo-Student", User.Role.STUDENT);
+        return user;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public User getDemoAdmin() {
-        return this.userRepository.findByUsername("Demo-Admin");
+        User user =  this.userRepository.findByUsername("Demo-Admin");
+        if (user == null)
+            return createUser("Demo Admin", "Demo-Admin", User.Role.DEMO_ADMIN);
+        return user;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public User createDemoStudent() {
+        String birthDate = LocalDateTime.now().toString();
+        User newDemoUser = createUser("Demo-Student-" + birthDate, "Demo-Student-" + birthDate, User.Role.STUDENT);
+
+        User demoUser = this.userRepository.findByUsername("Demo-Student");
+
+        CourseExecution courseExecution = demoUser.getCourseExecutions().stream().findAny().orElse(null);
+
+        if (courseExecution != null) {
+            courseExecution.addUser(newDemoUser);
+            newDemoUser.addCourse(courseExecution);
+        }
+
+        return newDemoUser;
     }
 }

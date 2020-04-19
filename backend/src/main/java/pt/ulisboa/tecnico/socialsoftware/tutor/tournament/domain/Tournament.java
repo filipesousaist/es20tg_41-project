@@ -23,7 +23,7 @@ public class Tournament {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User createdByUser;
 
@@ -112,7 +112,7 @@ public class Tournament {
 
     public void addStudentEnrolled(User user) {
 
-        if (this.studentsEnrolled.contains(user)) {
+        if (this.studentsEnrolled.contains(user) && !user.getUsername().equals("Demo-Student")) {
             throw new TutorException(STUDENT_ALREADY_ENROLLED);
         }
         if (this.isClosed) {
@@ -143,5 +143,21 @@ public class Tournament {
 
     public void setCourseExecution(CourseExecution courseExecution) {
         this.courseExecution = courseExecution;
+    }
+
+    public void remove() {
+
+        for(User user: this.studentsEnrolled) {
+            user.getTournamentsEnrolled().remove(this);
+        }
+        this.studentsEnrolled = null;
+
+        for(Topic topic: this.titles) {
+            topic.getTournaments().remove(this);
+        }
+        this.titles = null;
+
+        this.courseExecution.getTournaments().remove(this);
+        this.courseExecution = null;
     }
 }
