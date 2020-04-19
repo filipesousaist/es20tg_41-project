@@ -3,10 +3,11 @@
     :value="dialog"
     @input="$emit('close-dialog')"
     @keydown.esc="$emit('close-dialog')"
-    max-width="50%"
-    max-height="10%"
+    max-width="75%"
+    max-height="80%"
+    persistent
   >
-    <v-card>
+    <v-card max-height="30%">
       <v-card-title>
         <span class="headline">
           New Student Question
@@ -26,7 +27,7 @@
             <v-flex xs24 sm12 md12>
               <v-textarea
                 outline
-                rows="10"
+                rows="5"
                 v-model="editStudentQuestion.questionDto.content"
                 label="Question"
                 data-cy="Question"
@@ -49,7 +50,7 @@
               />
               <v-textarea
                 outline
-                rows="10"
+                rows="5"
                 v-model="
                   editStudentQuestion.questionDto.options[index - 1].content
                 "
