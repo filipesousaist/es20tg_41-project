@@ -408,6 +408,8 @@ public class User implements UserDetails {
 
     public void addTournamentEnrolled(Tournament tournament) {this.tournamentsEnrolled.add(tournament);}
 
+    public void removeTournamentEnrolled(Tournament tournament) {this.tournamentsEnrolled.remove(tournament);}
+
     public void addTournamentCreatedByMe(Tournament tournament) {this.tournamentsCreatedByMe.add(tournament);}
 
 

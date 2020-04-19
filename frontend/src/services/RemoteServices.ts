@@ -599,10 +599,19 @@ export default class RemoteServices {
       });
   }
 
+  static unenrollTournament(id: Number){
+    return httpClient
+      .post(
+        `/courseExecution/${Store.getters.getCurrentCourse.courseExecutionId}/tournament/${id}/unenrollTournament`
+      )
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
   static getAllOpenTournament(): Promise<Tournament[]> {
     return httpClient
-      .get(
-        'tournament/getAllOpenTournament')
+      .get('tournament/getAllOpenTournament')
       .then(response => {
         return response.data.map((tournament: any) => {
           return new Tournament(tournament);
@@ -614,9 +623,7 @@ export default class RemoteServices {
   }
   static getAllTournaments(): Promise<Tournament[]> {
     return httpClient
-      .get(
-        '/tournament/getAllTournaments'
-      )
+      .get('/tournament/getAllTournaments')
       .then(response => {
         return response.data.map((tournament: any) => {
           return new Tournament(tournament);

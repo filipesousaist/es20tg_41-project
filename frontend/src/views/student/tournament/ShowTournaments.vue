@@ -7,7 +7,8 @@
         <div class="col">Topics</div>
         <div class="col">Beggining Date</div>
         <div class="col">Ending Date</div>
-        <div class="col">Number of Questions</div>
+        <div class="col">Questions</div>
+        <div class="col">Result</div>
         <div class="col">Status</div>
 
       </li>
@@ -34,7 +35,10 @@
           {{ tournament.numberOfQuestions }}
         </div>
         <div class="col">
-          <span>{{ tournament.isClosed ? 'Closed' : 'Open' }}</span>
+          NA
+        </div>
+        <div class="col">
+          {{ tournament.isClosed ? 'Closed' : 'Open' }}
         </div>
       </li>
     </ul>
@@ -66,7 +70,7 @@ export default class ShowTournaments extends Vue {
 </script>
 <style lang="scss" scoped>
 .container {
-  max-width: 1000px;
+  max-width: 1250px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 10px;

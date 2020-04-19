@@ -7,20 +7,25 @@
         <div class="col">Topics</div>
         <div class="col">Available since</div>
         <div class="col">Available until</div>
-        <div class="col">Number of Questions</div>
+        <div class="col">Questions</div>
+        <div class="col">Participants</div>
         <div class="col last-col"></div>
       </li>
       <li
         class="list-row"
         v-for="tournament in tournaments"
         :key="tournament.id"
-        @click="enrollTournament(tournament.id)"
+        @click="enrollTournament(tournament)"
       >
         <div class="col">
           {{ tournament.name }}
         </div>
         <div class="col">
-          <div v-for="topic in tournament.topics" :key="topic.id" style="padding-bottom:2px;padding-top: 2px;">
+          <div
+            v-for="topic in tournament.topics"
+            :key="topic.id"
+            style="padding-bottom:2px;padding-top: 2px;"
+          >
             <v-chip>{{ topic.name }}</v-chip>
           </div>
         </div>
@@ -33,8 +38,12 @@
         <div class="col">
           {{ tournament.numberOfQuestions }}
         </div>
+        <div class="col">
+          {{ tournament.studentsUsername.length }}
+        </div>
         <div class="col last-col">
-          <i class="fas fa-chevron-circle-right"></i>
+          <li v-if="!tournament.studentsUsername.includes(username)"><v-btn color="primary" v-on="on">Enroll</v-btn></li>
+          <li v-else><v-btn color="error" v-on="on">Withdraw</v-btn></li>
         </div>
       </li>
     </ul>
@@ -45,12 +54,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Tournament from '@/models/tournament/Tournament';
 import RemoteServices from '@/services/RemoteServices';
-import StatementQuiz from '@/models/statement/StatementQuiz';
-import StatementManager from '@/models/statement/StatementManager';
 
 @Component
 export default class EnrollTournament extends Vue {
   course = this.$store.getters.getCurrentCourse.name;
+  username = this.$store.getters.getUser.username;
   tournaments: Tournament[] = [];
 
   async created() {
@@ -65,10 +73,16 @@ export default class EnrollTournament extends Vue {
     await this.$store.dispatch('clearLoading');
   }
 
-  async enrollTournament(id: Number) {
+  async enrollTournament(tournament: Tournament) {
     await this.$store.dispatch('loading');
     try {
-      await RemoteServices.enrollTournament(id);
+      if (tournament.studentsUsername.includes(this.username)) {
+        await RemoteServices.unenrollTournament(tournament.id);
+        tournament.studentsUsername.splice(this.username);
+      } else {
+        await RemoteServices.enrollTournament(tournament.id);
+        tournament.studentsUsername.push(this.username);
+      }
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
@@ -78,7 +92,7 @@ export default class EnrollTournament extends Vue {
 </script>
 <style lang="scss" scoped>
 .container {
-  max-width: 1000px;
+  max-width: 1250px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 10px;

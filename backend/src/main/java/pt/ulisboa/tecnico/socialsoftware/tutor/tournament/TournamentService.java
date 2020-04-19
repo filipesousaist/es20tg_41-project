@@ -90,6 +90,27 @@ public class TournamentService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TournamentDto enrollTournament(Integer studentId, Integer tournamentId) {
 
+        User user = getUser(studentId, tournamentId);
+
+        Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
+
+        tournament.addStudentEnrolled(user);
+        user.addTournamentEnrolled(tournament);
+        return new TournamentDto(tournament);
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void unenrollTournament(Integer studentId, Integer tournamentId) {
+
+        User user = getUser(studentId, tournamentId);
+
+        Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
+
+        tournament.removeStudentEnrolled(user);
+        user.removeTournamentEnrolled(tournament);
+    }
+
+    private User getUser(Integer studentId, Integer tournamentId) {
         if (tournamentId == null) {
             throw new TutorException(TOURNAMENT_NOT_FOUND);
         }
@@ -103,12 +124,7 @@ public class TournamentService {
         if (!user.getRole().equals(User.Role.STUDENT)) {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
-
-        Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
-
-        tournament.addStudentEnrolled(user);
-        user.addTournamentEnrolled(tournament);
-        return new TournamentDto(tournament);
+        return user;
     }
     /*
     @Transactional(isolation = Isolation.REPEATABLE_READ)

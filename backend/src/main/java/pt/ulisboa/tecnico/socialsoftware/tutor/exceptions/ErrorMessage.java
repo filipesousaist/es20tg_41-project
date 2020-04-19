@@ -70,6 +70,7 @@ public enum ErrorMessage {
 
     TOURNAMENT_NOT_FOUND("The tournament doesn't exist"),
     STUDENT_ALREADY_ENROLLED("The student is already enrolled"),
+    STUDENT_NOT_ENROLLED("The student is not enrolled"),
     TOURNAMENT_IS_CLOSED("The tournament has already closed"),
     NO_SUCH_TOPIC("No such topic in the course"),
     USER_IS_NOT_A_STUDENT("The user trying to enroll is not a student"),

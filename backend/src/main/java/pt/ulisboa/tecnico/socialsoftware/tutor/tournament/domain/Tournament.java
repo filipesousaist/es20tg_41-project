@@ -123,6 +123,14 @@ public class Tournament {
         this.studentsEnrolled.add(user);
     }
 
+    public void removeStudentEnrolled(User user) {
+
+        if (!this.studentsEnrolled.contains(user)) {
+            throw new TutorException(STUDENT_NOT_ENROLLED);
+        }
+        this.studentsEnrolled.remove(user);
+    }
+
     public Integer getId() {
         return id;
     }
