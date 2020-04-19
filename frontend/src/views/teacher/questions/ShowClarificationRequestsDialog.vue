@@ -1,8 +1,8 @@
 <template>
   <v-dialog
     :value="dialog"
-    @input="$emit('close-dialog')"
-    @keydown.esc="$emit('close-dialog')"
+    @input="closeRequestsDialog"
+    @keydown.esc="closeRequestsDialog"
     max-width="75%"
     max-height="80%"
   >
@@ -22,12 +22,26 @@
             <li>
               {{ request.text }}
             </li>
-            <v-text-field
-              v-model="clarification.text"
-              label="Text"
-            />
-            <v-btn color="blue" @click="saveClarification(request)"
-            >Submit</v-btn>
+            <div v-if="request.clarification != null">
+              <v-flex xs24 sm12 md8>
+                <b>{{ request.clarification.username }} said:</b>
+              </v-flex>
+              <v-flex xs24 sm12 md8>
+                <p>
+                  {{ request.clarification.text }}
+                </p>
+              </v-flex>
+            </div>
+            <div v-else>
+              <v-text-field
+                v-model="currentClarification.text"
+                label="Text"
+              />
+              <v-btn color="blue" @click="saveClarification(request)"
+              >Submit</v-btn>
+            </div>
+            <p></p>
+            <v-divider></v-divider>
           </v-card-text>
         </span>
 
@@ -54,31 +68,34 @@ export default class ClarificationRequestsDialog extends Vue {
   @Model('dialog', Boolean) dialog!: boolean;
   @Prop({ type: Question, required: true }) readonly question!: Question;
 
-  clarification!: Clarification | null;
+  currentClarification!: Clarification | null;
 
   created() {
-    this.clarification = new Clarification();
+    this.currentClarification = new Clarification();
   }
 
   async saveClarification(request: ClarificationRequest) {
-    if (this.clarification && !this.clarification.text) {
+    if (this.currentClarification && !this.currentClarification.text) {
       await this.$store.dispatch(
         'error',
-        'Clarification Request must have a title and a text.'
+        'Clarification Request must have text.'
       );
-      this.clarification = null;
+      this.currentClarification = null;
       return;
     }
-    if (this.clarification) {
-      this.clarification.username = this.$store.getters.getUser.username;
+    if (this.currentClarification) {
+      this.currentClarification.username = this.$store.getters.getUser.username;
       try {
-        const result = await RemoteServices.createClarification(this.clarification, request.id);
+        const result = await RemoteServices.createClarification(this.currentClarification, request.id);
         this.$emit('new-clarification-request', result);
+        request.clarification = result;
+        this.currentClarification.text = '';
       } catch (error) {
         await this.$store.dispatch('error', error);
       }
     }
   }
+
 
   closeRequestsDialog() {
     this.$emit('close-show-clarification-requests-dialog');

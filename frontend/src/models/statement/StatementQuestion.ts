@@ -1,6 +1,7 @@
 import StatementOption from '@/models/statement/StatementOption';
 import Image from '@/models/management/Image';
 import { _ } from 'vue-underscore';
+import ClarificationRequest from '../discussion/ClarificationRequest';
 
 export default class StatementQuestion {
   questionId!: number;
@@ -9,9 +10,11 @@ export default class StatementQuestion {
   image: Image | null = null;
 
   options: StatementOption[] = [];
+  clarificationRequest!: ClarificationRequest;
 
   constructor(jsonObj?: StatementQuestion) {
     if (jsonObj) {
+      console.log(jsonObj);
       this.questionId = jsonObj.questionId;
       this.quizQuestionId = jsonObj.quizQuestionId;
       this.content = jsonObj.content;
@@ -23,6 +26,10 @@ export default class StatementQuestion {
             (option: StatementOption) => new StatementOption(option)
           )
         );
+      }
+
+      if(jsonObj.clarificationRequest){
+        this.clarificationRequest = new ClarificationRequest(jsonObj.clarificationRequest);
       }
     }
   }

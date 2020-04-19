@@ -63,13 +63,15 @@ export const questionWithFigure = new Question({
       id: 48,
       title: 'Graphite',
       text: 'What is happening',
-      username: 'Student1'
+      username: 'Student1',
+      clarification: null
     },
     {
       id: 4,
       title: 'Module viewtype',
       text: 'I don\'t understand',
-      username: 'Student2'
+      username: 'Student2',
+      clarification: null
     }
   ]
 });
@@ -134,13 +136,15 @@ export const questionWithoutFigure = new Question({
       id: 48,
       title: 'Graphite',
       text: 'What is happening',
-      username: 'Student1'
+      username: 'Student1',
+      clarification: null
     },
     {
       id: 4,
       title: 'Module viewtype',
       text: 'I don\'t understand',
-      username: 'Student2'
+      username: 'Student2',
+      clarification: null
     }
   ]
 });

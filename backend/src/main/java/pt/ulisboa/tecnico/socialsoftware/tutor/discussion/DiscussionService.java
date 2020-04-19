@@ -148,6 +148,8 @@ public class DiscussionService {
 
         checkClarificationText(clarificationDto);
 
+        checkForDuplicateClarification(clarificationRequest, teacher);
+
         Clarification clarification = createClarification(clarificationDto, teacher, clarificationRequest);
 
         return new ClarificationDto(clarification);
@@ -159,6 +161,11 @@ public class DiscussionService {
         teacher.addClarification(clarification);
         discussionRepository.save(clarification);
         return clarification;
+    }
+
+    private void checkForDuplicateClarification(ClarificationRequest clarificationRequest, User teacher){
+        if(this.discussionRepository.findByUserIdAndClarificationRequestId(teacher.getId(), clarificationRequest.getId()).isPresent())
+            throw new TutorException(ErrorMessage.CLARIFICATION_ALREADY_EXISTS);
     }
 
     private void checkClarificationText(ClarificationDto clarificationDto) {

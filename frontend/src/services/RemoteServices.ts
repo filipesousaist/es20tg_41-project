@@ -17,6 +17,7 @@ import { QuizAnswers } from '@/models/management/QuizAnswers';
 import ClarificationRequest from '@/models/discussion/ClarificationRequest';
 import Clarification from '@/models/discussion/Clarification';
 
+
 const httpClient = axios.create();
 httpClient.defaults.timeout = 10000;
 httpClient.defaults.baseURL = process.env.VUE_APP_ROOT_API;
@@ -547,7 +548,7 @@ export default class RemoteServices {
         return new ClarificationRequest(response.data);
       })
       .catch(async error => {
-        throw Error(await this.errorMessage(error));
+        throw Error(await this.errorMessage('Error:'+error));
       });
   }
 
@@ -565,6 +566,17 @@ export default class RemoteServices {
       })
       .catch(async error => {
         throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async getClarification(clarificationRequestId: number|null):Promise<Clarification>{
+    return httpClient
+      .get('/clarificationRequests/'+clarificationRequestId+'/clarification')
+      .then(response => {
+        return new Clarification(response.data);
+      })
+      .catch(async error => {
+      throw Error(await this.errorMessage('Error:'+error));
       });
   }
 

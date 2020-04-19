@@ -164,6 +164,7 @@ import ShowQuestionDialog from '@/views/teacher/questions/ShowQuestionDialog.vue
 import EditQuestionDialog from '@/views/teacher/questions/EditQuestionDialog.vue';
 import EditQuestionTopics from '@/views/teacher/questions/EditQuestionTopics.vue';
 import ShowClarificationRequestsDialog from '@/views/teacher/questions/ShowClarificationRequestsDialog.vue';
+import Clarification from '@/models/discussion/Clarification';
 
 @Component({
   components: {
@@ -180,6 +181,7 @@ export default class QuestionsView extends Vue {
   editQuestionDialog: boolean = false;
   questionDialog: boolean = false;
   requestsDialog: boolean = false;
+  clarification: Clarification | null = null;
   search: string = '';
   statusList = ['DISABLED', 'AVAILABLE', 'REMOVED'];
 
