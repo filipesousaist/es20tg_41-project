@@ -348,7 +348,28 @@
             </v-list-item-action>
             <v-list-item-content>Stats</v-list-item-content>
           </v-list-item>
-        </v-list-group>
+
+          <v-list-item to="/student/createTournament">
+            <v-list-item-action>
+              <v-icon>create</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>Create Tournament</v-list-item-content>
+          </v-list-item>
+
+          <v-list-item to="/student/enrollTournament">
+            <v-list-item-action>
+              <v-icon>fas fa-user-check</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>Enroll Tournament</v-list-item-content>
+          </v-list-item>
+
+          <v-list-item to="/student/showTournaments">
+            <v-list-item-action>
+              <v-icon>fas fa-list-ul</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>Show Tournaments</v-list-item-content>
+          </v-list-item>
+      </v-list-group>
 
         <v-list-item to="/courses" v-if="isLoggedIn && moreThanOneCourse">
           <v-list-item-action>

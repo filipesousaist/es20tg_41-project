@@ -575,7 +575,7 @@ export default class RemoteServices {
   static createTournament(tournament: Tournament): Promise<Tournament> {
     return httpClient
       .post(
-        `/courseExecution/${Store.getters.getCurrentCourse.courseId}/tournament/createTournament/`,
+        `/courseExecution/${Store.getters.getCurrentCourse.courseExecutionId}/tournament/createTournament/`,
         tournament
       )
       .then(response => {
@@ -589,7 +589,7 @@ export default class RemoteServices {
   static enrollTournament(id: Number): Promise<Tournament> {
     return httpClient
       .post(
-        `/courseExecution/${Store.getters.getCurrentCourse.courseId}/tournament/${id}/enrollTournament`
+        `/courseExecution/${Store.getters.getCurrentCourse.courseExecutionId}/tournament/${id}/enrollTournament`
       )
       .then(response => {
         return new Tournament(response.data);
