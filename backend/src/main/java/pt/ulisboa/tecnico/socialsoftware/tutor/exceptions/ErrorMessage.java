@@ -85,6 +85,7 @@ public enum ErrorMessage {
     CLARIFICATION_REQUEST_ALREADY_EXISTS("You can not request another clarification for this question"),
     CLARIFICATION_REQUEST_TITLE_IS_EMTPY("The Clarification Request title is empty"),
     CLARIFICATION_REQUEST_TEXT_IS_EMTPY("The Clarification Request text is empty"),
+    CLARIFICATION_ALREADY_EXISTS("You can not submit another clarification for this request"),
     CLARIFICATION_TEXT_IS_EMPTY("The clarification text is empty"),
     CLARIFICATION_NOT_CONSISTENT("Field %s of clarification not consistent"),
     CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION("The Clarification Request has no clarification associated with it.");

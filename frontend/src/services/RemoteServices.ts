@@ -556,16 +556,37 @@ export default class RemoteServices {
       });
   }
 
-  static async createClarificationRequest(clarificationRequest: ClarificationRequest, 
-    questionId: number|undefined): Promise<ClarificationRequest> {
-
+  static async createClarificationRequest(
+    clarificationRequest: ClarificationRequest,
+    questionId: number | undefined
+  ): Promise<ClarificationRequest> {
     return httpClient
-      .post('/questions/'+questionId+'/clarification_request', clarificationRequest)
+      .post(
+        '/questions/' + questionId + '/clarification_request',
+        clarificationRequest
+      )
       .then(response => {
         return new ClarificationRequest(response.data);
       })
       .catch(async error => {
-        throw Error(await this.errorMessage("Error:"+error));
+        throw Error(await this.errorMessage('Error:'+error));
+      });
+  }
+
+  static async createClarification(
+    clarification: Clarification,
+    clarificationRequestId: number | undefined
+  ): Promise<Clarification> {
+    return httpClient
+      .post(
+        '/clarificationRequests/' + clarificationRequestId + '/clarifications',
+        clarification
+      )
+      .then(response => {
+        return new Clarification(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
       });
   }
 
@@ -576,7 +597,7 @@ export default class RemoteServices {
         return new Clarification(response.data);
       })
       .catch(async error => {
-        throw Error(await this.errorMessage("Error:"+error));
+      throw Error(await this.errorMessage('Error:'+error));
       });
   }
 
