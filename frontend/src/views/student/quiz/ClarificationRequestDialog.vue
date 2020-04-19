@@ -69,7 +69,7 @@ export default class ClarificationRequestDialog extends Vue {
 
   async saveClarificationRequest(){
     this.clarificationRequest.username = this.$store.getters.getUser.username;
-    if(this.clarificationRequest 
+    if (this.clarificationRequest
     && !this.clarificationRequest.title 
     || !this.clarificationRequest.text){
 

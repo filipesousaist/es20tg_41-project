@@ -117,15 +117,6 @@ let router = new Router({
             title: process.env.VUE_APP_NAME + ' - ImpExp',
             requiredAuth: 'Teacher'
           }
-        },
-        {
-          path: 'requests',
-          name: 'requests-management',
-          component: ClarificationRequestView,
-          meta: {
-            title: process.env.VUE_APP_NAME + ' - Requests',
-            requiredAuth: 'Teacher'
-          }
         }
       ]
     },
