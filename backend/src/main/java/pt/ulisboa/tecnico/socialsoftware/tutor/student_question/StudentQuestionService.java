@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain.StudentQuestion;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain.QuestionEvaluation;
@@ -80,6 +81,21 @@ public class StudentQuestionService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<StudentQuestionDto> getStudentQuestions(int userId) {
         return studentQuestionRepository.getByUserId(userId).stream()
+                .map(StudentQuestionDto::new).collect(Collectors.toList());
+    }
+
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<StudentQuestionDto> getProposedStudentQuestions(int courseId) {
+        return studentQuestionRepository.findAll().stream()
+                .filter(studentQuestion -> {
+                        Question question = studentQuestion.getQuestion();
+                        return question.getCourse().getId() == courseId &&
+                               question.getStatus() == Question.Status.PROPOSED;
+                    }
+                )
                 .map(StudentQuestionDto::new).collect(Collectors.toList());
     }
 

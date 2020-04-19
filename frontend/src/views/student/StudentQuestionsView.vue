@@ -120,8 +120,15 @@ export default class CreateStudentQuestionsView extends Vue {
     }
   ];
 
+  @Watch('studentQuestionDialog')
+  viewCloseError() {
+    if (!this.studentQuestionDialog) {
+      this.currentStudentQuestion = null;
+    }
+  }
+
   @Watch('editStudentQuestionDialog')
-  closeError() {
+  editCloseError() {
     if (!this.editStudentQuestionDialog) {
       this.currentStudentQuestion = null;
     }
@@ -178,7 +185,6 @@ export default class CreateStudentQuestionsView extends Vue {
 
   onCloseDialog() {
     this.editStudentQuestionDialog = false;
-    this.currentStudentQuestion = null;
   }
 }
 </script>
