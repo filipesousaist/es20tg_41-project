@@ -30,9 +30,8 @@
         ><i class="fas fa-chevron-left"
       /></span>
       <span
-        class="right-button"
+        class="right-button" data-cy="nextQuestionButton"
         @click="increaseOrder"
-        data-cy="nextQuestionButton"
         v-if="
           questionOrder !== statementManager.statementQuiz.questions.length - 1
         "

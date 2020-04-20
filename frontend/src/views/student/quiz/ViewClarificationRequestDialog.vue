@@ -55,7 +55,7 @@
         <v-btn
           color="blue darken-1"
           @click="$emit('close-view-clarreq-dialog')"
-          data-cy="cancelButton"
+          data-cy="closeButton"
           >Close</v-btn
         >
       </v-card-actions>

@@ -15,7 +15,7 @@ describe('Create Clarification', () => {
     cy.closeErrorMessage();
   });
 
-  it('login and create a clarification for a clarification request', () => {
+  it('login and create a clarification for five clarification requests', () => {
     cy.get('[data-cy="searchBox"]').type(
       'Consider a stakeholder that is particularly concerned about the total cost of the project. When it comes to describing the system using allocation viewtypes s'
     );
