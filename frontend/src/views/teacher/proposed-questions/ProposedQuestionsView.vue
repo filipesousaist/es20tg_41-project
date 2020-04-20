@@ -8,6 +8,7 @@
       :mobile-breakpoint="0"
       :items-per-page="15"
       :footer-props="{ itemsPerPageOptions: [15, 30, 50, 100] }"
+      data-cy="proposedQuestionsTable"
     >
       <template v-slot:top>
         <v-card-title>
@@ -16,6 +17,7 @@
             append-icon="search"
             label="Search"
             class="mx-2"
+            data-cy="searchBar"
           />
         </v-card-title>
       </template>
@@ -27,6 +29,7 @@
               class="mr-2"
               v-on="on"
               @click="evaluateQuestion(item)"
+              data-cy="evaluateButton"
             >
               book
             </v-icon>
@@ -109,6 +112,11 @@ export default class ProposedQuestionsView extends Vue {
   }
 
   onSubmitEvaluation() {
+    this.studentQuestions = this.studentQuestions.filter(sq => {
+      return (
+        this.currentStudentQuestion && sq.id != this.currentStudentQuestion.id
+      );
+    });
     this.evaluateQuestionDialog = false;
   }
 }

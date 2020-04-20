@@ -112,7 +112,12 @@
           </v-list>
         </v-menu>
 
-        <v-btn to="/student/studentQuestions/" v-if="isStudent && currentCourse" text dark>
+        <v-btn
+          to="/student/studentQuestions/"
+          v-if="isStudent && currentCourse"
+          text
+          dark
+        >
           Student Questions
           <v-icon>fas fa-file-alt</v-icon>
         </v-btn>
@@ -166,11 +171,11 @@
         </v-btn>
 
         <v-btn
-                v-if="isLoggedIn && moreThanOneCourse"
-                to="/courses"
-                active-class="no-active"
-                text
-                dark
+          v-if="isLoggedIn && moreThanOneCourse"
+          to="/courses"
+          active-class="no-active"
+          text
+          dark
         >
           Change course
           <v-icon>fa fa-book</v-icon>
@@ -312,8 +317,6 @@
             </v-list-item-action>
             <v-list-item-content>Student Questions</v-list-item-content>
           </v-list-item>
-
-
 
           <v-list-item to="/student/create">
             <v-list-item-action>
