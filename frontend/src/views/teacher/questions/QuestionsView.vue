@@ -17,6 +17,7 @@
             append-icon="search"
             label="Search"
             class="mx-2"
+            data-cy="searchBox"
           />
 
           <v-spacer />
@@ -102,6 +103,19 @@
               small
               class="mr-2"
               v-on="on"
+              data-cy="clarificationRequests"
+              @click="showClarificationRequestsDialog(item)"
+              >live_help</v-icon
+            >
+          </template>
+          <span>Clarification Requests</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon
+              small
+              class="mr-2"
+              v-on="on"
               @click="duplicateQuestion(item)"
               >cached</v-icon
             >
@@ -135,6 +149,14 @@
       :question="currentQuestion"
       v-on:close-show-question-dialog="onCloseShowQuestionDialog"
     />
+    <show-clarification-requests-dialog
+      v-if="currentQuestion"
+      v-model="requestsDialog"
+      :question="currentQuestion"
+      v-on:close-show-clarification-requests-dialog="
+        onCloseShowClarificationRequestsDialog
+      "
+    />
   </v-card>
 </template>
 
@@ -148,12 +170,15 @@ import Topic from '@/models/management/Topic';
 import ShowQuestionDialog from '@/views/teacher/questions/ShowQuestionDialog.vue';
 import EditQuestionDialog from '@/views/teacher/questions/EditQuestionDialog.vue';
 import EditQuestionTopics from '@/views/teacher/questions/EditQuestionTopics.vue';
+import ShowClarificationRequestsDialog from '@/views/teacher/questions/ShowClarificationRequestsDialog.vue';
+import Clarification from '@/models/discussion/Clarification';
 
 @Component({
   components: {
     'show-question-dialog': ShowQuestionDialog,
     'edit-question-dialog': EditQuestionDialog,
-    'edit-question-topics': EditQuestionTopics
+    'edit-question-topics': EditQuestionTopics,
+    'show-clarification-requests-dialog': ShowClarificationRequestsDialog
   }
 })
 export default class QuestionsView extends Vue {
@@ -162,6 +187,8 @@ export default class QuestionsView extends Vue {
   currentQuestion: Question | null = null;
   editQuestionDialog: boolean = false;
   questionDialog: boolean = false;
+  requestsDialog: boolean = false;
+  clarification: Clarification | null = null;
   search: string = '';
   statusList = ['DISABLED', 'AVAILABLE', 'REMOVED'];
 
@@ -296,6 +323,15 @@ export default class QuestionsView extends Vue {
 
   onCloseShowQuestionDialog() {
     this.questionDialog = false;
+  }
+
+  showClarificationRequestsDialog(question: Question) {
+    this.currentQuestion = question;
+    this.requestsDialog = true;
+  }
+
+  onCloseShowClarificationRequestsDialog() {
+    this.requestsDialog = false;
   }
 
   newQuestion() {

@@ -1,6 +1,7 @@
 import Option from '@/models/management/Option';
 import Image from '@/models/management/Image';
 import Topic from '@/models/management/Topic';
+import ClarificationRequest from '@/models/discussion/ClarificationRequest';
 
 export default class Question {
   id: number | null = null;
@@ -18,6 +19,7 @@ export default class Question {
 
   options: Option[] = [new Option(), new Option(), new Option(), new Option()];
   topics: Topic[] = [];
+  requests: ClarificationRequest[] = [];
 
   constructor(jsonObj?: Question) {
     if (jsonObj) {
@@ -38,6 +40,11 @@ export default class Question {
       );
 
       this.topics = jsonObj.topics.map((topic: Topic) => new Topic(topic));
+
+      this.requests = jsonObj.requests.map(
+        (clarificationRequest: ClarificationRequest) =>
+          new ClarificationRequest(clarificationRequest)
+      );
     }
   }
 }

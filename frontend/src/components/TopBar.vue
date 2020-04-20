@@ -124,7 +124,7 @@
 
         <v-menu offset-y v-if="isStudent && currentCourse" open-on-hover>
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" text dark>
+            <v-btn v-on="on" text dark data-cy="QuizzesButton">
               Quizzes
               <v-icon>fas fa-file-alt</v-icon>
             </v-btn>
@@ -164,6 +164,8 @@
             </v-list-item>
           </v-list>
         </v-menu>
+
+        
 
         <v-btn to="/student/stats" v-if="isStudent && currentCourse" text dark>
           Stats
@@ -343,7 +345,7 @@
             <v-list-item-action>
               <v-icon>fas fa-user</v-icon>
             </v-list-item-action>
-            <v-list-item-content>Stats</v-list-item-content>
+            <v-list-item-content>Statssss</v-list-item-content>
           </v-list-item>
         </v-list-group>
 

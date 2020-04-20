@@ -42,7 +42,6 @@ Cypress.Commands.add('demoTeacherLogin', () => {
   cy.visit('/');
   cy.get('[data-cy="teacherButton"]').click();
   cy.contains('Management').click();
-  cy.contains('Proposed Questions').click();
 });
 
 Cypress.Commands.add(
@@ -157,5 +156,25 @@ Cypress.Commands.add(
     cy.get('[data-cy="Acronym"]').type(acronym);
     cy.get('[data-cy="AcademicTerm"]').type(academicTerm);
     cy.get('[data-cy="saveButton"]').click();
-  }
-);
+  });
+
+  Cypress.Commands.add('answerQuiz', (title) => {
+    cy.contains(title).click()
+    cy.contains("End Quiz").click()
+    //cy.get(['data-cy=endQuizSure']).click()
+    cy.contains("I'm sure").click()
+
+});
+
+Cypress.Commands.add('createClarificationRequest', (title, text) => {
+    cy.contains("Request Clarification").click()
+    if(!!title) cy.get('[data-cy="clarificationRequestTitle"]').type(title)
+    if(!!text) cy.get('[data-cy="clarificationRequestText"]').type(text)
+    cy.get('[data-cy="submitClarificationRequest"').click()
+});
+
+Cypress.Commands.add('createClarification', (text) => {
+  cy.get('[data-cy="clarificationRequests"]').click();
+  if(!!text) cy.get('[data-cy="clarificationText"]').type(text);
+  cy.get('[data-cy="submitClarification"]').click();
+});

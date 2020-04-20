@@ -2,6 +2,8 @@ describe('Create Question Evaluation Walkthrough', () => {
   beforeEach(() => {
     // Login with student to create questions
     cy.demoStudentLogin();
+    cy.contains('Student Questions').click();
+
   });
 
   afterEach(() => {
@@ -21,6 +23,7 @@ describe('Create Question Evaluation Walkthrough', () => {
     cy.contains('Logout').click();
 
     cy.demoTeacherLogin();
+    cy.contains('Proposed Questions').click();
     cy.get('[data-cy="proposedQuestionsTable"]')
       .find('tr')
       .should('have.length', 3); // 2 student questions + search bar
@@ -40,6 +43,8 @@ describe('Create Question Evaluation Walkthrough', () => {
     cy.contains('Logout').click();
 
     cy.demoTeacherLogin();
+    cy.contains('Management').click();
+    cy.contains('Proposed Questions').click();
 
     cy.createQuestionEvaluation('Q3', null, 'Justification');
     cy.closeErrorMessage();
@@ -50,6 +55,8 @@ describe('Create Question Evaluation Walkthrough', () => {
     cy.contains('Logout').click();
 
     cy.demoTeacherLogin();
+    cy.contains('Management').click();
+    cy.contains('Proposed Questions').click();
 
     cy.createQuestionEvaluation('Q4', true, null);
     cy.closeErrorMessage();
@@ -60,6 +67,8 @@ describe('Create Question Evaluation Walkthrough', () => {
     cy.contains('Logout').click();
 
     cy.demoTeacherLogin();
+    cy.contains('Management').click();
+    cy.contains('Proposed Questions').click();
 
     // Click evaluate question and then close the window
     cy.clickEvaluateQuestion('Q5');
@@ -73,6 +82,8 @@ describe('Create Question Evaluation Walkthrough', () => {
     cy.createStudentQuestion('Q6', 'Question 6', 'A1', 'A2', 'A3', 'A4');
     cy.contains('Logout').click();
     cy.demoTeacherLogin();
+    cy.contains('Management').click();
+    cy.contains('Proposed Questions').click();
 
     cy.get('[data-cy="searchBar"]').type('Q6');
     cy.contains('Q6').should('exist');

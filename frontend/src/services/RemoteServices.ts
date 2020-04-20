@@ -13,6 +13,9 @@ import Assessment from '@/models/management/Assessment';
 import AuthDto from '@/models/user/AuthDto';
 import StatementAnswer from '@/models/statement/StatementAnswer';
 import { QuizAnswers } from '@/models/management/QuizAnswers';
+import ClarificationRequest from '@/models/discussion/ClarificationRequest';
+import Clarification from '@/models/discussion/Clarification';
+
 import StudentQuestion from '@/models/management/StudentQuestion';
 import QuestionEvaluation from '@/models/management/QuestionEvaluation';
 
@@ -613,6 +616,51 @@ export default class RemoteServices {
       .delete('/admin/courses/executions/' + courseExecutionId)
       .catch(async error => {
         throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async createClarificationRequest(
+    clarificationRequest: ClarificationRequest,
+    questionId: number | undefined
+  ): Promise<ClarificationRequest> {
+    return httpClient
+      .post(
+        '/questions/' + questionId + '/clarification_request',
+        clarificationRequest
+      )
+      .then(response => {
+        return new ClarificationRequest(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage('Error:'+error));
+      });
+  }
+
+  static async createClarification(
+    clarification: Clarification,
+    clarificationRequestId: number | undefined
+  ): Promise<Clarification> {
+    return httpClient
+      .post(
+        '/clarificationRequests/' + clarificationRequestId + '/clarifications',
+        clarification
+      )
+      .then(response => {
+        return new Clarification(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async getClarification(clarificationRequestId: number|null):Promise<Clarification>{
+    return httpClient
+      .get('/clarificationRequests/'+clarificationRequestId+'/clarification')
+      .then(response => {
+        return new Clarification(response.data);
+      })
+      .catch(async error => {
+      throw Error(await this.errorMessage('Error:'+error));
       });
   }
 

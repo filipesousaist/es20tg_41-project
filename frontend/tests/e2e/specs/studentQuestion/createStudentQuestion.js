@@ -1,6 +1,8 @@
 describe('Create Student Questions', () => {
   beforeEach(() => {
     cy.demoStudentLogin();
+    cy.contains('Student Questions').click();
+
   });
 
   afterEach(() => {

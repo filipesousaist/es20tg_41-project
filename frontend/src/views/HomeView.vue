@@ -13,7 +13,7 @@
         depressed
         small
         color="primary"
-        @click="demoStudent"
+         @click="demoStudent"
         data-cy="studentButton"
       >
         <i class="fa fa-graduation-cap" />Demo as student
