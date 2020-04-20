@@ -13,15 +13,15 @@
             <v-text-field
               v-model="currentTournament.name"
               label="Name of the tournament"
-              data-cy="Name of the tournament"
+              data-cy="tournamentName"
             />
             <v-datetime-picker
               label="Select beginning"
               v-model="currentTournament.beginningTime"
-              data-cy="Select beginning"
+              data-cy="Selectbeginning"
             >
             </v-datetime-picker>
-            <v-datetime-picker
+            <v-datetime-picker class="text-left"
               label="Select ending"
               v-model="currentTournament.endingTime"
               data-cy="Select ending"
@@ -107,7 +107,7 @@ export default class CreateTournament extends Vue {
     ) {
       await this.$store.dispatch(
         'error',
-        'Tournament must have a name, a beginning and a ending time, the number of questions and topics'
+        'Error:Tournament must have a name, a beginning and a ending time, the number of questions and topics'
       );
       return;
     }

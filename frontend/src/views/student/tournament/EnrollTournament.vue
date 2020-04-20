@@ -41,8 +41,26 @@
           {{ tournament.studentsUsername.length }}
         </div>
         <div class="col last-col">
-          <li v-if="!tournament.studentsUsername.includes(username)"><v-btn color="primary" @click="enrollTournament(tournament)" v-on="on">Enroll</v-btn></li>
-          <li v-else><v-btn color="error" @click="enrollTournament(tournament)"  v-on="on">Withdraw</v-btn></li>
+          <li v-if="!tournament.studentsUsername.includes(username)">
+            <v-btn
+              color="primary"
+              @click="enrollTournament(tournament)"
+              v-on="on"
+              data-cy="enroll"
+            >
+              Enroll
+            </v-btn>
+          </li>
+          <li v-else>
+            <v-btn
+              color="error"
+              @click="enrollTournament(tournament)"
+              v-on="on"
+              data-cy="withdraw"
+              >
+              Withdraw
+            </v-btn>
+          </li>
         </div>
       </li>
     </ul>
