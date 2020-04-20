@@ -1,8 +1,8 @@
 <template>
   <v-dialog
     :value="dialog"
-    @input="closeRequestsDialog"
-    @keydown.esc="closeRequestsDialog"
+    @input="$emit('dialog', false)"
+    @keydown.esc="$emit('dialog', false)"
     max-width="75%"
     max-height="80%"
   >
@@ -36,9 +36,14 @@
               <v-text-field
                 v-model="currentClarification.text"
                 label="Text"
+                data-cy="clarificationText"
               />
-              <v-btn color="blue" @click="saveClarification(request)"
-              >Submit</v-btn>
+              <v-btn
+                color="blue"
+                @click="saveClarification(request)"
+                data-cy="submitClarification"
+                >Submit</v-btn
+              >
             </div>
             <p></p>
             <v-divider></v-divider>
@@ -47,8 +52,11 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn color="blue darken-1" @click="closeRequestsDialog"
-            >close</v-btn
+          <v-btn
+            color="blue darken-1"
+            data-cy="closeButton"
+            @click="$emit('dialog', false)"
+            >Close</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -78,7 +86,7 @@ export default class ClarificationRequestsDialog extends Vue {
     if (this.currentClarification && !this.currentClarification.text) {
       await this.$store.dispatch(
         'error',
-        'Clarification Request must have text.'
+        'Error: Clarification Request must have text.'
       );
       this.currentClarification = null;
       return;
@@ -91,14 +99,9 @@ export default class ClarificationRequestsDialog extends Vue {
         request.clarification = result;
         this.currentClarification.text = '';
       } catch (error) {
-        await this.$store.dispatch('error', error);
+        await this.$store.dispatch('error', 'Error' + error);
       }
     }
-  }
-
-
-  closeRequestsDialog() {
-    this.$emit('close-show-clarification-requests-dialog');
   }
 }
 </script>

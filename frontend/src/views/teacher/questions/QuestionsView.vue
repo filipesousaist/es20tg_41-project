@@ -17,6 +17,7 @@
             append-icon="search"
             label="Search"
             class="mx-2"
+            data-cy="searchBox"
           />
 
           <v-spacer />
@@ -102,6 +103,7 @@
               small
               class="mr-2"
               v-on="on"
+              data-cy="clarificationRequests"
               @click="showClarificationRequestsDialog(item)"
               >live_help</v-icon
             >
@@ -149,9 +151,11 @@
     />
     <show-clarification-requests-dialog
       v-if="currentQuestion"
-      :dialog="requestsDialog"
+      v-model="requestsDialog"
       :question="currentQuestion"
-      v-on:close-show-clarification-requests-dialog="onCloseShowClarificationRequestsDialog"
+      v-on:close-show-clarification-requests-dialog="
+        onCloseShowClarificationRequestsDialog
+      "
     />
   </v-card>
 </template>
