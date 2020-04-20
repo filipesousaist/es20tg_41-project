@@ -62,7 +62,14 @@ public class TournamentService {
         CourseExecution courseEx = courseExecutionRepository.findById(courseExId).orElseThrow(() -> new TutorException(INVALID_COURSE_EXECUTION));
         List<Topic> topics = getTopics(tournamentDto, courseEx);
         String name = tournamentDto.getName();
+
+        if (tournamentRepository.findTournamentByName(name).orElse(null) != null) {
+
+            throw new TutorException(INVALID_TOURNAMENT_NAME);
+        }
+
         Tournament tournament = new Tournament(user, name, topics, begin, end, numberOfQuestions, courseEx);
+
         user.addTournamentCreatedByMe(tournament);
 
         entityManager.persist(tournament);

@@ -57,8 +57,18 @@
               @click="enrollTournament(tournament)"
               v-on="on"
               data-cy="withdraw"
-              >
+            >
               Withdraw
+            </v-btn>
+          </li>
+          <li v-if="tournament.creatorName === username">
+            <v-btn
+              color="error"
+              @click="deleteTournament(tournament)"
+              v-on="on"
+              data-cy="delete"
+            >
+              Delete
             </v-btn>
           </li>
         </div>
@@ -104,6 +114,10 @@ export default class EnrollTournament extends Vue {
       await this.$store.dispatch('error', error);
     }
     await this.$store.dispatch('clearLoading');
+  }
+
+  async deleteTournament(tournament: Tournament) {
+    return;
   }
 }
 </script>

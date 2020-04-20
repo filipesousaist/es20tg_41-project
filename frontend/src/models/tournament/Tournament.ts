@@ -6,7 +6,7 @@ export default class Tournament {
   endingTime!: string;
   numberOfQuestions!: number;
   isClosed!: boolean;
-  createdByUser!: number;
+  creatorName!: string;
   name!: string;
 
   topics: Topic[] = [];
@@ -20,7 +20,8 @@ export default class Tournament {
       this.endingTime = jsonObj.endingTime.replace('T', ' ').slice(0, 16);
       this.numberOfQuestions = jsonObj.numberOfQuestions;
       this.isClosed = jsonObj.isClosed;
-      this.createdByUser = jsonObj.createdByUser;
+      this.creatorName = jsonObj.creatorName;
+      console.log(jsonObj.creatorName);
       this.name = jsonObj.name;
 
       if (jsonObj.topics) {

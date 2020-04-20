@@ -21,7 +21,7 @@ public class TournamentDto implements Serializable {
     int numberOfQuestions;
     List<String> studentsUsername = new ArrayList<>();
     boolean isClosed;
-    Integer createdByUser;
+    String creatorName;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 
@@ -42,7 +42,7 @@ public class TournamentDto implements Serializable {
             topics.add(topicDto);
         }
         name = tournament.getName();
-        createdByUser = tournament.getCreatedByUser().getId();
+        creatorName = tournament.getCreatedByUser().getUsername();
 
         Set<User> users = tournament.getStudentsEnrolled();
         for (User user : users) {
@@ -112,5 +112,13 @@ public class TournamentDto implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 }

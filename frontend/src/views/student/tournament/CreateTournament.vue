@@ -21,7 +21,8 @@
               data-cy="Selectbeginning"
             >
             </v-datetime-picker>
-            <v-datetime-picker class="text-left"
+            <v-datetime-picker
+              class="text-left"
               label="Select ending"
               v-model="currentTournament.endingTime"
               data-cy="Select ending"
@@ -103,7 +104,8 @@ export default class CreateTournament extends Vue {
         (!this.currentTournament.numberOfQuestions &&
           !this.currentTournament.beginningTime) ||
         !this.currentTournament.endingTime ||
-        !this.currentTournament.topics.length)
+        !this.currentTournament.topics.length ||
+        this.currentTournament.numberOfQuestions > 25)
     ) {
       await this.$store.dispatch(
         'error',

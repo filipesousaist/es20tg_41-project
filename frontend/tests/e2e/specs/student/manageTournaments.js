@@ -22,19 +22,34 @@ describe('Tournaments walkthrough', () => {
   });
 
   it('tournament with more than the max permited in the questions', () => {
-    cy.createTournament('Demo Tournament1', '26', '18');
+    cy.createTournament('Demo Tournament2', '26', '18');
     cy.closeErrorMessage();
     cy.get('[data-cy="cancelButton"]').click();
   });
 
   it('tournament with invalid dates', () => {
-    cy.createTournament('Demo Tournament1', '4', '16');
+    cy.createTournament('Demo Tournament3', '4', '16');
     cy.closeErrorMessage();
   });
 
   it('tournament with no topics', () => {
-    cy.createTournamentEmptyTopics('Demo Tournament1', '4', '18');
+    cy.createTournamentEmptyTopics('Demo Tournament4', '4', '18');
     cy.closeErrorMessage();
     cy.get('[data-cy="cancelButton"]').click();
+  });
+
+  it('creates a tournament then enrolls in it', () => {
+    cy.createTournament('Demo Tournament5', '5', '18');
+    cy.enrollTournament('Demo Tournament5');
+  });
+
+  it('withdraws from a already enrolled tournament', () => {
+    cy.withdrawTournament('Demo Tournament5');
+  });
+
+  it('creates a tournament then enrolls in it and withdraws', () => {
+    cy.createTournament('Demo Tournament6', '5', '18');
+    cy.enrollTournament('Demo Tournament6');
+    cy.withdrawTournament('Demo Tournament6');
   });
 });
