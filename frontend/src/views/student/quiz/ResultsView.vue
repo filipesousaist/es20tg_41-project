@@ -32,6 +32,7 @@
       <span
         class="right-button"
         @click="increaseOrder"
+        data-cy="nextQuestionButton"
         v-if="
           questionOrder !== statementManager.statementQuiz.questions.length - 1
         "

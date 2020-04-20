@@ -31,9 +31,16 @@ Cypress.Commands.add('demoAdminLogin', () => {
   cy.contains('Manage Courses').click();
 });
 
+Cypress.Commands.add('demoTeacherLogin', () => {
+  cy.visit('/');
+  cy.get('[data-cy="teacherButton"]').click();
+  cy.contains('Management').click();
+  cy.contains('Questions').click();
+});
+
 Cypress.Commands.add('demoStudentLogin', () => {
-  cy.visit('/')
-  cy.get('[data-cy="studentButton"]').click()
+  cy.visit('/');
+  cy.get('[data-cy="studentButton"]').click();
 });
 
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
@@ -85,9 +92,14 @@ Cypress.Commands.add(
 });
 
 Cypress.Commands.add('createClarificationRequest', (title, text) => {
-    //cy.get(['data-cy="requestButton"']).click()
     cy.contains("Request Clarification").click()
-    cy.get('[data-cy="clarificationRequestTitle"]').invoke('val', title)
-    cy.get('[data-cy="clarificationRequestText"]').invoke('val', text)
+    if(!!title) cy.get('[data-cy="clarificationRequestTitle"]').type(title)
+    if(!!text) cy.get('[data-cy="clarificationRequestText"]').type(text)
     cy.get('[data-cy="submitClarificationRequest"').click()
+});
+
+Cypress.Commands.add('createClarification', (text) => {
+  cy.get('[data-cy="clarificationRequests"]').click();
+  if(!!text) cy.get('[data-cy="clarificationText"]').type(text);
+  cy.get('[data-cy="submitClarification"]').click();
 });
