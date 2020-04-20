@@ -5,10 +5,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.QuestionEvaluationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -22,12 +24,15 @@ public class StudentQuestionController {
 
     @PostMapping("courses/{courseId}/studentQuestions")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#courseId, 'COURSE.ACCESS')")
-    public StudentQuestionDto createStudentQuestion(Principal principal, @PathVariable int courseId, @RequestBody StudentQuestionDto studentQuestionDto) {
+    public StudentQuestionDto createStudentQuestion(Principal principal, @PathVariable int courseId, @Valid @RequestBody StudentQuestionDto studentQuestionDto) {
         User user = (User) ((Authentication) principal).getPrincipal();
 
         if (user == null) {
             throw new TutorException(AUTHENTICATION_ERROR);
         }
+
+        studentQuestionDto.getQuestionDto().setStatus(Question.Status.PROPOSED.name());
+
         return studentQuestionService.createStudentQuestion(courseId, user.getId(), studentQuestionDto);
     }
 
@@ -52,5 +57,11 @@ public class StudentQuestionController {
             throw new TutorException(AUTHENTICATION_ERROR);
         }
         return studentQuestionService.getStudentQuestions(user.getId());
+    }
+
+    @GetMapping("courses/{courseId}/studentQuestions/proposed")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#courseId, 'COURSE.ACCESS')")
+    public List<StudentQuestionDto> getProposedStudentQuestions(@PathVariable int courseId) {
+        return studentQuestionService.getProposedStudentQuestions(courseId);
     }
 }

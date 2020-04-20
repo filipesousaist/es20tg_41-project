@@ -26,7 +26,7 @@ import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 public class Question implements DomainEntity {
     @SuppressWarnings("unused")
     public enum Status {
-        DISABLED, REMOVED, AVAILABLE, PROPOSED
+        DISABLED, REMOVED, AVAILABLE, PROPOSED, REJECTED
     }
 
     @Id

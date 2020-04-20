@@ -1,6 +1,7 @@
 describe('Create Clarification', () => {
   beforeEach(() => {
     cy.demoTeacherLogin();
+    cy.contains('Questions').click()
   });
 
   afterEach(() => {
