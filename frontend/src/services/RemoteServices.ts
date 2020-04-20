@@ -608,6 +608,12 @@ export default class RemoteServices {
       });
   }
 
+  static deleteTournament(id: Number) {
+    return httpClient.delete(`/courseExecution/${Store.getters.getCurrentCourse.courseExecutionId}/tournament/${id}/deleteTournament`).catch(async error => {
+      throw Error(await this.errorMessage(error));
+    });
+  }
+
   static enrollTournament(id: Number): Promise<Tournament> {
     return httpClient
       .post(

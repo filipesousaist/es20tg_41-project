@@ -205,6 +205,9 @@ public class User implements UserDetails, DomainEntity {
         clarifications.add(clarification);
     }
 
+    public void removeTournamentCreated(Tournament tournament) {
+        this.tournamentsCreatedByMe.remove(tournament);
+    }
 
     public Integer getNumberOfTeacherQuizzes() {
         if (this.numberOfTeacherQuizzes == null)

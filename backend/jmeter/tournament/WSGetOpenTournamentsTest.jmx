@@ -85,8 +85,8 @@
           <stringProp name="checkQuery"></stringProp>
           <stringProp name="dbUrl">jdbc:postgresql://localhost:5432/tutordb?autoReconnect=true</stringProp>
           <stringProp name="driver">org.postgresql.Driver</stringProp>
-          <stringProp name="username">miguelsequeiradias</stringProp>
-          <stringProp name="password">Acoriano2038</stringProp>
+          <stringProp name="username">rafael</stringProp>
+          <stringProp name="password">tagus</stringProp>
           <stringProp name="connectionProperties"></stringProp>
         </JDBCDataSource>
         <hashTree/>
@@ -103,9 +103,9 @@ INSERT INTO topics(id, name, course_id) VALUES (${topicId}, &apos;TOPIC_NAME_1&a
 INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId});
 
 
-INSERT INTO tournaments VALUES (${tournamentId}, &apos;2020-03-26 18:30:00&apos;, &apos;2020-03-26 19:00:00&apos;, False, 4, ${courseExecutionId}, ${userId}),
-						(${tournamentId}+1, &apos;2020-03-26 14:30:00&apos;, &apos;2020-03-26 15:00:00&apos;, True, 6, ${courseExecutionId}, ${userId}),
-						(${tournamentId}+2, &apos;2020-03-26 15:30:00&apos;, &apos;2020-03-26 17:30:00&apos;, False, 7, ${courseExecutionId}, ${userId});
+INSERT INTO tournaments VALUES (${tournamentId}, &apos;2020-03-26 18:30:00&apos;, &apos;2020-03-26 19:00:00&apos;, False, &apos;Demo-Tournament1&apos;, 4, ${courseExecutionId}, ${userId}),
+						(${tournamentId}+1, &apos;2020-03-26 14:30:00&apos;, &apos;2020-03-26 15:00:00&apos;, True, &apos;Demo-Tournament1&apos;, 6, ${courseExecutionId}, ${userId}),
+						(${tournamentId}+2, &apos;2020-03-26 15:30:00&apos;, &apos;2020-03-26 17:30:00&apos;, False, &apos;Demo-Tournament1&apos;, 7, ${courseExecutionId}, ${userId});
 
 INSERT INTO topics_tournaments VALUES (${topicId}, ${tournamentId}), 
 							(${topicId}+1, ${tournamentId}+1),
@@ -374,7 +374,7 @@ INSERT INTO tournaments_students_enrolled VALUES (${tournamentId}+2, ${userId});
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="tearDown Thread Group" enabled="false">
+      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="tearDown Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -398,13 +398,13 @@ INSERT INTO tournaments_students_enrolled VALUES (${tournamentId}+2, ${userId});
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">Acoriano2038</stringProp>
+          <stringProp name="password">tagus</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">miguelsequeiradias</stringProp>
+          <stringProp name="username">rafael</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">

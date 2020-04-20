@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
@@ -163,7 +164,15 @@ public class Tournament {
         this.name = name;
     }
 
-    public void remove() {
+    public void remove(int studentId) {
+
+        if (this.createdByUser.getId() != studentId)
+            throw new TutorException(STUDENT_DIDNT_CREATE_TOURNAMENT);
+
+        if (this.isClosed)
+            throw new TutorException((TOURNAMENT_IS_CLOSED));
+
+        this.createdByUser.removeTournamentCreated(this);
 
         for(User user: this.studentsEnrolled) {
             user.getTournamentsEnrolled().remove(this);

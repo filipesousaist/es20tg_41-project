@@ -80,6 +80,7 @@ public class TournamentService {
 
         return new TournamentDto(tournament);
     }
+
     @Transactional(isolation = Isolation.READ_COMMITTED)
     List<Topic> getTopics(TournamentDto tournamentDto, CourseExecution courseEx) {
         List<TopicDto> titlesDto = tournamentDto.getTopics();
@@ -88,12 +89,19 @@ public class TournamentService {
         }
         List<Topic> topics = new ArrayList<>();
         for (TopicDto dto : titlesDto) {
-            Topic topic = topicRepository.optionalFindTopicByName(courseEx.getCourse().getId(), dto.getName()).orElseThrow(() -> new TutorException(NO_SUCH_TOPIC));
+            Topic topic;
+            if (dto.getId() == null)
+                topic = topicRepository.optionalFindTopicByName(courseEx.getCourse().getId(), dto.getName()).orElseThrow(() -> new TutorException(NO_SUCH_TOPIC));
+            else {
+                topic = topicRepository.findById(dto.getId()).orElseThrow(() -> new TutorException(NO_SUCH_TOPIC));
+                if (!topic.getCourse().getId().equals(courseEx.getCourse().getId()))
+                    throw new TutorException(NO_SUCH_TOPIC);
+            }
             topics.add(topic);
-
         }
         return topics;
     }
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TournamentDto enrollTournament(Integer studentId, Integer tournamentId) {
 
@@ -133,17 +141,17 @@ public class TournamentService {
         }
         return user;
     }
-    /*
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public void removeTournament(Integer tournamentId) {
+    public void removeTournament(Integer studentID, Integer tournamentId) {
 
         Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
 
-        tournament.remove();
+        tournament.remove(studentID);
 
-        entityManager.remove(tournament);
+        tournamentRepository.delete(tournament);
 
-    }*/
+    }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<TournamentDto> getAllTournaments() {

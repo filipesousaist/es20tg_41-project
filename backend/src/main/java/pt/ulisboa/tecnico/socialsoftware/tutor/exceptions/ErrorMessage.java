@@ -75,6 +75,7 @@ public enum ErrorMessage {
     INVALID_TOURNAMENT_NAME("Tournament name already in use."),
     NO_SUCH_TOPIC("No such topic in the course"),
     USER_IS_NOT_A_STUDENT("The user trying to enroll is not a student"),
+    STUDENT_DIDNT_CREATE_TOURNAMENT("The user cant delete a tournament that did not create"),
 
     // StudentQuestion
     STUDENT_QUESTION_NOT_FOUND("Student question not found with id %d"),

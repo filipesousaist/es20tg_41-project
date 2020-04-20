@@ -117,7 +117,16 @@ export default class EnrollTournament extends Vue {
   }
 
   async deleteTournament(tournament: Tournament) {
-    return;
+    await this.$store.dispatch('loading');
+    try {
+      if (tournament.creatorName == this.username) {
+        await RemoteServices.deleteTournament(tournament.id);
+        await this.$router.push('showTournaments');
+      }
+    } catch (error) {
+      await this.$store.dispatch('error', error);
+    }
+    await this.$store.dispatch('clearLoading');
   }
 }
 </script>

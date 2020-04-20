@@ -80,8 +80,8 @@
           <stringProp name="checkQuery"></stringProp>
           <stringProp name="dbUrl">jdbc:postgresql://localhost:5432/tutordb?autoReconnect=true</stringProp>
           <stringProp name="driver">org.postgresql.Driver</stringProp>
-          <stringProp name="username">miguelsequeiradias</stringProp>
-          <stringProp name="password">Acoriano2038</stringProp>
+          <stringProp name="username">rafael</stringProp>
+          <stringProp name="password">tagus</stringProp>
           <stringProp name="connectionProperties"></stringProp>
         </JDBCDataSource>
         <hashTree/>
@@ -241,11 +241,11 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId}),
                 <collectionProp name="Arguments.arguments">
                   <elementProp name="" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&#xd;
-	&quot;beginningTime&quot; : &quot;2020-03-26 12:00:00&quot;,&#xd;
-	&quot;endingTime&quot; : &quot;2020-03-26 13:00:00&quot;,&#xd;
+                    <stringProp name="Argument.value">{	&quot;name&quot; : null,&#xd;
+	&quot;beginningTime&quot; : &quot;2020-03-26T12:00:00.000Z&quot;,&#xd;
+	&quot;endingTime&quot; : &quot;2020-03-26T13:00:00.000Z&quot;,&#xd;
 	&quot;numberOfQuestions&quot;: 5,&#xd;
-		&quot;titles&quot;: [&#xd;
+		&quot;topics&quot;: [&#xd;
 		{&#xd;
 		 &quot;name&quot;: &quot;TOPIC_NAME_1&quot;&#xd;
 		}, {&#xd;
