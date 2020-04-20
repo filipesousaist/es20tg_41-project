@@ -3,6 +3,7 @@
     v-model="dialog"
     @keydown.esc="closeStudentQuestionDialog"
     max-width="75%"
+    persistent
   >
     <v-card>
       <v-card-title>

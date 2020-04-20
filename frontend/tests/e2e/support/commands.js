@@ -37,6 +37,7 @@ Cypress.Commands.add('demoStudentLogin', () => {
   cy.contains('Student Questions').click();
 });
 
+
 Cypress.Commands.add('demoTeacherLogin', () => {
   cy.visit('/');
   cy.get('[data-cy="teacherButton"]').click();
@@ -67,9 +68,9 @@ Cypress.Commands.add(
     cy.get('[data-cy="Content"]')
       .eq(3)
       .type(option4);
+
     cy.get('[data-cy="saveButton"]').click();
-  }
-);
+});
 
 Cypress.Commands.add(
   'createStudentQuestionWithOneOption',

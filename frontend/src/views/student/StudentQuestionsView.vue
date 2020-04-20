@@ -3,6 +3,7 @@
     <v-data-table
       :headers="headers"
       :items="studentQuestions"
+      :custom-filter="customFilter"
       :search="search"
       disable-pagination
       :hide-default-footer="true"
@@ -30,7 +31,13 @@
         </v-card-title>
       </template>
 
-      <template v-slot:item.image="{ item }">
+      <template v-slot:item.questionDto.status="{ item }">
+        <v-chip :color="getStatusColor(item.questionDto.status)" medium>
+          <span>{{ item.questionDto.status }}</span>
+        </v-chip>
+      </template>
+
+      <template v-slot:item.questionDto.image="{ item }">
         <v-file-input
           show-size
           dense
@@ -57,7 +64,7 @@
     </v-data-table>
 
     <edit-student-question-dialog
-      v-if="currentStudentQuestion"
+      v-if="currentStudentQuestion && !studentQuestionDialog"
       v-model="editStudentQuestionDialog"
       :studentQuestion="currentStudentQuestion"
       v-on:save-student-question="onSaveStudentQuestion"
@@ -65,7 +72,7 @@
     />
 
     <show-student-question-dialog
-      v-if="currentStudentQuestion"
+      v-if="currentStudentQuestion && !editStudentQuestionDialog"
       :dialog="studentQuestionDialog"
       :studentQuestion="currentStudentQuestion"
       v-on:close-show-student-question-dialog="onCloseShowStudentQuestionDialog"
@@ -80,6 +87,7 @@ import StudentQuestion from '@/models/management/StudentQuestion';
 import EditStudentQuestionDialog from '@/views/student/EditStudentQuestionDialog.vue';
 import Image from '@/models/management/Image';
 import ShowStudentQuestionDialog from '@/views/student/ShowStudentQuestionDialog.vue';
+import Question from '@/models/management/Question';
 
 @Component({
   components: {
@@ -120,15 +128,8 @@ export default class CreateStudentQuestionsView extends Vue {
     }
   ];
 
-  @Watch('studentQuestionDialog')
-  viewCloseError() {
-    if (!this.studentQuestionDialog) {
-      this.currentStudentQuestion = null;
-    }
-  }
-
   @Watch('editStudentQuestionDialog')
-  editCloseError() {
+  closeError() {
     if (!this.editStudentQuestionDialog) {
       this.currentStudentQuestion = null;
     }
@@ -144,7 +145,22 @@ export default class CreateStudentQuestionsView extends Vue {
     await this.$store.dispatch('clearLoading');
   }
 
+  customFilter(
+    value: string,
+    search: string,
+    studentQuestion: StudentQuestion
+  ) {
+    // noinspection SuspiciousTypeOfGuard,SuspiciousTypeOfGuard
+    return (
+      search != null &&
+      JSON.stringify(studentQuestion)
+        .toLowerCase()
+        .indexOf(search.toLowerCase()) !== -1
+    );
+  }
+
   newStudentQuestion() {
+    this.studentQuestionDialog = false;
     this.currentStudentQuestion = new StudentQuestion();
     this.editStudentQuestionDialog = true;
   }
@@ -175,16 +191,25 @@ export default class CreateStudentQuestionsView extends Vue {
   }
 
   showStudentQuestionDialog(studentQuestion: StudentQuestion) {
+    this.editStudentQuestionDialog = false;
     this.currentStudentQuestion = studentQuestion;
     this.studentQuestionDialog = true;
   }
 
   onCloseShowStudentQuestionDialog() {
     this.studentQuestionDialog = false;
+    this.currentStudentQuestion = null;
   }
 
   onCloseDialog() {
     this.editStudentQuestionDialog = false;
+    this.currentStudentQuestion = null;
+  }
+
+  getStatusColor(status: string) {
+    if (status === 'REJECTED') return 'red';
+    else if (status === 'PROPOSED') return 'blue';
+    else return 'green';
   }
 }
 </script>

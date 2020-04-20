@@ -14,7 +14,6 @@ public class StudentQuestionDto implements Serializable {
 
     private UserDto userDto;
 
-    private Integer ser;
 
     public StudentQuestionDto(){
     }
@@ -44,12 +43,5 @@ public class StudentQuestionDto implements Serializable {
         this.questionDto = questionDto;
     }
 
-    public Integer getSer() {
-        return ser;
-    }
-
-    public void setSer(Integer ser) {
-        this.ser = ser;
-    }
 }
 
