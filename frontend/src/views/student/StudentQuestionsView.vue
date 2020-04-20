@@ -32,10 +32,7 @@
       </template>
 
       <template v-slot:item.questionDto.status="{ item }">
-        <v-chip
-          :color="getStatusColor(item.questionDto.status)"
-          medium
-        >
+        <v-chip :color="getStatusColor(item.questionDto.status)" medium>
           <span>{{ item.questionDto.status }}</span>
         </v-chip>
       </template>
@@ -148,7 +145,11 @@ export default class CreateStudentQuestionsView extends Vue {
     await this.$store.dispatch('clearLoading');
   }
 
-  customFilter(value: string, search: string, studentQuestion: StudentQuestion) {
+  customFilter(
+    value: string,
+    search: string,
+    studentQuestion: StudentQuestion
+  ) {
     // noinspection SuspiciousTypeOfGuard,SuspiciousTypeOfGuard
     return (
       search != null &&
