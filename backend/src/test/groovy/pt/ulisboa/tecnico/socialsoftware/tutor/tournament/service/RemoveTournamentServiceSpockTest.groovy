@@ -1,10 +1,13 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament.service
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseService
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.TopicService
@@ -17,28 +20,20 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto
 import spock.lang.Specification
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.beans.factory.annotation.Autowired
 
 import java.time.LocalDateTime
 import java.time.Month
 import java.time.format.DateTimeFormatter
 
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.STUDENT_ALREADY_ENROLLED
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_IS_CLOSED
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_NOT_FOUND
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.USER_IS_NOT_A_STUDENT
-
-
 @DataJpaTest
-class EnrollTournamentServiceSpockTest extends Specification {
+class RemoveTournamentServiceSpockTest extends Specification {
 
-    static final String NAME_1 = "Miguel"
-    static final String USERNAME_1 = "miguelpsdias"
+    static final String NAME_1 = "Rafael"
+    static final String USERNAME_1 = "VivaRafael"
     static final User.Role ROLE = User.Role.STUDENT
 
-    static final String NAME_2 = "Rafael"
-    static final String USERNAME_2 = "VivaRafael"
+    static final String NAME_2 = "Miguel"
+    static final String USERNAME_2 = "miguelpsdias"
 
     static final int HOUR1 = 8
     static final int HOUR2 = 12
@@ -73,41 +68,37 @@ class EnrollTournamentServiceSpockTest extends Specification {
     CourseRepository courseRepository
 
     def user1
+    def user2
     def userDto
     def tournamentDto
     def courseDto1
     def courseEx1
     def topicDto1
     def topicDto2
-    def topicDto3
     def topicList1
-    def topicList2
 
     def setup() {
 
         user1 = userService.createUser(NAME_1, USERNAME_1, ROLE)
         userRepository.save(user1)
 
+        user2 = userService.createUser(NAME_2, USERNAME_2, ROLE)
+        userRepository.save(user2)
+
         courseDto1 = new CourseDto(COURSE_NAME, ACRONYM, ACADEMIC_TERM)
         courseEx1 = courseService.createTecnicoCourseExecution(courseDto1)
 
         topicDto1 = new TopicDto()
         topicDto2 = new TopicDto()
-        topicDto3 = new TopicDto()
         topicDto1.setName(TOPIC_NAME1)
         topicDto2.setName(TOPIC_NAME2)
-        topicDto3.setName(TOPIC_NAME3)
 
         topicDto1 = topicService.createTopic(courseEx1.getCourseId(), topicDto1)
         topicDto2 = topicService.createTopic(courseEx1.getCourseId(), topicDto2)
-        topicDto3 = topicService.createTopic(courseEx1.getCourseId(), topicDto3)
         topicList1 = new ArrayList<TopicDto>()
-        topicList2 = new ArrayList<TopicDto>()
         topicList1.add(topicDto1)
         topicList1.add(topicDto2)
-        topicList2.add(topicDto1)
-        topicList2.add(topicDto2)
-        topicList2.add(topicDto3)
+
 
         userDto = new UserDto(user1)
         tournamentDto = new TournamentDto()
@@ -115,74 +106,90 @@ class EnrollTournamentServiceSpockTest extends Specification {
         tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
         tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
         tournamentDto.setNumberOfQuestions(NUMBER_OF_QUESTIONS)
+
     }
 
-    def "a student exists and enrolls in a tournament"() {
-        given: "student creates a tournament"
+    def "delete a tournament with 0 students enrolled"() {
+        given: "a tournament"
         tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 
         when:
-        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
+        tournamentService.removeTournament(user1.getId(), tournamentDto.getId())
 
-        then:"is in the database"
+        then:
+        tournamentRepository.findAll().size() == 0
+        user1.getTournamentsCreatedByMe().size() == 0
+        user1.getTournamentsEnrolled().size() == 0
+    }
+
+    def "delete a tournament with 2 students enrolled"() {
+
+        given: "a tournament and 2 students enrolled"
+        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
+        tournamentService.enrollTournament(user2.getId(), tournamentDto.getId())
+
+        when:
+        tournamentService.removeTournament(user1.getId(), tournamentDto.getId())
+
+        then:
+        tournamentRepository.findAll().size() == 0
+        user1.getTournamentsCreatedByMe().size() == 0
+        user1.getTournamentsEnrolled().size() == 0
+        user2.getTournamentsEnrolled().size() == 0
+    }
+
+    def "the student that didnt create tries to delete the tournament"() {
+
+        given: "a tournament and 2 students enrolled"
+        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
+        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
+        tournamentService.enrollTournament(user2.getId(), tournamentDto.getId())
+
+        when:
+        tournamentService.removeTournament(user2.getId(), tournamentDto.getId())
+
+        then:
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.STUDENT_DIDNT_CREATE_TOURNAMENT
         tournamentRepository.findAll().size() == 1
-        def tournament = tournamentRepository.findAll().get(0)
-        tournament != null
-        and:"is enrolled"
-        def student = tournament.getStudentsEnrolled().iterator().next()
-        student.getName() == NAME_1
-        student.getRole() == ROLE
-        student.getUsername() == USERNAME_1
-
+        user1.getTournamentsCreatedByMe().size() == 1
+        user1.getTournamentsEnrolled().size() == 1
+        user2.getTournamentsEnrolled().size() == 1
     }
 
-    def "a student enrolling in a tournament that doesn't exists"() {
+    def "the student tries to delete a tournament that doesnt exist"() {
+
         when:
-        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
+        tournamentService.removeTournament(user2.getId(),1)
 
         then:
-        TutorException exception = thrown()
-        exception.getErrorMessage() == TOURNAMENT_NOT_FOUND
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.TOURNAMENT_NOT_FOUND
+        tournamentRepository.findAll().size() == 0
+        user1.getTournamentsCreatedByMe().size() == 0
+        user1.getTournamentsEnrolled().size() == 0
+        user2.getTournamentsEnrolled().size() == 0
     }
 
-    def "a student enrolls in a tournament when he's already enrolled"() {
-        given: "student creates a tournament"
+    def "the student tries to delete a tournament that does not exist"() {
+
+        given: "a tournament closed"
         tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
-        when:
         tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
-        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
-
-        then:
-        TutorException exception = thrown()
-        exception.getErrorMessage() == STUDENT_ALREADY_ENROLLED
-    }
-
-
-    def "a student enrolls in a tournament where the ending date already passed"() {
-        given: "student creates a tournament"
-        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
+        tournamentService.enrollTournament(user2.getId(), tournamentDto.getId())
         tournamentRepository.findAll().get(0).setIsClosed(true)
 
         when:
-        tournamentService.enrollTournament(user1.getId(), tournamentDto.getId())
+        tournamentService.removeTournament(user1.getId(),tournamentDto.getId())
 
         then:
-        TutorException exception = thrown()
-        exception.getErrorMessage() == TOURNAMENT_IS_CLOSED
-    }
-
-    def "a teacher tries to enroll in a tournament"() {
-        given: "student creates a tournament"
-        def user2 = userService.createUser(NAME_2, USERNAME_2, User.Role.TEACHER)
-        userRepository.save(user2)
-        tournamentDto = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
-
-        when:
-        tournamentService.enrollTournament(user2.getId(), tournamentDto.getId())
-
-        then:
-        TutorException exception = thrown()
-        exception.getErrorMessage() == USER_IS_NOT_A_STUDENT
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.TOURNAMENT_IS_CLOSED
+        tournamentRepository.findAll().size() == 1
+        user1.getTournamentsCreatedByMe().size() == 1
+        user1.getTournamentsEnrolled().size() == 1
+        user2.getTournamentsEnrolled().size() == 1
     }
 
     @TestConfiguration

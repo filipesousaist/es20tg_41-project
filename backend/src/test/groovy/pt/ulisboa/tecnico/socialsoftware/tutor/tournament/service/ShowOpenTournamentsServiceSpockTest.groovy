@@ -12,7 +12,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
-import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto
 import spock.lang.Specification
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
@@ -23,9 +22,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.TournamentService
 import java.time.LocalDateTime
 import java.time.Month
 import java.time.format.DateTimeFormatter
-
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*
-
 
 @DataJpaTest
 class ShowOpenTournamentsServiceSpockTest extends Specification{
@@ -108,15 +104,15 @@ class ShowOpenTournamentsServiceSpockTest extends Specification{
         topicList2.add(topicDto3)
 
         tournamentDto1 = new TournamentDto()
-        tournamentDto1.setTitles(topicList1)
-        tournamentDto1.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-        tournamentDto1.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto1.setTopics(topicList1)
+        tournamentDto1.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto1.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
         tournamentDto1.setNumberOfQuestions(NUMBER_OF_QUESTIONS)
 
         tournamentDto2 = new TournamentDto()
-        tournamentDto2.setTitles(topicList1)
-        tournamentDto2.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-        tournamentDto2.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto2.setTopics(topicList1)
+        tournamentDto2.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto2.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
         tournamentDto2.setNumberOfQuestions(NUMBER_OF_QUESTIONS)
     }
 
@@ -130,12 +126,12 @@ class ShowOpenTournamentsServiceSpockTest extends Specification{
         then:"the openTournaments have return the correct values "
         openTournaments.size() == 1
         def tournamentDto3 = openTournaments.get(0)
-        topicList1.size() == tournamentDto3.getTitles().size()
+        topicList1.size() == tournamentDto3.getTopics().size()
         for (int i = 0 ; i != topicList1.size() ; i++) {
-            tournamentDto3.getTitles().get(i) == topicList1.get(i)
+            tournamentDto3.getTopics().get(i) == topicList1.get(i)
         }
-        tournamentDto3.getBeginningTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-        tournamentDto3.getEndingTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto3.getBeginningTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto3.getEndingTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
         tournamentDto3.getNumberOfQuestions() == NUMBER_OF_QUESTIONS
     }
 
@@ -150,21 +146,21 @@ class ShowOpenTournamentsServiceSpockTest extends Specification{
         then:"the openTournaments have return the correct values "
         openTournaments.size() == 2
         def tournamentDto3 = openTournaments.get(0)
-        topicList1.size() == tournamentDto3.getTitles().size()
+        topicList1.size() == tournamentDto3.getTopics().size()
         for (int i = 0 ; i != topicList1.size() ; i++) {
-            tournamentDto3.getTitles().get(i) == topicList1.get(i)
+            tournamentDto3.getTopics().get(i) == topicList1.get(i)
         }
-        tournamentDto3.getBeginningTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-        tournamentDto3.getEndingTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto3.getBeginningTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto3.getEndingTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
         tournamentDto3.getNumberOfQuestions() == NUMBER_OF_QUESTIONS
 
         def tournamentDto4 = openTournaments.get(1)
-        topicList1.size() == tournamentDto4.getTitles().size()
+        topicList1.size() == tournamentDto4.getTopics().size()
         for (int i = 0 ; i != topicList1.size() ; i++) {
-            tournamentDto4.getTitles().get(i) == topicList1.get(i)
+            tournamentDto4.getTopics().get(i) == topicList1.get(i)
         }
-        tournamentDto4.getBeginningTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-        tournamentDto4.getEndingTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto4.getBeginningTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto4.getEndingTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
         tournamentDto4.getNumberOfQuestions() == NUMBER_OF_QUESTIONS
 
 
@@ -173,7 +169,7 @@ class ShowOpenTournamentsServiceSpockTest extends Specification{
     def "a student creates a tournament and it's closed and lists all the open tournaments"() {
         given: "student creates several tournament"
         tournamentDto1 = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(),tournamentDto1)
-        tournamentRepository.findAll().get(0).setClosed(true)
+        tournamentRepository.findAll().get(0).setIsClosed(true)
 
         when:
         List<TournamentDto> openTournaments = tournamentService.getAllOpenTournament()
@@ -185,7 +181,7 @@ class ShowOpenTournamentsServiceSpockTest extends Specification{
     def "a student creates several tournaments and one is closed and one is opened and lists all the open tournaments"() {
         given: "student creates several tournament"
         tournamentDto1 = tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(),tournamentDto1)
-        tournamentRepository.findAll().get(0).setClosed(true)
+        tournamentRepository.findAll().get(0).setIsClosed(true)
         tournamentDto2 = tournamentService.createNewTournament(user2.getId(), courseEx1.getCourseExecutionId(),tournamentDto2)
 
         when:

@@ -92,7 +92,7 @@
 INSERT INTO course_executions(id, acronym, academic_term, course_id) VALUES (${courseExecutionId}, &apos;ACRONYM&apos;, &apos;ACADEMIC_TERM&apos;, (select max(id) from courses));
 INSERT INTO topics(id, name, course_id) VALUES (${topicId}, &apos;TOPIC_NAME_1&apos;, (select max(id) from courses)), (${topicId}+1,&apos;TOPIC_NAME_2&apos;, (select max(id) from courses));
 INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId});
-INSERT INTO tournaments VALUES (${tournamentId}, &apos;2020-03-26 12:30:00&apos;, &apos;2020-03-26 13:00:00&apos;, False, 4, ${courseExecutionId}, ${userId})</stringProp>
+INSERT INTO tournaments VALUES (${tournamentId}, &apos;2020-03-26 12:30:00&apos;, &apos;2020-03-26 13:00:00&apos;,  False, &apos;Demo-tournament&apos;, 4, ${courseExecutionId}, ${userId});</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="variableNames"></stringProp>

@@ -13,6 +13,9 @@ import Assessment from '@/models/management/Assessment';
 import AuthDto from '@/models/user/AuthDto';
 import StatementAnswer from '@/models/statement/StatementAnswer';
 import { QuizAnswers } from '@/models/management/QuizAnswers';
+
+import Tournament from '@/models/tournament/Tournament';
+
 import ClarificationRequest from '@/models/discussion/ClarificationRequest';
 import Clarification from '@/models/discussion/Clarification';
 
@@ -700,5 +703,75 @@ export default class RemoteServices {
       console.log(error);
       return 'Unknown Error - Contact admin';
     }
+  }
+
+  /// TOURNAMENT
+
+  static createTournament(tournament: Tournament): Promise<Tournament> {
+    return httpClient
+      .post(
+        `/courseExecution/${Store.getters.getCurrentCourse.courseExecutionId}/tournament/createTournament/`,
+        tournament
+      )
+      .then(response => {
+        return new Tournament(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static deleteTournament(id: Number) {
+    return httpClient.delete(`/courseExecution/${Store.getters.getCurrentCourse.courseExecutionId}/tournament/${id}/deleteTournament`).catch(async error => {
+      throw Error(await this.errorMessage(error));
+    });
+  }
+
+  static enrollTournament(id: Number): Promise<Tournament> {
+    return httpClient
+      .post(
+        `/courseExecution/${Store.getters.getCurrentCourse.courseExecutionId}/tournament/${id}/enrollTournament`
+      )
+      .then(response => {
+        return new Tournament(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static unenrollTournament(id: Number){
+    return httpClient
+      .post(
+        `/courseExecution/${Store.getters.getCurrentCourse.courseExecutionId}/tournament/${id}/unenrollTournament`
+      )
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static getAllOpenTournament(): Promise<Tournament[]> {
+    return httpClient
+      .get('tournament/getAllOpenTournament')
+      .then(response => {
+        return response.data.map((tournament: any) => {
+          return new Tournament(tournament);
+        });
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+  static getAllTournaments(): Promise<Tournament[]> {
+    return httpClient
+      .get('/tournament/getAllTournaments')
+      .then(response => {
+        return response.data.map((tournament: any) => {
+          return new Tournament(tournament);
+        });
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
   }
 }

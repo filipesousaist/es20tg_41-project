@@ -14,39 +14,48 @@ import java.util.Set;
 public class TournamentDto implements Serializable {
 
     Integer id;
-    List<TopicDto> titles = new ArrayList<>();
+    String name;
+    List<TopicDto> topics = new ArrayList<>();
     String beginningTime;
     String endingTime;
     int numberOfQuestions;
     List<String> studentsUsername = new ArrayList<>();
+    boolean isClosed;
+    String creatorName;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
 
     public TournamentDto() {}
 
     public TournamentDto(Tournament tournament) {
         id = tournament.getId();
+        isClosed = tournament.getIsClosed();
         if (tournament.getBeginningTime() != null)
-            beginningTime = tournament.getBeginningTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            beginningTime = tournament.getBeginningTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
         if (tournament.getEndingTime() != null)
-            endingTime = tournament.getEndingTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            endingTime = tournament.getEndingTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
         numberOfQuestions = tournament.getNumberOfQuestions();
 
         List<Topic> tournamentTitles= tournament.getTitles();
         for (Topic var : tournamentTitles) {
             TopicDto topicDto = new TopicDto(var);
-            titles.add(topicDto);
+            topics.add(topicDto);
         }
+        name = tournament.getName();
+        creatorName = tournament.getCreatedByUser().getUsername();
+
         Set<User> users = tournament.getStudentsEnrolled();
         for (User user : users) {
             studentsUsername.add(user.getUsername());
         }
     }
 
-    public List<TopicDto> getTitles() {
-        return titles;
+    public List<TopicDto> getTopics() {
+        return topics;
     }
 
-    public void setTitles(List<TopicDto> titles) {
-        this.titles = titles;
+    public void setTopics(List<TopicDto> topics) {
+        this.topics = topics;
     }
 
     public String getBeginningTime() {
@@ -87,5 +96,29 @@ public class TournamentDto implements Serializable {
 
     public void setStudentsUsername(List<String> studentsUsername) {
         this.studentsUsername = studentsUsername;
+    }
+
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    public void setClosed(boolean closed) {
+        isClosed = closed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 }
