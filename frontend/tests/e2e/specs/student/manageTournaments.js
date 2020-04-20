@@ -16,7 +16,7 @@ describe('Tournaments walkthrough', () => {
     cy.createTournament('Demo Tournament1', '4', '18');
     cy.log('try to create with the same name');
     cy.contains('Logout').click();
-    cy.demoStudentLogin();
+    cy.demoStudentLoginT();
     cy.createTournament('Demo Tournament1', '4', '23');
     cy.closeErrorMessage();
   });
