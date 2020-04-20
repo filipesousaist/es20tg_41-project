@@ -70,9 +70,12 @@ public enum ErrorMessage {
 
     TOURNAMENT_NOT_FOUND("The tournament doesn't exist"),
     STUDENT_ALREADY_ENROLLED("The student is already enrolled"),
+    STUDENT_NOT_ENROLLED("The student is not enrolled"),
     TOURNAMENT_IS_CLOSED("The tournament has already closed"),
+    INVALID_TOURNAMENT_NAME("Tournament name already in use."),
     NO_SUCH_TOPIC("No such topic in the course"),
     USER_IS_NOT_A_STUDENT("The user trying to enroll is not a student"),
+    STUDENT_DIDNT_CREATE_TOURNAMENT("The user cant delete a tournament that did not create"),
 
     // StudentQuestion
     STUDENT_QUESTION_NOT_FOUND("Student question not found with id %d"),
@@ -85,6 +88,7 @@ public enum ErrorMessage {
     CLARIFICATION_REQUEST_ALREADY_EXISTS("You can not request another clarification for this question"),
     CLARIFICATION_REQUEST_TITLE_IS_EMTPY("The Clarification Request title is empty"),
     CLARIFICATION_REQUEST_TEXT_IS_EMTPY("The Clarification Request text is empty"),
+    CLARIFICATION_ALREADY_EXISTS("You can not submit another clarification for this request"),
     CLARIFICATION_TEXT_IS_EMPTY("The clarification text is empty"),
     CLARIFICATION_NOT_CONSISTENT("Field %s of clarification not consistent"),
     CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION("The Clarification Request has no clarification associated with it.");

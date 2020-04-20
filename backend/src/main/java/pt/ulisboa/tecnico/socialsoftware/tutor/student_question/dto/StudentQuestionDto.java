@@ -14,6 +14,7 @@ public class StudentQuestionDto implements Serializable {
 
     private UserDto userDto;
 
+
     public StudentQuestionDto(){
     }
 
