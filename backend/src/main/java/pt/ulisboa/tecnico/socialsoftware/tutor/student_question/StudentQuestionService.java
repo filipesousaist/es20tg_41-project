@@ -51,10 +51,6 @@ public class StudentQuestionService {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
 
-        if (studentQuestionDto.getQuestionDto().getCreationDate() == null) {
-            studentQuestionDto.getQuestionDto().setCreationDate(LocalDateTime.now().format(Course.formatter));
-        }
-
         StudentQuestion studentQuestion = new StudentQuestion(course, user,studentQuestionDto);
         entityManager.persist(studentQuestion);
 

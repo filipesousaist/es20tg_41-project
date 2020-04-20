@@ -7,6 +7,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuest
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -51,6 +52,10 @@ public class StudentQuestion {
     private void checkQuestion(StudentQuestionDto studentQuestionDto) {
         if (studentQuestionDto.getQuestionDto() == null){
             throw new TutorException(QUESTION_IS_MISSING);
+        }
+
+        if (studentQuestionDto.getQuestionDto().getCreationDate() == null) {
+            studentQuestionDto.getQuestionDto().setCreationDate(LocalDateTime.now().format(Course.formatter));
         }
     }
 
