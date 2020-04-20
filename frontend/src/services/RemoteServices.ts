@@ -13,6 +13,8 @@ import Assessment from '@/models/management/Assessment';
 import AuthDto from '@/models/user/AuthDto';
 import StatementAnswer from '@/models/statement/StatementAnswer';
 import { QuizAnswers } from '@/models/management/QuizAnswers';
+import StudentQuestion from '@/models/management/StudentQuestion';
+import QuestionEvaluation from '@/models/management/QuestionEvaluation';
 
 const httpClient = axios.create();
 httpClient.defaults.timeout = 10000;
@@ -85,6 +87,67 @@ export default class RemoteServices {
       )
       .then(response => {
         return new StudentStats(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async getStudentQuestions(): Promise<StudentQuestion[]> {
+    return httpClient
+      .get('/studentQuestions')
+      .then(response => {
+        return response.data.map((studentQuestion: any) => {
+          return new StudentQuestion(studentQuestion);
+        });
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static createStudentQuestion(
+    studentQuestion: StudentQuestion
+  ): Promise<StudentQuestion> {
+    return httpClient
+      .post(
+        `/courses/${Store.getters.getCurrentCourse.courseId}/studentQuestions/`,
+        studentQuestion
+      )
+      .then(response => {
+        return new StudentQuestion(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async getProposedStudentQuestions(): Promise<StudentQuestion[]> {
+    return httpClient
+      .get(
+        `/courses/${Store.getters.getCurrentCourse.courseId}/studentQuestions/proposed`
+      )
+      .then(response => {
+        return response.data.map((studentQuestion: any) => {
+          return new StudentQuestion(studentQuestion);
+        });
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static submitEvaluation(
+    questionEvaluation: QuestionEvaluation,
+    studentQuestionId: number | null
+  ): Promise<QuestionEvaluation> {
+    return httpClient
+      .post(
+        `/studentQuestions/${studentQuestionId}/questionEvaluations/`,
+        questionEvaluation
+      )
+      .then(response => {
+        return new QuestionEvaluation(response.data);
       })
       .catch(async error => {
         throw Error(await this.errorMessage(error));
