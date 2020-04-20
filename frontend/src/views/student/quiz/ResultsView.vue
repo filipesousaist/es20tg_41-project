@@ -30,7 +30,7 @@
         ><i class="fas fa-chevron-left"
       /></span>
       <span
-        class="right-button"
+        class="right-button" data-cy="nextQuestionButton"
         @click="increaseOrder"
         v-if="
           questionOrder !== statementManager.statementQuiz.questions.length - 1
@@ -38,6 +38,10 @@
         ><i class="fas fa-chevron-right"
       /></span>
     </div>
+
+     
+
+
     <result-component
       v-model="questionOrder"
       :answer="statementManager.statementQuiz.answers[questionOrder]"
@@ -47,6 +51,27 @@
       @increase-order="increaseOrder"
       @decrease-order="decreaseOrder"
     />
+
+    <clarification-request-dialog
+      v-if="clarificationRequest"
+      v-model="clarificationRequestDialog"
+      :question="statementManager.statementQuiz.questions[questionOrder]"
+      v-on:close-dialog="onCloseDialog"
+    />
+
+    <view-clarification-request-dialog
+      v-model="viewClarificationRequestDialog"
+      :clarificationRequest ="statementManager.statementQuiz.questions[questionOrder].clarificationRequest"
+      :clarification="currClarification"
+      v-on:close-view-clarreq-dialog="onCloseViewClarReqDialog"
+    />
+
+    <v-btn color="primary" dark @click="createClarificationRequest" v-if="!existsClarificationRequest" data-cy="requestButton"
+            >Request Clarification</v-btn>
+    
+    <v-btn color="primary" dark @click="viewClarificationRequest" v-if="existsClarificationRequest"
+            >View Clarification Request</v-btn>
+
   </div>
 </template>
 
@@ -54,15 +79,28 @@
 import { Component, Vue } from 'vue-property-decorator';
 import StatementManager from '@/models/statement/StatementManager';
 import ResultComponent from '@/views/student/quiz/ResultComponent.vue';
+import ClarificationRequestDialog from '@/views/student/quiz/ClarificationRequestDialog.vue';
+import ViewClarificationRequestDialog from '@views/student/quiz/ViewClarificationRequestDialog.vue';
+import ClarificationRequest from '@/models/discussion/ClarificationRequest';
+import Clarification from '@/models/discussion/Clarification';
+import RemoteServices from '@/services/RemoteServices';
+
 
 @Component({
   components: {
-    'result-component': ResultComponent
+    'result-component': ResultComponent,
+    'clarification-request-dialog': ClarificationRequestDialog,
+    'view-clarification-request-dialog': ViewClarificationRequestDialog
   }
 })
 export default class ResultsView extends Vue {
   statementManager: StatementManager = StatementManager.getInstance;
   questionOrder: number = 0;
+  existsClarificationRequest: boolean = !!this.statementManager.statementQuiz!.questions[this.questionOrder].clarificationRequest;
+  clarificationRequestDialog: boolean = false;
+  viewClarificationRequestDialog: boolean = false;
+  clarificationRequest: ClarificationRequest | null = null;
+  currClarification: Clarification | null = null;
 
   async created() {
     if (this.statementManager.isEmpty()) {
@@ -84,18 +122,57 @@ export default class ResultsView extends Vue {
     ) {
       this.questionOrder += 1;
     }
+    this.existsClarificationRequest = !!this.statementManager.statementQuiz!.questions[this.questionOrder].clarificationRequest;
   }
 
   decreaseOrder(): void {
     if (this.questionOrder > 0) {
       this.questionOrder -= 1;
     }
+    this.existsClarificationRequest = !!this.statementManager.statementQuiz!.questions[this.questionOrder].clarificationRequest;
+
   }
 
   changeOrder(n: number): void {
     if (n >= 0 && n < +this.statementManager.statementQuiz!.questions.length) {
       this.questionOrder = n;
     }
+    this.existsClarificationRequest = !!this.statementManager.statementQuiz!.questions[this.questionOrder].clarificationRequest;
+
+  }
+
+  createClarificationRequest(): void{
+    this.clarificationRequestDialog = true;
+    this.clarificationRequest = new ClarificationRequest();
+  }
+  
+  async viewClarificationRequest(){
+    let result;
+    await this.$store.dispatch('loading');
+    try {
+      result = await RemoteServices.getClarification(this.statementManager.statementQuiz!.questions[this.questionOrder].clarificationRequest.id);
+    } catch (error) {
+    }finally{
+    await this.$store.dispatch('clearLoading');
+
+    if(!!result) 
+      this.currClarification = result;
+    else
+      this.currClarification = null;
+    this.viewClarificationRequestDialog = true;
+    }
+  }
+
+  onCloseDialog(): void{
+    this.clarificationRequestDialog = false;
+    this.clarificationRequest = null;
+    this.existsClarificationRequest = !!this.statementManager.statementQuiz!.questions[this.questionOrder].clarificationRequest;
+
+  }
+
+  onCloseViewClarReqDialog(): void{
+    this.viewClarificationRequestDialog = false;
+    this.currClarification = null;
   }
 }
 </script>

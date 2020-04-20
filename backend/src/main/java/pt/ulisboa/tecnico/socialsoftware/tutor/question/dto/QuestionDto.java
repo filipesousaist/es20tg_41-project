@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.question.dto;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
@@ -29,6 +30,8 @@ public class QuestionDto implements Serializable {
     private List<TopicDto> topics = new ArrayList<>();
     private Integer sequence;
 
+    private List<ClarificationRequestDto> requests = new ArrayList<>();
+
     public QuestionDto() {
     }
 
@@ -49,6 +52,7 @@ public class QuestionDto implements Serializable {
         this.status = question.getStatus().name();
         this.options = question.getOptions().stream().map(OptionDto::new).collect(Collectors.toList());
         this.topics = question.getTopics().stream().sorted(Comparator.comparing(Topic::getName)).map(TopicDto::new).collect(Collectors.toList());
+        this.requests = question.getClarificationRequests().stream().map(ClarificationRequestDto::new).collect(Collectors.toList());
 
         if (question.getImage() != null)
             this.image = new ImageDto(question.getImage());
@@ -176,6 +180,14 @@ public class QuestionDto implements Serializable {
         this.sequence = sequence;
     }
 
+    public List<ClarificationRequestDto> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<ClarificationRequestDto> requests) {
+        this.requests = requests;
+    }
+
     @Override
     public String toString() {
         return "QuestionDto{" +
@@ -194,6 +206,7 @@ public class QuestionDto implements Serializable {
                 ", image=" + image +
                 ", topics=" + topics +
                 ", sequence=" + sequence +
+                ", requests=" + requests +
                 '}';
     }
 }

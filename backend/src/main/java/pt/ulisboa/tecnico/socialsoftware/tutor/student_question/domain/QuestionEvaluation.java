@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.QuestionEvaluationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
@@ -47,11 +48,19 @@ public class QuestionEvaluation {
 
         this.teacher = teacher;
         teacher.addQuestionEvaluation(this);
-        this.studentQuestion = studentQuestion;
-        studentQuestion.addQuestionEvaluation(this);
+        addStudentQuestion(studentQuestion, questionEvaluationDto.isApproved());
 
         this.approved = questionEvaluationDto.isApproved();
         this.justification = just;
+    }
+
+    private void addStudentQuestion(StudentQuestion studentQuestion, boolean isApproved) {
+        this.studentQuestion = studentQuestion;
+        studentQuestion.addQuestionEvaluation(this);
+
+        this.studentQuestion.getQuestion().setStatus(
+            isApproved ? Question.Status.AVAILABLE : Question.Status.REJECTED
+        );
     }
 
     private String checkAndGetJustification(QuestionEvaluationDto questionEvaluationDto) {

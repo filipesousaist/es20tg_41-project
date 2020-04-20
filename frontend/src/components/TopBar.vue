@@ -93,6 +93,14 @@
                 <v-list-item-title>Students</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+            <v-list-item to="/management/proposed-questions">
+              <v-list-item-action>
+                <v-icon>live_help</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Proposed Questions</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
             <v-list-item to="/management/impexp">
               <v-list-item-action>
                 <v-icon>cloud</v-icon>
@@ -104,9 +112,19 @@
           </v-list>
         </v-menu>
 
+        <v-btn
+          to="/student/studentQuestions/"
+          v-if="isStudent && currentCourse"
+          text
+          dark
+        >
+          Student Questions
+          <v-icon>fas fa-file-alt</v-icon>
+        </v-btn>
+
         <v-menu offset-y v-if="isStudent && currentCourse" open-on-hover>
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" text dark>
+            <v-btn v-on="on" text dark data-cy="QuizzesButton">
               Quizzes
               <v-icon>fas fa-file-alt</v-icon>
             </v-btn>
@@ -291,6 +309,14 @@
               <v-list-item-title>Students</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item to="/management/proposed-questions">
+            <v-list-item-action>
+              <v-icon>live_help</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Proposed Questions</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item to="/management/impexp">
             <v-list-item-action>
               <v-icon>cloud</v-icon>
@@ -321,6 +347,13 @@
             <v-list-item-content>Available Quizzes</v-list-item-content>
           </v-list-item>
 
+          <v-list-item to="/student/studentQuestions">
+            <v-list-item-action>
+              <v-icon>assignment</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>Student Questions</v-list-item-content>
+          </v-list-item>
+
           <v-list-item to="/student/create">
             <v-list-item-action>
               <v-icon>create</v-icon>
@@ -346,7 +379,7 @@
             <v-list-item-action>
               <v-icon>fas fa-user</v-icon>
             </v-list-item-action>
-            <v-list-item-content>Stats</v-list-item-content>
+            <v-list-item-content>Statssss</v-list-item-content>
           </v-list-item>
 
           <v-list-item to="/student/createTournament">

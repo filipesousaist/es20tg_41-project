@@ -12,6 +12,7 @@ import TopicsView from '@/views/teacher/TopicsView.vue';
 import QuizzesView from '@/views/teacher/quizzes/QuizzesView.vue';
 import StudentsView from '@/views/teacher/students/StudentsView.vue';
 import StudentView from '@/views/student/StudentView.vue';
+import StudentQuestionsView from './views/student/StudentQuestionsView.vue';
 import AvailableQuizzesView from '@/views/student/AvailableQuizzesView.vue';
 import SolvedQuizzesView from '@/views/student/SolvedQuizzesView.vue';
 import QuizView from '@/views/student/quiz/QuizView.vue';
@@ -23,12 +24,16 @@ import CreateTournament from './views/student/tournament/CreateTournament.vue';
 import EnrollTournament from './views/student/tournament/EnrollTournament.vue';
 import ShowTournaments from './views/student/tournament/ShowTournaments.vue';
 
-import AdminManagementView from '@/views/admin/AdminManagementView.vue';
-import NotFoundView from '@/views/NotFoundView.vue';
+import ClarificationRequestView from './views/teacher/requests/ClarificationRequestsView.vue';
+import ClarificationRequestsView from './views/student/clarificationRequest/ClarificationRequestsView.vue';
+import AdminManagementView from './views/admin/AdminManagementView.vue';
+import NotFoundView from './views/NotFoundView.vue';
 import ImpExpView from '@/views/teacher/impexp/ImpExpView.vue';
 import AssessmentsView from '@/views/teacher/assessments/AssessmentsView.vue';
 import CreateQuizzesView from '@/views/student/CreateQuizzesView.vue';
 import CoursesView from '@/views/admin/Courses/CoursesView.vue';
+import ProposedQuestionsView from '@/views/teacher/proposed-questions/ProposedQuestionsView.vue';
+
 Vue.use(Router);
 
 let router = new Router({
@@ -110,6 +115,15 @@ let router = new Router({
           }
         },
         {
+          path: 'proposed-questions',
+          name: 'proposed-questions-management',
+          component: ProposedQuestionsView,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Proposed Questions',
+            requiredAuth: 'Teacher'
+          }
+        },
+        {
           path: 'impexp',
           name: 'impexp-management',
           component: ImpExpView,
@@ -125,6 +139,15 @@ let router = new Router({
       name: 'student',
       component: StudentView,
       children: [
+        {
+          path: 'studentQuestions',
+          name: 'create-studentQuestion',
+          component: StudentQuestionsView,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Student Questions',
+            requiredAuth: 'Student'
+          }
+        },
         {
           path: 'available',
           name: 'available-quizzes',

@@ -1,6 +1,6 @@
 describe('Tournaments walkthrough', () => {
   beforeEach(() => {
-    cy.demoStudentLogin();
+    cy.demoStudentLoginT();
   });
 
   afterEach(() => {
