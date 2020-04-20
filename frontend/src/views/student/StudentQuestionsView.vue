@@ -19,6 +19,7 @@
             append-icon="search"
             label="Search"
             class="mx-2"
+            data-cy="searchBar"
           />
           <v-spacer />
           <v-btn
@@ -55,6 +56,7 @@
               class="mr-2"
               v-on="on"
               @click="showStudentQuestionDialog(item)"
+              data-cy="showStudentQuestionButton"
               >visibility</v-icon
             >
           </template>
