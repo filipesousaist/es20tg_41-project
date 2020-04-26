@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
-import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
@@ -56,15 +54,22 @@ public class TournamentService {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        LocalDateTime begin = LocalDateTime.parse(tournamentDto.getBeginningTime(), formatter);
-        LocalDateTime end = LocalDateTime.parse(tournamentDto.getEndingTime(), formatter);
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        LocalDateTime begin = LocalDateTime.parse(tournamentDto.getBeginningTime(), inputFormatter);
+        LocalDateTime end = LocalDateTime.parse(tournamentDto.getEndingTime(), inputFormatter);
         int numberOfQuestions = tournamentDto.getNumberOfQuestions();
 
         CourseExecution courseEx = courseExecutionRepository.findById(courseExId).orElseThrow(() -> new TutorException(INVALID_COURSE_EXECUTION));
         List<Topic> topics = getTopics(tournamentDto, courseEx);
-        Tournament tournament = new Tournament(user, topics, begin, end, numberOfQuestions, courseEx);
+        String name = tournamentDto.getName();
+
+        if (tournamentRepository.findTournamentByName(name).orElse(null) != null) {
+
+            throw new TutorException(INVALID_TOURNAMENT_NAME);
+        }
+
+        Tournament tournament = new Tournament(user, name, topics, begin, end, numberOfQuestions, courseEx);
+
         user.addTournamentCreatedByMe(tournament);
 
         entityManager.persist(tournament);
@@ -75,23 +80,52 @@ public class TournamentService {
 
         return new TournamentDto(tournament);
     }
+
     @Transactional(isolation = Isolation.READ_COMMITTED)
     List<Topic> getTopics(TournamentDto tournamentDto, CourseExecution courseEx) {
-        List<TopicDto> titlesDto = tournamentDto.getTitles();
+        List<TopicDto> titlesDto = tournamentDto.getTopics();
         if (titlesDto == null || titlesDto.isEmpty()) {
             throw new TutorException(EMPTY_TOPIC);
         }
         List<Topic> topics = new ArrayList<>();
         for (TopicDto dto : titlesDto) {
-            Topic topic = topicRepository.optionalFindTopicByName(courseEx.getCourse().getId(), dto.getName()).orElseThrow(() -> new TutorException(NO_SUCH_TOPIC));
+            Topic topic;
+            if (dto.getId() == null)
+                topic = topicRepository.optionalFindTopicByName(courseEx.getCourse().getId(), dto.getName()).orElseThrow(() -> new TutorException(NO_SUCH_TOPIC));
+            else {
+                topic = topicRepository.findById(dto.getId()).orElseThrow(() -> new TutorException(NO_SUCH_TOPIC));
+                if (!topic.getCourse().getId().equals(courseEx.getCourse().getId()))
+                    throw new TutorException(NO_SUCH_TOPIC);
+            }
             topics.add(topic);
-
         }
         return topics;
     }
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TournamentDto enrollTournament(Integer studentId, Integer tournamentId) {
 
+        User user = getUser(studentId, tournamentId);
+
+        Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
+
+        tournament.addStudentEnrolled(user);
+        user.addTournamentEnrolled(tournament);
+        return new TournamentDto(tournament);
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void unenrollTournament(Integer studentId, Integer tournamentId) {
+
+        User user = getUser(studentId, tournamentId);
+
+        Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
+
+        tournament.removeStudentEnrolled(user);
+        user.removeTournamentEnrolled(tournament);
+    }
+
+    private User getUser(Integer studentId, Integer tournamentId) {
         if (tournamentId == null) {
             throw new TutorException(TOURNAMENT_NOT_FOUND);
         }
@@ -105,29 +139,36 @@ public class TournamentService {
         if (!user.getRole().equals(User.Role.STUDENT)) {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
-
-        Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
-
-        tournament.addStudentEnrolled(user);
-        user.addTournamentEnrolled(tournament);
-        return new TournamentDto(tournament);
+        return user;
     }
-    /*
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public void removeTournament(Integer tournamentId) {
+    public void removeTournament(Integer studentID, Integer tournamentId) {
 
         Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
 
-        tournament.remove();
+        tournament.remove(studentID);
 
-        entityManager.remove(tournament);
+        tournamentRepository.delete(tournament);
 
-    }*/
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<TournamentDto> getAllTournaments() {
+        return tournamentRepository.findAll().stream()
+                .map(TournamentDto::new)
+                .sorted(Comparator
+                        .comparing(TournamentDto::getBeginningTime)
+                        .thenComparing(TournamentDto::getEndingTime)
+                        .thenComparing(TournamentDto::getNumberOfQuestions))
+                .collect(Collectors.toList());
+    }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<TournamentDto> getAllOpenTournament() {
+
         return tournamentRepository.findAll().stream()
-                .filter(tournament -> !tournament.getClosed())
+                .filter(tournament -> !tournament.getIsClosed())
                 .map(TournamentDto::new)
                 .sorted(Comparator
                         .comparing(TournamentDto::getBeginningTime)

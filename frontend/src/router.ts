@@ -19,6 +19,11 @@ import QuizView from '@/views/student/quiz/QuizView.vue';
 import ResultsView from '@/views/student/quiz/ResultsView.vue';
 import StatsView from '@/views/student/StatsView.vue';
 import ScanView from '@/views/student/ScanView.vue';
+
+import CreateTournament from './views/student/tournament/CreateTournament.vue';
+import EnrollTournament from './views/student/tournament/EnrollTournament.vue';
+import ShowTournaments from './views/student/tournament/ShowTournaments.vue';
+
 import ClarificationRequestView from './views/teacher/requests/ClarificationRequestsView.vue';
 import ClarificationRequestsView from './views/student/clarificationRequest/ClarificationRequestsView.vue';
 import AdminManagementView from './views/admin/AdminManagementView.vue';
@@ -203,6 +208,33 @@ let router = new Router({
           component: ScanView,
           meta: {
             title: process.env.VUE_APP_NAME + ' - Scan',
+            requiredAuth: 'Student'
+          }
+        },
+        {
+          path: 'createTournament',
+          name: 'createTournament',
+          component: CreateTournament,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Create Tournament',
+            requiredAuth: 'Student'
+          }
+        },
+        {
+          path: 'enrollTournament',
+          name: 'enrolltournament',
+          component: EnrollTournament,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Enroll Tournament',
+            requiredAuth: 'Student'
+          }
+        },
+        {
+          path: 'showTournaments',
+          name: 'showTournaments',
+          component: ShowTournaments,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Show Tournament',
             requiredAuth: 'Student'
           }
         }

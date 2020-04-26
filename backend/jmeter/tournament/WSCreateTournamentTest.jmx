@@ -96,44 +96,44 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId});</s
           <stringProp name="resultSetHandler">Store as String</stringProp>
         </JDBCSampler>
         <hashTree/>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
-          <boolProp name="ResultCollector.error_logging">false</boolProp>
-          <objProp>
-            <name>saveConfig</name>
-            <value class="SampleSaveConfiguration">
-              <time>true</time>
-              <latency>true</latency>
-              <timestamp>true</timestamp>
-              <success>true</success>
-              <label>true</label>
-              <code>true</code>
-              <message>true</message>
-              <threadName>true</threadName>
-              <dataType>true</dataType>
-              <encoding>false</encoding>
-              <assertions>true</assertions>
-              <subresults>true</subresults>
-              <responseData>false</responseData>
-              <samplerData>false</samplerData>
-              <xml>false</xml>
-              <fieldNames>true</fieldNames>
-              <responseHeaders>false</responseHeaders>
-              <requestHeaders>false</requestHeaders>
-              <responseDataOnError>false</responseDataOnError>
-              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-              <assertionsResultsToSave>0</assertionsResultsToSave>
-              <bytes>true</bytes>
-              <sentBytes>true</sentBytes>
-              <url>true</url>
-              <threadCounts>true</threadCounts>
-              <idleTime>true</idleTime>
-              <connectTime>true</connectTime>
-            </value>
-          </objProp>
-          <stringProp name="filename"></stringProp>
-        </ResultCollector>
-        <hashTree/>
       </hashTree>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Users Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
@@ -195,15 +195,15 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId});</s
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&#xd;
-	&quot;beginningTime&quot; : &quot;2020-03-26 12:30:00&quot;,&#xd;
-	&quot;endingTime&quot; : &quot;2020-03-26 13:00:00&quot;,&#xd;
+                  <stringProp name="Argument.value">{	&#xd;
+	&quot;name&quot; : &quot;Demo-Tournament&quot;,&#xd;
+	&quot;beginningTime&quot; : &quot;2020-03-26T12:30:00.000Z&quot;,&#xd;
+	&quot;endingTime&quot; : &quot;2020-03-26T13:00:00.000Z&quot;,&#xd;
 	&quot;numberOfQuestions&quot;: 5,&#xd;
-		&quot;titles&quot;: [&#xd;
+		&quot;topics&quot;: [&#xd;
 		{&#xd;
+		 &quot;id&quot;: ${topicId},&#xd;
 		 &quot;name&quot;: &quot;TOPIC_NAME_1&quot;&#xd;
-		}, {&#xd;
-		 &quot;name&quot;: &quot;TOPIC_NAME_2&quot;&#xd;
 		}&#xd;
 	]&#xd;
 }</stringProp>
@@ -228,7 +228,7 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId});</s
           <hashTree>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert tournament beginning date" enabled="true">
               <stringProp name="JSON_PATH">$.beginningTime</stringProp>
-              <stringProp name="EXPECTED_VALUE">2020-03-26 12:30:00</stringProp>
+              <stringProp name="EXPECTED_VALUE">2020-03-26T12:30:00.000Z</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -237,7 +237,7 @@ INSERT INTO users_course_executions VALUES (${userId}, ${courseExecutionId});</s
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert tournament ending date" enabled="true">
               <stringProp name="JSON_PATH">$.endingTime</stringProp>
-              <stringProp name="EXPECTED_VALUE">2020-03-26 13:00:00</stringProp>
+              <stringProp name="EXPECTED_VALUE">2020-03-26T13:00:00.000Z</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>

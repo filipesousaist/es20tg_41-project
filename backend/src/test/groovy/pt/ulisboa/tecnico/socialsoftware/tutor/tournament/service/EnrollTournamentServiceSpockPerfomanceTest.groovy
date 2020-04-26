@@ -102,9 +102,9 @@ class EnrollTournamentServiceSpockPerfomanceTest extends Specification{
 
         given:"A TournamentDto"
         tournamentDto = new TournamentDto()
-        tournamentDto.setTitles(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        tournamentDto.setTopics(topicList1)
+        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
         tournamentDto.setNumberOfQuestions(NUMBER_OF_QUESTIONS)
         tournamentService.createNewTournament(user1.getId(), courseEx1.getCourseExecutionId(), tournamentDto)
 

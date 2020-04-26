@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
@@ -37,6 +38,7 @@ public class Tournament {
     @JoinColumn(name = "course_executions_id")
     private CourseExecution courseExecution;
 
+    private String name;
     private LocalDateTime beginningTime;
     private LocalDateTime endingTime;
     private int numberOfQuestions;
@@ -45,10 +47,11 @@ public class Tournament {
 
     public Tournament() {}
 
-    public Tournament(User student, List<Topic> titlesList, LocalDateTime initialTime, LocalDateTime endTime, int nQuestions, CourseExecution courseEx) {
+    public Tournament(User student, String tournamentName, List<Topic> titlesList, LocalDateTime initialTime, LocalDateTime endTime, int nQuestions, CourseExecution courseEx) {
 
         checkParameters(titlesList, initialTime, endTime, nQuestions);
 
+        name = tournamentName;
         createdByUser = student;
         titles = titlesList;
         beginningTime = initialTime;
@@ -121,15 +124,23 @@ public class Tournament {
         this.studentsEnrolled.add(user);
     }
 
+    public void removeStudentEnrolled(User user) {
+
+        if (!this.studentsEnrolled.contains(user)) {
+            throw new TutorException(STUDENT_NOT_ENROLLED);
+        }
+        this.studentsEnrolled.remove(user);
+    }
+
     public Integer getId() {
         return id;
     }
 
-    public Boolean getClosed() {
+    public Boolean getIsClosed() {
         return isClosed;
     }
 
-    public void setClosed(Boolean closed) {
+    public void setIsClosed(Boolean closed) {
         isClosed = closed;
     }
 
@@ -145,7 +156,23 @@ public class Tournament {
         this.courseExecution = courseExecution;
     }
 
-    public void remove() {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void remove(int studentId) {
+
+        if (this.createdByUser.getId() != studentId)
+            throw new TutorException(STUDENT_DIDNT_CREATE_TOURNAMENT);
+
+        if (this.isClosed)
+            throw new TutorException((TOURNAMENT_IS_CLOSED));
+
+        this.createdByUser.removeTournamentCreated(this);
 
         for(User user: this.studentsEnrolled) {
             user.getTournamentsEnrolled().remove(this);
