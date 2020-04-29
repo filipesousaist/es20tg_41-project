@@ -56,7 +56,7 @@ public class StudentQuestion {
         }
 
         if (studentQuestionDto.getQuestionDto().getCreationDate() == null) {
-            studentQuestionDto.getQuestionDto().setCreationDate(DateHandler.toISOString(LocalDateTime.now()));
+            studentQuestionDto.getQuestionDto().setCreationDate(DateHandler.toISOString(DateHandler.now()));
         }
 
     }
