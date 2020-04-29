@@ -14,6 +14,8 @@ public class ClarificationRequestDto implements Serializable {
 
     private String username;
 
+    private int userId;
+
     private ClarificationDto clarification;
 
     public ClarificationRequestDto(){}
@@ -23,6 +25,7 @@ public class ClarificationRequestDto implements Serializable {
         this.title = clarificationRequest.getTitle();
         this.text = clarificationRequest.getText();
         this.username = clarificationRequest.getStudent().getUsername();
+        this.userId = clarificationRequest.getStudent().getId();
         if (clarificationRequest.getClarification() != null){
             this.clarification = new ClarificationDto(clarificationRequest.getClarification());
         }
@@ -68,5 +71,13 @@ public class ClarificationRequestDto implements Serializable {
 
     public void setClarification(ClarificationDto clarification) {
         this.clarification = clarification;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }
