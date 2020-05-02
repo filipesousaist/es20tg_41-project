@@ -79,7 +79,7 @@ public class DiscussionService {
 
         checkClarificationRequest(clarificationRequestDto.getText(), ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMTPY);
 
-        List<Question> questions = userService.getAnsweredQuestions(clarificationRequestDto.getUsername());
+        List<Question> questions = userService.getAnsweredQuestions(clarificationRequestDto.getUserId());
 
         checkQuestionAnswer(question, questions);
 

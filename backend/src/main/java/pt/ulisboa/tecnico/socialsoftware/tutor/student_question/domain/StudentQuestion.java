@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
@@ -55,8 +56,9 @@ public class StudentQuestion {
         }
 
         if (studentQuestionDto.getQuestionDto().getCreationDate() == null) {
-            studentQuestionDto.getQuestionDto().setCreationDate(LocalDateTime.now().format(Course.formatter));
+            studentQuestionDto.getQuestionDto().setCreationDate(DateHandler.toISOString(DateHandler.now()));
         }
+
     }
 
     public Integer getId() { return id; }
