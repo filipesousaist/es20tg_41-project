@@ -13,6 +13,8 @@ public class ClarificationDto implements Serializable {
 
     private Integer userId;
 
+    private Integer clairifcationRequestId;
+
     public ClarificationDto(){}
 
     public ClarificationDto(Clarification clarification){
