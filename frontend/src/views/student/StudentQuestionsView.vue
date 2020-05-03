@@ -32,9 +32,9 @@
         </v-card-title>
       </template>
 
-      <template v-slot:item.questionDto.status="{ item }">
-        <v-chip :color="getStatusColor(item.questionDto.status)" medium>
-          <span>{{ item.questionDto.status }}</span>
+      <template v-slot:item.status="{ item }">
+        <v-chip :color="getStatusColor(item.status)" medium>
+          <span>{{ item.status }}</span>
         </v-chip>
       </template>
 
@@ -85,7 +85,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
-import StudentQuestion from '@/models/management/StudentQuestion';
+import StudentQuestion from '@/models/student_question/StudentQuestion';
 import EditStudentQuestionDialog from '@/views/student/EditStudentQuestionDialog.vue';
 import Image from '@/models/management/Image';
 import ShowStudentQuestionDialog from '@/views/student/ShowStudentQuestionDialog.vue';
@@ -107,7 +107,7 @@ export default class CreateStudentQuestionsView extends Vue {
     { text: 'Title', value: 'questionDto.title', align: 'left', width: '30%' },
     {
       text: 'Status',
-      value: 'questionDto.status',
+      value: 'status',
       align: 'center',
       width: '10%'
     },
@@ -209,9 +209,14 @@ export default class CreateStudentQuestionsView extends Vue {
   }
 
   getStatusColor(status: string) {
-    if (status === 'REJECTED') return 'red';
-    else if (status === 'PROPOSED') return 'blue';
-    else return 'green';
+    switch (status) {
+      case 'PROPOSED':
+        return 'blue';
+      case 'ACCEPTED':
+        return 'green';
+      case 'REJECTED':
+        return 'red';
+    }
   }
 }
 </script>

@@ -77,7 +77,7 @@ public class StudentQuestionService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<StudentQuestionDto> getStudentQuestions(int userId) {
         return studentQuestionRepository.getByUserId(userId).stream()
-                .map(StudentQuestionDto::new).collect(Collectors.toList());
+            .map(StudentQuestionDto::new).collect(Collectors.toList());
     }
 
     @Retryable(
@@ -86,13 +86,11 @@ public class StudentQuestionService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<StudentQuestionDto> getProposedStudentQuestions(int courseId) {
         return studentQuestionRepository.findAll().stream()
-                .filter(studentQuestion -> {
-                        Question question = studentQuestion.getQuestion();
-                        return question.getCourse().getId() == courseId &&
-                               question.getStatus() == Question.Status.PROPOSED;
-                    }
-                )
-                .map(StudentQuestionDto::new).collect(Collectors.toList());
+            .filter(studentQuestion ->
+                studentQuestion.getQuestion().getCourse().getId() == courseId &&
+                studentQuestion.getStatus() == StudentQuestion.Status.PROPOSED
+            )
+            .map(StudentQuestionDto::new).collect(Collectors.toList());
     }
 
     @Retryable(

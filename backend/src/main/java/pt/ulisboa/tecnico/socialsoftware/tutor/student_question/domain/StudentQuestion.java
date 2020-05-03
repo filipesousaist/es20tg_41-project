@@ -8,16 +8,17 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuest
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
 @Entity
 @Table(name = "student_questions")
 public class StudentQuestion {
+    public enum Status {
+        PROPOSED, ACCEPTED, REJECTED
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +32,11 @@ public class StudentQuestion {
     @JoinColumn(name = "question_id")
     private Question question;
 
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.PROPOSED;
+
     @OneToMany
     private Set<QuestionEvaluation> questionEvaluations = new HashSet<>();
-
-    public static Logger logger=Logger.getLogger("global");
 
     public StudentQuestion(){
     }
@@ -75,6 +77,14 @@ public class StudentQuestion {
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public Set<QuestionEvaluation> getQuestionEvaluations() { return questionEvaluations; }

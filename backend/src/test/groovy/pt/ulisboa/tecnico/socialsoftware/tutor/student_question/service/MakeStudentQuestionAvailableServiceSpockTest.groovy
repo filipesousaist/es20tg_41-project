@@ -1,30 +1,30 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.service
 
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
 import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.StudentQuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain.StudentQuestion
-import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.QuestionEvaluationDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.QuestionEvaluationRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.StudentQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
-import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import spock.lang.Specification
+import spock.lang.Unroll;
 
 @DataJpaTest
-class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification {
+class MakeStudentQuestionAvailableServiceSpockTest extends Specification {
     private static final String COURSE_NAME = "Engenharia de Software";
     private static final String ACRONYM = "ES";
     private static final String ACADEMIC_TERM = "2 SEM";
@@ -35,10 +35,6 @@ class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification 
     private static final String STUDENT_NAME = "Student Name";
     private static final String STUDENT_USERNAME = "Student Username";
     private static final int STUDENT_KEY = 1;
-    private static final String JUSTIFICATION = "Good question";
-    private static final String TEACHER_NAME = "Teacher Name";
-    private static final String TEACHER_USERNAME = "Teacher Username";
-    private static final int TEACHER_KEY = 2;
 
     @Autowired
     StudentQuestionService studentQuestionService;
@@ -58,14 +54,8 @@ class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification 
     @Autowired
     StudentQuestionRepository studentQuestionRepository;
 
-    @Autowired
-    QuestionEvaluationRepository questionEvaluationRepository;
-
     def studentQuestion
     def studentQuestionID
-    def teacher
-    def teacherID
-    def questionEvaluationDto
 
     def setup() {
         // Create course and course execution
@@ -79,7 +69,7 @@ class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification 
         questionDto.setKey(1)
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
-        questionDto.setStatus(Question.Status.AVAILABLE.name())
+        questionDto.setStatus(Question.Status.DISABLED.name())
         questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()))
 
         // Create 2 options, and add them to question
@@ -100,13 +90,6 @@ class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification 
         courseExecution.getUsers().add(student)
         userRepository.save(student)
 
-        // Create teacher, and get ID
-        teacher = new User(TEACHER_NAME, TEACHER_USERNAME, TEACHER_KEY, User.Role.TEACHER)
-        teacher.getCourseExecutions().add(courseExecution)
-        courseExecution.getUsers().add(teacher)
-        userRepository.save(teacher)
-        teacherID = userRepository.findByKey(TEACHER_KEY).id
-
         // Create student question, and get ID
         def studentQuestionDto = new StudentQuestionDto()
         studentQuestionDto.setQuestionDto(questionDto)
@@ -115,28 +98,42 @@ class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification 
         studentQuestionID = studentQuestionRepository.findAll().get(0).id
     }
 
-    def "performance test to create 10000 question evaluations"() {
-        given: "a QuestionEvaluationDto"
-        questionEvaluationDto = new QuestionEvaluationDto()
+    def "make accepted student question available"() {
+        given: "the studentQuestion is accepted"
+        studentQuestion.setStatus(StudentQuestion.Status.ACCEPTED)
 
-        when: "a question evaluation is created"
-        1.upto(/*10000*/1, {
-            questionEvaluationDto.setJustification(JUSTIFICATION + it);
-            questionEvaluationDto.setApproved(it % 3 == 0);
-            studentQuestionService.createQuestionEvaluation(
-                teacherID, studentQuestionID, questionEvaluationDto);
-        });
+        when: "it is made available"
+        studentQuestionService.makeStudentQuestionAvailable(studentQuestionID)
 
-        then:
-        true
+        then: "it is available"
+        def updatedStudentQuestion = studentQuestionService.findById(studentQuestionID)
+        updatedStudentQuestion != null
+        def updatedQuestion = updatedStudentQuestion.getQuestion()
+        updatedQuestion != null
+        updatedQuestion.getStatus() == Question.Status.AVAILABLE
     }
 
-    @TestConfiguration
-    static class StudentQuestionServiceImplTestContextConfiguration {
+    @Unroll("invalid status: #status || #errorMessage")
+    def "try to make unaccepted studentQuestion available"() {
+        given: "the studentQuestion is accepted"
+        studentQuestion.setStatus(status)
 
-        @Bean
-        StudentQuestionService studentQuestionService() {
-            return new StudentQuestionService()
-        }
+        when: "it is made available"
+        studentQuestionService.makeStudentQuestionAvailable(studentQuestionID)
+
+        then: "an exception is thrown"
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.STUDENT_QUESTION_TEACHER_NOT_IN_COURSE
+        and: "the question is not made available"
+        def updatedStudentQuestion = studentQuestionService.findById(studentQuestionID)
+        updatedStudentQuestion != null
+        def updatedQuestion = updatedStudentQuestion.getQuestion()
+        updatedQuestion != null
+        updatedQuestion.getStatus() != Question.Status.AVAILABLE
+
+        where:
+        status                      ||  errorMessage
+        Question.Status.DISABLED    ||  ErrorMessage.STUDENT_QUESTION_NEEDS_ACCEPTANCE
+        Question.Status.REMOVED     ||  ErrorMessage.STUDENT_QUESTION_NEEDS_ACCEPTANCE
     }
 }

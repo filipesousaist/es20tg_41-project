@@ -19,8 +19,8 @@ import Tournament from '@/models/tournament/Tournament';
 import ClarificationRequest from '@/models/discussion/ClarificationRequest';
 import Clarification from '@/models/discussion/Clarification';
 
-import StudentQuestion from '@/models/management/StudentQuestion';
-import QuestionEvaluation from '@/models/management/QuestionEvaluation';
+import StudentQuestion from '@/models/student_question/StudentQuestion';
+import QuestionEvaluation from '@/models/student_question/QuestionEvaluation';
 
 const httpClient = axios.create();
 httpClient.defaults.timeout = 10000;

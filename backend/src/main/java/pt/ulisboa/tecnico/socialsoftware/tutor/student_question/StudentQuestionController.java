@@ -31,8 +31,6 @@ public class StudentQuestionController {
             throw new TutorException(AUTHENTICATION_ERROR);
         }
 
-        studentQuestionDto.getQuestionDto().setStatus(Question.Status.PROPOSED.name());
-
         return studentQuestionService.createStudentQuestion(courseId, user.getId(), studentQuestionDto);
     }
 

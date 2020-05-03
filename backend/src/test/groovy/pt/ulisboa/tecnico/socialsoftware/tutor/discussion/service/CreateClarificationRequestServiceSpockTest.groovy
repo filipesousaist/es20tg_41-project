@@ -39,7 +39,7 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 @DataJpaTest
-class createClarificationRequestServiceSpockTest extends Specification {
+class CreateClarificationRequestServiceSpockTest extends Specification {
 
 
     static final String QUESTION_TITLE = "question1"
@@ -320,10 +320,10 @@ class createClarificationRequestServiceSpockTest extends Specification {
 
         where:
         title                   | text                   || errorMessage
-        null                    | CLARIFICATION_TEXT     || ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMTPY
-        "       "               | CLARIFICATION_TEXT     || ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMTPY
-        CLARIFICATION_TITLE     | null                   || ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMTPY
-        CLARIFICATION_TITLE     | "      "               || ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMTPY
+        null                    | CLARIFICATION_TEXT     || ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMPTY
+        "       "               | CLARIFICATION_TEXT     || ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMPTY
+        CLARIFICATION_TITLE     | null                   || ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMPTY
+        CLARIFICATION_TITLE     | "      "               || ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMPTY
 
     }
 

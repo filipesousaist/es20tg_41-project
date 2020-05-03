@@ -100,20 +100,19 @@ public enum ErrorMessage {
     STUDENT_QUESTION_NOT_FOUND("Student question not found with id %d"),
     QUESTION_EVALUATION_MISSING_JUSTIFICATION("Student question has no justification"),
     STUDENT_QUESTION_TEACHER_NOT_IN_COURSE("Teacher is not in course of student question"),
+    STUDENT_QUESTION_NEEDS_ACCEPTANCE("Student question needs to be accepted"),
 
     ACCESS_DENIED("You do not have permission to view this resource"),
     CANNOT_OPEN_FILE("Cannot open file"),
 
     // Discussion
     CLARIFICATION_REQUEST_ALREADY_EXISTS("You can not request another clarification for this question"),
-    CLARIFICATION_REQUEST_TITLE_IS_EMTPY("The Clarification Request title is empty"),
-    CLARIFICATION_REQUEST_TEXT_IS_EMTPY("The Clarification Request text is empty"),
+    CLARIFICATION_REQUEST_TITLE_IS_EMPTY("The Clarification Request title is empty"),
+    CLARIFICATION_REQUEST_TEXT_IS_EMPTY("The Clarification Request text is empty"),
     CLARIFICATION_ALREADY_EXISTS("You can not submit another clarification for this request"),
     CLARIFICATION_TEXT_IS_EMPTY("The clarification text is empty"),
     CLARIFICATION_NOT_CONSISTENT("Field %s of clarification not consistent"),
     CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION("The Clarification Request has no clarification associated with it.");
-
-
 
     public final String label;
 

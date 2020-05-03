@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
-
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
@@ -14,13 +14,12 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.StudentQuestionService
+import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain.StudentQuestion
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.StudentQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
-
-import java.time.LocalDateTime
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*
 
@@ -73,8 +72,8 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         questionDto.setKey(1)
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
-        questionDto.setStatus(Question.Status.PROPOSED.name())
-        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter));
+        questionDto.setStatus(Question.Status.DISABLED.name())
+        questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()));
         and: 'a optionDto'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)
@@ -93,14 +92,17 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         this.studentQuestionRepository.count() == 1L
         def result = this.studentQuestionRepository.findAll().get(0)
         result.getId() != null
-        result.getQuestion().getKey() == 1
-        result.getQuestion().getStatus() == Question.Status.PROPOSED
-        result.getQuestion().getTitle() == QUESTION_TITLE
-        result.getQuestion().getContent() == QUESTION_CONTENT
-        result.getQuestion().getImage() == null
-        result.getQuestion().getOptions().size() == 1
-        result.getQuestion().getCourse().getName() == COURSE_NAME
-        def resOption = result.getQuestion().getOptions().get(0)
+        result.getStatus() == StudentQuestion.Status.PROPOSED
+        def resQuestion = result.getQuestion()
+        resQuestion != null
+        resQuestion.getKey() == 1
+        resQuestion.getStatus() == Question.Status.DISABLED
+        resQuestion.getTitle() == QUESTION_TITLE
+        resQuestion.getContent() == QUESTION_CONTENT
+        resQuestion.getImage() == null
+        resQuestion.getOptions().size() == 1
+        resQuestion.getCourse().getName() == COURSE_NAME
+        def resOption = resQuestion.getOptions().get(0)
         resOption.getContent() == OPTION_CONTENT
         resOption.getCorrect()
         result.getUser() == user
@@ -115,8 +117,8 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
         questionDto.setKey(1)
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent("")
-        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter))
-        questionDto.setStatus(Question.Status.PROPOSED.name())
+        questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()))
+        questionDto.setStatus(Question.Status.DISABLED.name())
         and: "a optionDto"
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)
@@ -133,7 +135,7 @@ class CreateStudentQuestionServiceSpockTest extends Specification{
 
         then:
         TutorException exception = thrown()
-        exception.getErrorMessage() == QUESTION_MISSING_DATA
+        exception.getErrorMessage() == INVALID_CONTENT_FOR_QUESTION
         this.studentQuestionRepository.findAll().size() == 0
     }
 

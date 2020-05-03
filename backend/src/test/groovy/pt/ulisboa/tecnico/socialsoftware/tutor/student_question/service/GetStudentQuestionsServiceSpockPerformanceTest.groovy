@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
@@ -67,7 +68,7 @@ class GetStudentQuestionsServiceSpockPerformanceTest extends Specification {
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
         questionDto.setStatus(Question.Status.PROPOSED.name())
-        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter));
+        questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()));
         and: 'a optionDto'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)

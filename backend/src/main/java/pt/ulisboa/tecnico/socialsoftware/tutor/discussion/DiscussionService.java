@@ -21,7 +21,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionR
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository;
@@ -34,8 +33,6 @@ import javax.persistence.PersistenceContext;
 
 import java.util.List;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
@@ -75,9 +72,9 @@ public class DiscussionService {
 
         User user = getUser(clarificationRequestDto.getUsername());
 
-        checkClarificationRequest(clarificationRequestDto.getTitle(), ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMTPY);
+        checkClarificationRequest(clarificationRequestDto.getTitle(), ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMPTY);
 
-        checkClarificationRequest(clarificationRequestDto.getText(), ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMTPY);
+        checkClarificationRequest(clarificationRequestDto.getText(), ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMPTY);
 
         List<Question> questions = userService.getAnsweredQuestions(clarificationRequestDto.getUserId());
 
