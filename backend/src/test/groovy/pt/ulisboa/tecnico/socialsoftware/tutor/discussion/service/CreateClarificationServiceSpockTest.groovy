@@ -16,13 +16,12 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Option
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.QuizService
@@ -72,7 +71,7 @@ class CreateClarificationServiceSpockTest extends Specification {
     QuizService quizService
 
     @Autowired
-    DiscussionRepository discussionRepository
+    ClarificationRepository discussionRepository
 
     @Autowired
     ClarificationRequestRepository clarificationRequestRepository

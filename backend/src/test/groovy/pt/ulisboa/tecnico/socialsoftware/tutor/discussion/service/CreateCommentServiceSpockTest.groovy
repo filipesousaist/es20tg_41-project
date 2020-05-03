@@ -9,10 +9,13 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Comment
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.CommentDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.CommentRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
 import spock.lang.Specification
@@ -44,6 +47,15 @@ class CreateCommentServiceSpockTest extends Specification{
     @Autowired
     CommentRepository commentRepository
 
+    @Autowired
+    ClarificationRequestRepository clarificationRequestRepository
+
+    @Autowired
+    ClarificationRepository clarificationRepository
+
+    @Autowired
+    QuestionRepository questionRepository
+
 
 
     User u1
@@ -66,49 +78,90 @@ class CreateCommentServiceSpockTest extends Specification{
         question = new Question()
         question.setTitle(QUESTION_TITLE)
         question.setContent(QUESTION_CONTENT)
+        questionRepository.save(question)
 
     }
 
-    def "the clarification request exists, the user created the clarifiction request and create a Comment" () {
+    def "the clarification exists, the user created the clarifiction request and create a Comment" () {
         given: "a clarification request"
         clarificationRequest = new ClarificationRequest()
         clarificationRequest.setQuestion(question)
         clarificationRequest.setStudent(u1)
+        clarificationRequestRepository.save(clarificationRequest)
 
         and: "a clarification"
         clarification = new Clarification()
         clarification.setTeacher(u3)
+        clarification.setClarificationRequest(clarificationRequest)
+        clarificationRepository.save(clarification)
+
 
         and: "a comment dto"
         commentDto = new CommentDto()
-        commentDto.setUser(u1.getId())
+        commentDto.setUserId(u1.getId())
         commentDto.setText(COMMENT_TEXT1)
 
         when:
         discussionService.createComment(clarification.getId(), commentDto)
 
         then: "the comment is added to the repository"
-        commentRepository.count() == 1L
+        commentRepository.findAll().size() == 1
         def result = commentRepository.findAll().get(0)
 
         and: "the comment values are correct"
-        result.getUserId() == u1.getId()
-        result.getClarificationId() == clarification.getId()
+        result.getUser().getId() == u1.getId()
         result.getText() == COMMENT_TEXT1
 
         and: "the comment gets added to the clarification"
         clarification.getComments() != null
-        clarification.getComments().size == 1
+        clarification.getComments().size() == 1
         def comm = clarification.getComments().get(0)
         comm.getUser().getId() == u1.getId()
-        comm.getClarification().getId() == clarification.getId()
+        comm.getText() == COMMENT_TEXT1
+    }
+
+    def "the clarification exists, the user created the clarifiction and create a Comment" () {
+        given: "a clarification request"
+        clarificationRequest = new ClarificationRequest()
+        clarificationRequest.setQuestion(question)
+        clarificationRequest.setStudent(u1)
+        clarificationRequestRepository.save(clarificationRequest)
+
+        and: "a clarification"
+        clarification = new Clarification()
+        clarification.setTeacher(u3)
+        clarification.setClarificationRequest(clarificationRequest)
+        clarificationRepository.save(clarification)
+
+
+        and: "a comment dto"
+        commentDto = new CommentDto()
+        commentDto.setUserId(u3.getId())
+        commentDto.setText(COMMENT_TEXT1)
+
+        when:
+        discussionService.createComment(clarification.getId(), commentDto)
+
+        then: "the comment is added to the repository"
+        commentRepository.findAll().size() == 1
+        def result = commentRepository.findAll().get(0)
+
+        and: "the comment values are correct"
+        result.getUser().getId() == u3.getId()
+        result.getText() == COMMENT_TEXT1
+
+        and: "the comment gets added to the clarification"
+        clarification.getComments() != null
+        clarification.getComments().size() == 1
+        def comm = clarification.getComments().get(0)
+        comm.getUser().getId() == u3.getId()
         comm.getText() == COMMENT_TEXT1
     }
 
     def "the clarification does not exist" () {
         given: "a comment dto"
         commentDto = new CommentDto()
-        commentDto.setUser(u1.getId())
+        commentDto.setUserId(u3.getId())
         commentDto.setText(COMMENT_TEXT1)
 
         when:
@@ -116,7 +169,7 @@ class CreateCommentServiceSpockTest extends Specification{
 
         then:
         def error = thrown(TutorException)
-        error.getErrorMessage() == ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND
+        error.getErrorMessage() == ErrorMessage.CLARIFICATION_NOT_FOUND
 
         and: "the comment is not added to the repository"
         commentRepository.count() == 0L
@@ -127,14 +180,19 @@ class CreateCommentServiceSpockTest extends Specification{
         clarificationRequest = new ClarificationRequest()
         clarificationRequest.setQuestion(question)
         clarificationRequest.setStudent(u1)
+        clarificationRequestRepository.save(clarificationRequest)
 
         and: "a clarification"
         clarification = new Clarification()
         clarification.setTeacher(u3)
+        clarification.setClarificationRequest(clarificationRequest)
+        clarificationRepository.save(clarification)
+
+
 
         and: "a comment dto"
         commentDto = new CommentDto()
-        commentDto.setUser(u2.getId())
+        commentDto.setUserId(u2.getId())
         commentDto.setText(COMMENT_TEXT1)
 
         when:
@@ -148,7 +206,7 @@ class CreateCommentServiceSpockTest extends Specification{
         commentRepository.count() == 0L
 
         and: "the comment is not added to the clarification request"
-        clarification.getComments().size == 0
+        clarification.getComments().size() == 0
 
 
     }
@@ -159,14 +217,17 @@ class CreateCommentServiceSpockTest extends Specification{
         clarificationRequest = new ClarificationRequest()
         clarificationRequest.setQuestion(question)
         clarificationRequest.setStudent(u1)
+        clarificationRequestRepository.save(clarificationRequest)
 
         and: "a clarification"
         clarification = new Clarification()
         clarification.setTeacher(u3)
+        clarification.setClarificationRequest(clarificationRequest)
+        clarificationRepository.save(clarification)
 
         and: "a comment dto"
         commentDto = new CommentDto()
-        commentDto.setUser(u2.getId())
+        commentDto.setUserId(u1.getId())
         commentDto.setText(text)
 
         when:
@@ -180,7 +241,7 @@ class CreateCommentServiceSpockTest extends Specification{
         commentRepository.count() == 0L
 
         and: "the comment is not added to the clarification request"
-        clarification.getComments().size == 0
+        clarification.getComments().size() == 0
 
         where:
         text                   || errorMessage

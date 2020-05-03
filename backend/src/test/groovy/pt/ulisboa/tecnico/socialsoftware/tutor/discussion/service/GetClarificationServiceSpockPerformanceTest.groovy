@@ -16,12 +16,10 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Option
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.QuizService
@@ -82,7 +80,7 @@ class GetClarificationServiceSpockPerformanceTest extends Specification{
     ClarificationRequestRepository clarificationRequestRepository
 
     @Autowired
-    DiscussionRepository discussionRepository
+    ClarificationRepository discussionRepository
 
     @Autowired
     QuestionRepository questionRepository
