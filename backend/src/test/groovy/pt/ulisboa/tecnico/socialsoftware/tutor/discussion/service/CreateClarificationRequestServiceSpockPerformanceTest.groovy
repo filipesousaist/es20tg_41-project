@@ -125,7 +125,7 @@ class CreateClarificationRequestServiceSpockPerformanceTest extends Specificatio
         quiz.setKey(1)
         quiz.setKey(quizService.getMaxQuizKey() + 1)
         quiz.setCourseExecution(courseExecution);
-        quiz.setType(Quiz.QuizType.GENERATED)
+        quiz.setType(Quiz.QuizType.GENERATED.toString())
         quizRepository.save(quiz)
 
         question1 = new Question()
@@ -135,11 +135,6 @@ class CreateClarificationRequestServiceSpockPerformanceTest extends Specificatio
         question1.setCourse(course)
         questionRepository.save(question1)
 
-        def option = new Option()
-        option.setCorrect(false)
-        option.setContent(OPTION_CONTENT)
-        option.setQuestion(question1)
-        question1.addOption(option)
 
         def quizQuestion = new QuizQuestion(quiz, question1, 1)
         quizQuestionRepository.save(quizQuestion)
@@ -166,7 +161,7 @@ class CreateClarificationRequestServiceSpockPerformanceTest extends Specificatio
 
         when:
         1.upto(1, {
-            clarificationRequestDto.setUsername(USERNAME + it)
+            clarificationRequestDto.setUserId(it)
             discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
 
         })

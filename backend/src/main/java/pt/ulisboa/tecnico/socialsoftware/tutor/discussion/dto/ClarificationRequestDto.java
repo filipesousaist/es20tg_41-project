@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest;
 
 import java.io.Serializable;
@@ -12,11 +13,11 @@ public class ClarificationRequestDto implements Serializable {
 
     private String text;
 
-    private String username;
-
     private int userId;
 
     private ClarificationDto clarification;
+
+    private String creationDate;
 
     public ClarificationRequestDto(){}
 
@@ -24,11 +25,11 @@ public class ClarificationRequestDto implements Serializable {
         this.id = clarificationRequest.getId();
         this.title = clarificationRequest.getTitle();
         this.text = clarificationRequest.getText();
-        this.username = clarificationRequest.getStudent().getUsername();
         this.userId = clarificationRequest.getStudent().getId();
         if (clarificationRequest.getClarification() != null){
             this.clarification = new ClarificationDto(clarificationRequest.getClarification());
         }
+        this.creationDate = DateHandler.toISOString(clarificationRequest.getCreationDate());
     }
 
 
@@ -57,14 +58,6 @@ public class ClarificationRequestDto implements Serializable {
         this.text = text;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public ClarificationDto getClarification() {
         return clarification;
     }
@@ -79,5 +72,13 @@ public class ClarificationRequestDto implements Serializable {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
     }
 }

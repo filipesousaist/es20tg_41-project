@@ -122,6 +122,8 @@ class CreateClarificationServiceSpockPerformanceTest extends Specification{
     def quizAnswer
     def questionAnswer
 
+    def request
+
     def setup (){
 
         course = new Course(COURSE_NAME, COURSE_TYPE);
@@ -139,7 +141,7 @@ class CreateClarificationServiceSpockPerformanceTest extends Specification{
         quiz.setKey(1)
         quiz.setKey(quizService.getMaxQuizKey() + 1)
         quiz.setCourseExecution(courseExecution);
-        quiz.setType(Quiz.QuizType.GENERATED)
+        quiz.setType(Quiz.QuizType.GENERATED.toString())
         quizRepository.save(quiz)
 
         question1 = new Question()
@@ -149,18 +151,17 @@ class CreateClarificationServiceSpockPerformanceTest extends Specification{
         question1.setCourse(course)
         questionRepository.save(question1)
 
-        def option = new Option()
-        option.setCorrect(false)
-        option.setContent(OPTION_CONTENT)
-        option.setQuestion(question1)
-        question1.addOption(option)
 
         def quizQuestion = new QuizQuestion(quiz, question1, 1)
         quizQuestionRepository.save(quizQuestion)
 
-        def clarificationRequestDto = new ClarificationRequestDto()
+        /*def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
-        clarificationRequestDto.setText(CLARIFICATION_REQUEST_TEXT)
+        clarificationRequestDto.setText(CLARIFICATION_REQUEST_TEXT)*/
+
+        request = new ClarificationRequest()
+        request.setQuestion(question1)
+        clarificationRequestRepository.save(request)
 
         1.upto(1, {
             user1 = userService.createUser(NAME + it, USERNAME + it, ROLE)
@@ -174,8 +175,10 @@ class CreateClarificationServiceSpockPerformanceTest extends Specification{
             user1.addQuizAnswer(quizAnswer)
             answerService.concludeQuiz(user1, quiz.getId())
             answerService.submitAnswer(user1, quiz.getId(), new StatementAnswerDto(questionAnswer))
-            clarificationRequestDto.setUsername(USERNAME + it)
-            discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
+            request.setStudent(user1)
+            //discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
+            clarificationRequestRepository.save(request)
+
         })
 
     }
@@ -184,7 +187,7 @@ class CreateClarificationServiceSpockPerformanceTest extends Specification{
     def "performance testing to create 1000 clarifications"() {
 
         def clarificationDto = new ClarificationDto()
-        clarificationDto.setUsername(teacher1.getUsername())
+        clarificationDto.setUserId(teacher1.getId())
 
         when:
         1.upto(1, {

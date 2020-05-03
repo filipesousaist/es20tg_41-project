@@ -146,7 +146,7 @@ class GetClarificationServiceSpockTest extends Specification{
         quiz.setKey(1)
         quiz.setKey(quizService.getMaxQuizKey()+1)
         quiz.setCourseExecution(courseExecution);
-        quiz.setType(Quiz.QuizType.GENERATED)
+        quiz.setType(Quiz.QuizType.GENERATED.toString())
         quizRepository.save(quiz)
 
         question1 = new Question()

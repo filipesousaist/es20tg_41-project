@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto;
 
+import io.swagger.models.auth.In;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
 
 import java.io.Serializable;
@@ -10,14 +11,14 @@ public class ClarificationDto implements Serializable {
 
     private String text;
 
-    private String username;
+    private Integer userId;
 
     public ClarificationDto(){}
 
     public ClarificationDto(Clarification clarification){
         this.id = clarification.getId();
         this.text = clarification.getText();
-        this.username = clarification.getTeacher().getUsername();
+        this.userId = clarification.getTeacher().getId();
     }
 
     public Integer getId() {
@@ -36,12 +37,12 @@ public class ClarificationDto implements Serializable {
         this.text = text;
     }
 
-    public String getUsername() {
-        return username;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -49,7 +50,7 @@ public class ClarificationDto implements Serializable {
         return "ClarificationDto{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
-                ", username='" + username + '\'' +
+                ", userId='" + userId + '\'' +
                 '}';
     }
 }

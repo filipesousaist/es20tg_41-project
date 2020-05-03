@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.discussion;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
@@ -73,7 +74,7 @@ public class DiscussionService {
 
         Question question = getQuestion(questionId);
 
-        User user = getUser(clarificationRequestDto.getUsername());
+        User user = getUser(clarificationRequestDto.getUserId());
 
         checkClarificationRequest(clarificationRequestDto.getTitle(), ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMTPY);
 
@@ -86,14 +87,13 @@ public class DiscussionService {
         checkForDuplicateClarificationRequest(question, user);
 
         ClarificationRequest clarificationRequest = createClarificationRequest(clarificationRequestDto, question, user);
-
+        clarificationRequest.setCreationDate(DateHandler.now());
         return new ClarificationRequestDto(clarificationRequest);
     }
 
-    private User getUser(String username) {
-        User user = this.userService.findByUsername(username);
-        if(user == null) throw new TutorException(ErrorMessage.USER_NOT_FOUND);
-        return user;
+    private User getUser(Integer id) {
+        Optional<User> user = this.userRepository.findById(id);
+        return user.orElseThrow(() -> new TutorException(USER_NOT_FOUND,id));
     }
 
     private ClarificationRequest createClarificationRequest(ClarificationRequestDto clarificationRequestDto, Question question, User user) {
@@ -138,7 +138,7 @@ public class DiscussionService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public ClarificationDto createClarification(int clarificationRequestId, ClarificationDto clarificationDto){
 
-        User teacher = getUser(clarificationDto.getUsername());
+        User teacher = getUser(clarificationDto.getUserId());
 
         ClarificationRequest clarificationRequest = getClarificationRequest(clarificationRequestId);
 
@@ -151,6 +151,8 @@ public class DiscussionService {
         checkForDuplicateClarification(clarificationRequest, teacher);
 
         Clarification clarification = createClarification(clarificationDto, teacher, clarificationRequest);
+
+        clarification.setCreationDate(DateHandler.now());
 
         return new ClarificationDto(clarification);
     }

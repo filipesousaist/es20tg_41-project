@@ -5,6 +5,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "clarifications")
@@ -21,6 +22,9 @@ public  class Clarification {
     @OneToOne
     @JoinColumn(name = "clarification_request_id")
     private ClarificationRequest clarificationRequest;
+
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
     @Autowired
     private String text;
@@ -65,5 +69,13 @@ public  class Clarification {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 }

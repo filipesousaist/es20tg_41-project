@@ -146,12 +146,7 @@ class CreateClarificationServiceSpockTest extends Specification {
         question.setCourse(course1)
         questionRepository.save(question)
 
-        def option = new Option()
-        option.setCorrect(false)
-        option.setContent(OPTION_CONTENT)
-        option.setQuestion(question)
 
-        question.addOption(option)
 
         def quizQuestion = new QuizQuestion(quiz,question, 1)
         def quizAnswer = new QuizAnswer(user, quiz)
@@ -170,7 +165,7 @@ class CreateClarificationServiceSpockTest extends Specification {
     def "create Clarification" (){
         given:"A clarificationRequest"
         clarificationDto.setText(CLARIFICATION_TEXT)
-        clarificationDto.setUsername(teacher1.getUsername())
+        clarificationDto.setUserId(teacher1.getId())
 
         when:
         discussionService.createClarification(request.getId(), clarificationDto)
@@ -194,7 +189,7 @@ class CreateClarificationServiceSpockTest extends Specification {
     def "the request does not exist" (){
         given:"createClarification a clarification"
         clarificationDto.setText(CLARIFICATION_TEXT)
-        clarificationDto.setUsername(teacher1.getUsername())
+        clarificationDto.setUserId(teacher1.getId())
 
         when:
         discussionService.createClarification(-1, clarificationDto)
@@ -213,7 +208,7 @@ class CreateClarificationServiceSpockTest extends Specification {
     def "the teacher does not exist" (){
         given:"createClarification a clarification"
         clarificationDto.setText(CLARIFICATION_TEXT)
-        clarificationDto.setUsername("Eu não existo")
+        clarificationDto.setUserId(-1)
 
         when:
         discussionService.createClarification(request.getId(), clarificationDto)
@@ -237,7 +232,7 @@ class CreateClarificationServiceSpockTest extends Specification {
         teacher2.setCourseExecutions(courses)
         userRepository.save(teacher2)
         clarificationDto.setText(CLARIFICATION_TEXT)
-        clarificationDto.setUsername(teacher2.getUsername())
+        clarificationDto.setUserId(teacher2.getId())
 
         when:
         discussionService.createClarification(request.getId(), clarificationDto)
@@ -260,7 +255,7 @@ class CreateClarificationServiceSpockTest extends Specification {
     def "invalid argument: text=#text" (){
         given: "a clarification dto"
         clarificationDto.setText(text)
-        clarificationDto.setUsername(teacher1.getUsername())
+        clarificationDto.setUserId(teacher1.getId())
 
         when:
         discussionService.createClarification(request.getId(), clarificationDto)
