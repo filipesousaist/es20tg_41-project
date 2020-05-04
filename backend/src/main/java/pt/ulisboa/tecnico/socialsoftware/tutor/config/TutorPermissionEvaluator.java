@@ -101,7 +101,7 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
                     return userHasAnExecutionOfTheCourse(userId, discussionService.findClarificationRequestCourse(id).getCourseId());
                 case "CLARIFICATION.ACCESS":
                     return userHasThisClarificationRequest(userId, id);
-                case "COMMENT.ACCES":
+                case "COMMENT.ACCESS":
                     return userHasThisClarification(userId, id)
                             || userHasThisClarificationRequest(userId, clarificationRepository.findById(id)
                             .orElseThrow(() -> new TutorException(ErrorMessage.CLARIFICATION_NOT_FOUND, id)).getClarificationRequest().getId());
@@ -143,13 +143,8 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
     }
 
     private boolean userHasThisClarification(int userId, int id){
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new TutorException(ErrorMessage.USER_NOT_FOUND, userId))
-                .getClarifications()
-                .stream()
-                .map(Clarification::getId)
-                .collect(Collectors.toList())
-                .contains(id);
+        return userService.getClarifications(userId).stream()
+                .anyMatch(clarification -> clarification.getId() == id);
     }
 
     @Override

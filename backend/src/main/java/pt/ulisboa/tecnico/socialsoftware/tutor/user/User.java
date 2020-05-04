@@ -73,7 +73,7 @@ public class User implements UserDetails, DomainEntity {
     @OneToMany
     private Set<ClarificationRequest> clarificationRequests = new HashSet<>();
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "teacher", cascade = CascadeType.ALL)
     private Set<Clarification> clarifications = new HashSet<>();
 
     @OneToMany

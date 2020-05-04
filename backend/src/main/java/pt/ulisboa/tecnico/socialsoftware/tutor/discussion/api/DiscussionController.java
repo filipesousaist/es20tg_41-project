@@ -37,7 +37,7 @@ public class DiscussionController {
     }
 
     @PostMapping("/clarifications/{clarificationId}/comment")
-    @PreAuthorize("(hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER')) and hasPermission(#clarification, 'COMMENT.ACCESS')")
+    @PreAuthorize("(hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER')) and hasPermission(#clarificationId, 'COMMENT.ACCESS')")
     public CommentDto createComment(@PathVariable int clarificationId, @Valid @RequestBody CommentDto commentDto){
         return this.discussionService.createComment(clarificationId, commentDto);
     }
