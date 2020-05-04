@@ -62,10 +62,9 @@ public class StudentQuestionController {
         return studentQuestionService.getProposedStudentQuestions(courseId);
     }
 
-    @PutMapping("courses/{courseId}/studentQuestions/{studentQuestionId}/available")
-    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#courseId, 'COURSE.ACCESS')")
-    public StudentQuestionDto makeStudentQuestionAvailable(@PathVariable int courseId,
-                                                           @PathVariable int studentQuestionId) {
+    @PutMapping("studentQuestions/{studentQuestionId}/available")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#studentQuestionId, 'STUDENT_QUESTION.ACCESS')")
+    public StudentQuestionDto makeStudentQuestionAvailable(@PathVariable int studentQuestionId) {
         return studentQuestionService.makeStudentQuestionAvailable(studentQuestionId);
     }
 }
