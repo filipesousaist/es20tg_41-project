@@ -23,7 +23,7 @@ public  class Clarification {
     @JoinColumn(name = "clarification_request_id")
     private ClarificationRequest clarificationRequest;
 
-    @Column(name = "clarification_summary")
+    @Column(name = "summary")
     private String summary;
 
     @Column(name = "creation_date")
@@ -40,6 +40,7 @@ public  class Clarification {
         this.teacher = teacher;
         this.clarificationRequest = request;
         this.text = clarificationDto.getText();
+        this.summary = clarificationDto.getSummary();
     }
 
     public Integer getId() {

@@ -195,6 +195,9 @@ public class DiscussionService {
         }
     }
 
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public ClarificationDto createClarificationSummary(int clarificationId, ClarificationDto clarificationDto){
 

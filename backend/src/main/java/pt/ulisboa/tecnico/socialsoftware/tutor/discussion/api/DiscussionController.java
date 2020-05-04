@@ -33,7 +33,7 @@ public class DiscussionController {
         return this.discussionService.getClarificationByRequest(clarificationRequestId);
     }
 
-    @PostMapping("clarification/{clarificationId}/summary")
+    @PutMapping("/clarification/{clarificationId}")
     @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#clarificationId, 'SUMMARY.ACCESS')")
     public ClarificationDto createClarificationSummary(@PathVariable int clarificationId, @Valid @RequestBody ClarificationDto clarificationDto){
         return this.discussionService.createClarificationSummary(clarificationId, clarificationDto);
