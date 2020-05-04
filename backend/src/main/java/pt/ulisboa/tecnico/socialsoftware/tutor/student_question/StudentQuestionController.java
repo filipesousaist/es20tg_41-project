@@ -5,7 +5,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.QuestionEvaluationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
@@ -61,5 +60,12 @@ public class StudentQuestionController {
     @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#courseId, 'COURSE.ACCESS')")
     public List<StudentQuestionDto> getProposedStudentQuestions(@PathVariable int courseId) {
         return studentQuestionService.getProposedStudentQuestions(courseId);
+    }
+
+    @PutMapping("courses/{courseId}/studentQuestions/{studentQuestionId}/available")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#courseId, 'COURSE.ACCESS')")
+    public StudentQuestionDto makeStudentQuestionAvailable(@PathVariable int courseId,
+                                                           @PathVariable int studentQuestionId) {
+        return studentQuestionService.makeStudentQuestionAvailable(studentQuestionId);
     }
 }
