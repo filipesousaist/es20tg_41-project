@@ -12,6 +12,7 @@ export default class StudentQuestion {
     if (jsonObj) {
       this.id = jsonObj.id;
       this.user = jsonObj.user;
+      this.status = jsonObj.status;
       this.questionDto = new Question(jsonObj.questionDto);
     }
   }

@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain.StudentQuestion;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain.QuestionEvaluation;
@@ -20,7 +19,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,11 +83,11 @@ public class StudentQuestionService {
             value = { SQLException.class },
             backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public List<StudentQuestionDto> getProposedStudentQuestions(int courseId) {
+    public List<StudentQuestionDto> getNonRejectedStudentQuestions(int courseId) {
         return studentQuestionRepository.findAll().stream()
             .filter(studentQuestion ->
                 studentQuestion.getQuestion().getCourse().getId() == courseId &&
-                studentQuestion.getStatus() == StudentQuestion.Status.PROPOSED
+                studentQuestion.getStatus() != StudentQuestion.Status.REJECTED
             )
             .map(StudentQuestionDto::new).collect(Collectors.toList());
     }

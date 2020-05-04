@@ -94,7 +94,12 @@ export default class EvaluateQuestionDialog extends Vue {
             this.questionEvaluation,
             this.studentQuestion.id
           );
-          this.$emit('submit-evaluation', result);
+          this.$emit(
+            this.questionEvaluation.approved
+              ? 'submit-approval'
+              : 'submit-refusal',
+            result
+          );
         } catch (error) {
           await this.$store.dispatch('error', error);
         }

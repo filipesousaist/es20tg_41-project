@@ -56,10 +56,10 @@ public class StudentQuestionController {
         return studentQuestionService.getStudentQuestions(user.getId());
     }
 
-    @GetMapping("courses/{courseId}/studentQuestions/proposed")
+    @GetMapping("courses/{courseId}/studentQuestions/non-rejected")
     @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#courseId, 'COURSE.ACCESS')")
-    public List<StudentQuestionDto> getProposedStudentQuestions(@PathVariable int courseId) {
-        return studentQuestionService.getProposedStudentQuestions(courseId);
+    public List<StudentQuestionDto> getNonRejectedStudentQuestions(@PathVariable int courseId) {
+        return studentQuestionService.getNonRejectedStudentQuestions(courseId);
     }
 
     @PutMapping("studentQuestions/{studentQuestionId}/available")
