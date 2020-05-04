@@ -196,13 +196,15 @@ public class DiscussionService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public void createClarificationSummary(int clarificationId, ClarificationDto clarificationDto){
+    public ClarificationDto createClarificationSummary(int clarificationId, ClarificationDto clarificationDto){
 
         Clarification clarification = getClarification(clarificationId);
 
         checkClarificationSummary(clarificationDto);
 
         clarification.setSummary(clarificationDto.getSummary());
+
+        return new ClarificationDto(clarification);
     }
 
     private List<Course> getCourses(User teacher) {

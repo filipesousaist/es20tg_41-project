@@ -23,14 +23,20 @@ public class DiscussionController {
 
     @PostMapping("clarificationRequests/{clarificationRequestId}/clarifications")
     @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#clarificationRequestId, 'CLARIFICATION.REQUEST.ACCESS')")
-    public ClarificationDto createClarification(@PathVariable int clarificationRequestId, @Valid @RequestBody ClarificationDto clarification){
-        return this.discussionService.createClarification(clarificationRequestId, clarification);
+    public ClarificationDto createClarification(@PathVariable int clarificationRequestId, @Valid @RequestBody ClarificationDto clarificationDto){
+        return this.discussionService.createClarification(clarificationRequestId, clarificationDto);
     }
 
     @GetMapping("/clarificationRequests/{clarificationRequestId}/clarification")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#clarificationRequestId, 'CLARIFICATION.ACCESS')")
     public ClarificationDto getClarification(@PathVariable int clarificationRequestId){
         return this.discussionService.getClarificationByRequest(clarificationRequestId);
+    }
+
+    @PostMapping("clarification/{clarificationId}/summary")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#clarificationId, 'SUMMARY.ACCESS')")
+    public ClarificationDto createClarificationSummary(@PathVariable int clarificationId, @Valid @RequestBody ClarificationDto clarificationDto){
+        return this.discussionService.createClarificationSummary(clarificationId, clarificationDto);
     }
 
 }

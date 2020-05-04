@@ -13,6 +13,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.config.Demo;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.UsersXmlExport;
@@ -109,6 +110,13 @@ public class UserService {
         return new ArrayList<>(userRepository.findById(userId)
                 .orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId))
                 .getClarificationRequests());
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<Clarification> getClarifications(int userId){
+        return new ArrayList<>(userRepository.findById(userId)
+                .orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId))
+                .getClarifications());
     }
 
 

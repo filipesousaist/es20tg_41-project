@@ -89,6 +89,8 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
                     return userHasAnExecutionOfTheCourse(userId, discussionService.findClarificationRequestCourse(id).getCourseId());
                 case "CLARIFICATION.ACCESS":
                     return userHasThisClarificationRequest(userId, id);
+                case "SUMMARY.ACCESS":
+                    return userHasThisClarification(userId, id);
                 default: return false;
             }
         }
@@ -123,6 +125,11 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
     private boolean userHasThisClarificationRequest(int userId, int id){
         return userService.getClarificationRequests(userId).stream()
                 .anyMatch(clarificationRequest -> clarificationRequest.getId() == id);
+    }
+
+    private boolean userHasThisClarification(int userId, int id){
+        return userService.getClarifications(userId).stream()
+                .anyMatch(clarification -> clarification.getId() == id);
     }
 
     @Override
