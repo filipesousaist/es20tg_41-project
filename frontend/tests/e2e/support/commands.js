@@ -37,6 +37,12 @@ Cypress.Commands.add('demoStudentLogin', () => {
   cy.contains('Student Questions').click();
 });
 
+Cypress.Commands.add('simpleDemoStudentLogin', () => {
+  cy.visit('/');
+  cy.get('[data-cy="demoStudentLoginButton"]').click();
+
+});
+
 
 Cypress.Commands.add('demoTeacherLogin', () => {
   cy.visit('/');

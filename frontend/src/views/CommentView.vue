@@ -15,6 +15,7 @@
             <v-text-field
                 label="Text"
                 v-model="comment.text"
+                data-cy="commentText"
               />
             </v-flex>
             <v-card-actions>
@@ -22,6 +23,7 @@
         <v-btn
           color="blue darken-1"
           @click="createComment"
+          data-cy="sendCommentButton"
           >Send</v-btn
         >
       </v-card-actions>
