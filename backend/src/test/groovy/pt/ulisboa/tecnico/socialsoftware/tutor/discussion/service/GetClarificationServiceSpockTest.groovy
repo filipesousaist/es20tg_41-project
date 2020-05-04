@@ -193,7 +193,7 @@ class GetClarificationServiceSpockTest extends Specification{
         clarificationRequest.setClarification(clarification)
 
         when:
-        def result = discussionService.getClarification(clarificationRequest.getId())
+        def result = discussionService.getClarificationByRequest(clarificationRequest.getId())
 
         then:
         result != null
@@ -209,7 +209,7 @@ class GetClarificationServiceSpockTest extends Specification{
         discussionRepository.save(clarification)
 
         when:
-        discussionService.getClarification(clarificationRequest.getId())
+        discussionService.getClarificationByRequest(clarificationRequest.getId())
 
         then:
         def error = thrown(TutorException)
@@ -225,7 +225,7 @@ class GetClarificationServiceSpockTest extends Specification{
         clarificationRequest.setClarification(clarification)
 
         when:
-        discussionService.getClarification(-1)
+        discussionService.getClarificationByRequest(-1)
 
         then:
         def error = thrown(TutorException)

@@ -22,7 +22,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionR
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository;
@@ -35,7 +34,6 @@ import javax.persistence.PersistenceContext;
 
 import java.util.List;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -176,7 +174,17 @@ public class DiscussionService {
         }
 
         else if (clarificationDto.getText().trim().equals("")){
-            throw  new TutorException(ErrorMessage.CLARIFICATION_TEXT_IS_EMPTY);
+            throw new TutorException(ErrorMessage.CLARIFICATION_TEXT_IS_EMPTY);
+        }
+    }
+
+    private void checkClarificationSummary(ClarificationDto clarificationDto) {
+        if(clarificationDto.getSummary() == null) {
+            throw new TutorException(CLARIFICATION_NOT_CONSISTENT, "Summary");
+        }
+
+        else if (clarificationDto.getSummary().trim().equals("")) {
+            throw new TutorException(ErrorMessage.CLARIFICATION_SUMMARY_IS_EMPTY);
         }
     }
 
@@ -185,6 +193,16 @@ public class DiscussionService {
             throw new TutorException(ErrorMessage.TEACHER_COURSE_EXECUTION_MISMATCH,
                     teacher.getId(), clarificationRequest.getQuestion().getCourse().getId());
         }
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void createClarificationSummary(int clarificationId, ClarificationDto clarificationDto){
+
+        Clarification clarification = getClarification(clarificationId);
+
+        checkClarificationSummary(clarificationDto);
+
+        clarification.setSummary(clarificationDto.getSummary());
     }
 
     private List<Course> getCourses(User teacher) {
@@ -199,6 +217,11 @@ public class DiscussionService {
                     .orElseThrow(() -> new TutorException(ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND));
     }
 
+    private Clarification getClarification(Integer clarificationId) {
+        return discussionRepository.findById(clarificationId)
+                .orElseThrow(() -> new TutorException(CLARIFICATION_NOT_FOUND));
+    }
+
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public CourseDto findClarificationRequestCourse(Integer clarificationRequestId){
@@ -211,7 +234,7 @@ public class DiscussionService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public ClarificationDto getClarification(Integer clarificationRequestId){
+    public ClarificationDto getClarificationByRequest(Integer clarificationRequestId){
         ClarificationRequest clarificationRequest = clarificationRequestRepository.findById(clarificationRequestId)
                 .orElseThrow(() -> new TutorException(CLARIFICATION_REQUEST_NOT_FOUND));
 
@@ -220,7 +243,5 @@ public class DiscussionService {
 
         return new ClarificationDto(clarificationRequest.getClarification());
     }
-
-
 
 }

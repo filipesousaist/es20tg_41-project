@@ -13,6 +13,8 @@ public class ClarificationDto implements Serializable {
 
     private Integer userId;
 
+    private String summary;
+
     public ClarificationDto(){}
 
     public ClarificationDto(Clarification clarification){
@@ -43,6 +45,14 @@ public class ClarificationDto implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     @Override

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService;
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto;
 
@@ -31,7 +30,7 @@ public class DiscussionController {
     @GetMapping("/clarificationRequests/{clarificationRequestId}/clarification")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#clarificationRequestId, 'CLARIFICATION.ACCESS')")
     public ClarificationDto getClarification(@PathVariable int clarificationRequestId){
-        return this.discussionService.getClarification(clarificationRequestId);
+        return this.discussionService.getClarificationByRequest(clarificationRequestId);
     }
 
 }

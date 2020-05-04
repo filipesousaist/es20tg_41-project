@@ -16,12 +16,10 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Option
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.QuizService
@@ -181,7 +179,7 @@ class GetClarificationServiceSpockPerformanceTest extends Specification{
         when:
         for (int j = 1; j <= 1; j++) {
             for (int i = 1; i <= 1; i++) {
-                discussionService.getClarification(i)
+                discussionService.getClarificationByRequest(i)
             }
         }
 

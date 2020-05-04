@@ -182,9 +182,9 @@ class CreateClarificationSummarySpockTest extends Specification{
     }
 
     @Unroll
-    def "invalid argument: text=#text" (){
+    def "invalid argument: summary=#summary" (){
         given:"A clarificationDto"
-        clarificationDto.setText(text)
+        clarificationDto.setSummary(summary)
 
         when:
         discussionService.createClarificationSummary(clarification.getId(), clarificationDto)
@@ -194,10 +194,10 @@ class CreateClarificationSummarySpockTest extends Specification{
         error.getErrorMessage() == errorMessage
 
         and:"clarification has no summary"
-        clarification.getSummary == null
+        clarification.getSummary() == null
 
         where:
-        text                    || errorMessage
+        summary                 || errorMessage
         null                    || ErrorMessage.CLARIFICATION_NOT_CONSISTENT
         "  "                    || ErrorMessage.CLARIFICATION_SUMMARY_IS_EMPTY
 
