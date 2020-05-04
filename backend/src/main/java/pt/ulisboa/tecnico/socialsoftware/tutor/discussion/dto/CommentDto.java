@@ -12,6 +12,8 @@ public class CommentDto implements Serializable {
 
     private Integer userId;
 
+    private String username;
+
     private String creationDate;
 
     public CommentDto(){}
@@ -20,6 +22,7 @@ public class CommentDto implements Serializable {
         this.id = comment.getId();
         this.text = comment.getText();
         this.userId = comment.getUser().getId();
+        this.username = comment.getUser().getUsername();
         this.creationDate = DateHandler.toISOString(comment.getCreationDate());
     }
 
@@ -41,6 +44,14 @@ public class CommentDto implements Serializable {
 
     public Integer getUserId() {
         return userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setUserId(Integer userId) {

@@ -325,6 +325,7 @@ export default class RemoteServices {
         });
       })
       .catch(async error => {
+        console.log('Unexpected error');
         throw Error(await this.errorMessage(error));
       });
   }
@@ -661,6 +662,17 @@ export default class RemoteServices {
       .get('/clarificationRequests/'+clarificationRequestId+'/clarification')
       .then(response => {
         return new Clarification(response.data);
+      })
+      .catch(async error => {
+      throw Error(await this.errorMessage('Error:'+error));
+      });
+  }
+
+  static async createComment(comment: Comment, clarificationId: number|null):Promise<Comment>{
+    return httpClient
+      .post('/clarifications/'+clarificationId+'/comment', comment)
+      .then(response => {
+        return new Comment(response.data);
       })
       .catch(async error => {
       throw Error(await this.errorMessage('Error:'+error));

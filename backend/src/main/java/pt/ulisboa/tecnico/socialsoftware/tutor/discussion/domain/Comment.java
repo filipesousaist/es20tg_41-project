@@ -26,6 +26,8 @@ public class Comment {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
+    public Comment(){}
+
     public Comment(CommentDto commentDto, User user){
         this.id = commentDto.getId();
         this.text = commentDto.getText();
