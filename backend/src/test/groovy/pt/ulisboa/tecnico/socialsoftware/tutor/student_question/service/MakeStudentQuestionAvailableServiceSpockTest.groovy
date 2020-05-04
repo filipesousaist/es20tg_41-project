@@ -1,7 +1,9 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.service
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
 import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
@@ -16,43 +18,42 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepos
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.StudentQuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain.StudentQuestion
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.QuestionEvaluationRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.StudentQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
-import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
-import spock.lang.Unroll;
+import spock.lang.Unroll
 
 @DataJpaTest
 class MakeStudentQuestionAvailableServiceSpockTest extends Specification {
-    private static final String COURSE_NAME = "Engenharia de Software";
-    private static final String ACRONYM = "ES";
-    private static final String ACADEMIC_TERM = "2 SEM";
-    private static final String QUESTION_TITLE = "Question 1";
-    private static final String QUESTION_CONTENT = "What is the answer to this question?";
-    private static final String OPTION1_CONTENT = "Option 1";
-    private static final String OPTION2_CONTENT = "Option 2";
-    private static final String STUDENT_NAME = "Student Name";
-    private static final String STUDENT_USERNAME = "Student Username";
-    private static final int STUDENT_KEY = 1;
+    private static final String COURSE_NAME = "Engenharia de Software"
+    private static final String ACRONYM = "ES"
+    private static final String ACADEMIC_TERM = "2 SEM"
+    private static final String QUESTION_TITLE = "Question 1"
+    private static final String QUESTION_CONTENT = "What is the answer to this question?"
+    private static final String OPTION1_CONTENT = "Option 1"
+    private static final String OPTION2_CONTENT = "Option 2"
+    private static final String STUDENT_NAME = "Student Name"
+    private static final String STUDENT_USERNAME = "Student Username"
+    private static final int STUDENT_KEY = 1
 
     @Autowired
-    StudentQuestionService studentQuestionService;
+    StudentQuestionService studentQuestionService
 
     @Autowired
-    CourseRepository courseRepository;
+    CourseRepository courseRepository
 
     @Autowired
-    CourseExecutionRepository courseExecutionRepository;
+    CourseExecutionRepository courseExecutionRepository
 
     @Autowired
-    QuestionRepository questionRepository;
+    QuestionRepository questionRepository
 
     @Autowired
-    UserRepository userRepository;
+    UserRepository userRepository
 
     @Autowired
-    StudentQuestionRepository studentQuestionRepository;
+    StudentQuestionRepository studentQuestionRepository
 
     def studentQuestion
     def studentQuestionID
@@ -106,7 +107,7 @@ class MakeStudentQuestionAvailableServiceSpockTest extends Specification {
         studentQuestionService.makeStudentQuestionAvailable(studentQuestionID)
 
         then: "it is available"
-        def updatedStudentQuestion = studentQuestionService.findById(studentQuestionID)
+        def updatedStudentQuestion = studentQuestionRepository.findAll().get(0)
         updatedStudentQuestion != null
         def updatedQuestion = updatedStudentQuestion.getQuestion()
         updatedQuestion != null
@@ -123,17 +124,26 @@ class MakeStudentQuestionAvailableServiceSpockTest extends Specification {
 
         then: "an exception is thrown"
         def exception = thrown(TutorException)
-        exception.getErrorMessage() == ErrorMessage.STUDENT_QUESTION_TEACHER_NOT_IN_COURSE
+        exception.getErrorMessage() == errorMessage
         and: "the question is not made available"
-        def updatedStudentQuestion = studentQuestionService.findById(studentQuestionID)
+        def updatedStudentQuestion = studentQuestionRepository.findAll().get(0)
         updatedStudentQuestion != null
         def updatedQuestion = updatedStudentQuestion.getQuestion()
         updatedQuestion != null
         updatedQuestion.getStatus() != Question.Status.AVAILABLE
 
         where:
-        status                      ||  errorMessage
-        Question.Status.DISABLED    ||  ErrorMessage.STUDENT_QUESTION_NEEDS_ACCEPTANCE
-        Question.Status.REMOVED     ||  ErrorMessage.STUDENT_QUESTION_NEEDS_ACCEPTANCE
+        status                              ||  errorMessage
+        StudentQuestion.Status.REJECTED     ||  ErrorMessage.STUDENT_QUESTION_NEEDS_ACCEPTANCE
+        StudentQuestion.Status.PROPOSED     ||  ErrorMessage.STUDENT_QUESTION_NEEDS_ACCEPTANCE
+    }
+
+    @TestConfiguration
+    static class StudentQuestionServiceImplTestContextConfiguration {
+
+        @Bean
+        StudentQuestionService studentQuestionService() {
+            return new StudentQuestionService()
+        }
     }
 }

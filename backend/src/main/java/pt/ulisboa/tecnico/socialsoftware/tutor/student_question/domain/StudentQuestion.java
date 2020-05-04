@@ -38,7 +38,7 @@ public class StudentQuestion {
     @OneToMany
     private Set<QuestionEvaluation> questionEvaluations = new HashSet<>();
 
-    public StudentQuestion(){
+    public StudentQuestion() {
     }
 
     public StudentQuestion(Course course, User user, StudentQuestionDto studentQuestionDto){
@@ -90,4 +90,11 @@ public class StudentQuestion {
     public Set<QuestionEvaluation> getQuestionEvaluations() { return questionEvaluations; }
 
     public void addQuestionEvaluation(QuestionEvaluation questionEvaluation) { questionEvaluations.add(questionEvaluation); }
+
+    public void makeAvailable() {
+        if (status == Status.ACCEPTED)
+            question.setStatus(Question.Status.AVAILABLE);
+        else
+            throw new TutorException(STUDENT_QUESTION_NEEDS_ACCEPTANCE);
+    }
 }
