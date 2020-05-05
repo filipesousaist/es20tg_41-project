@@ -97,4 +97,11 @@ public class StudentQuestion {
         else
             throw new TutorException(STUDENT_QUESTION_NEEDS_ACCEPTANCE);
     }
+
+    public void update(StudentQuestionDto studentQuestionDto) {
+        if (status == Status.ACCEPTED)
+            this.question.update(studentQuestionDto.getQuestionDto());
+        else
+            throw new TutorException(STUDENT_QUESTION_NEEDS_ACCEPTANCE);
+    }
 }

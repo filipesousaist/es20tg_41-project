@@ -67,4 +67,10 @@ public class StudentQuestionController {
     public StudentQuestionDto makeStudentQuestionAvailable(@PathVariable int studentQuestionId) {
         return studentQuestionService.makeStudentQuestionAvailable(studentQuestionId);
     }
+
+    @PutMapping("studentQuestions/{studentQuestionId}/update")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#studentQuestionId, 'STUDENT_QUESTION.ACCESS')")
+    public StudentQuestionDto updateStudentQuestion(@PathVariable int studentQuestionId, @RequestBody StudentQuestionDto studentQuestionDto) {
+        return studentQuestionService.updateStudentQuestion(studentQuestionId, studentQuestionDto);
+    }
 }
