@@ -4,6 +4,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament;
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto.TournamentDto;
 
 import java.io.Serializable;
 import java.util.ArrayList;

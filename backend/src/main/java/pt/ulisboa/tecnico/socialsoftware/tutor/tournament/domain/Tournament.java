@@ -4,6 +4,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
 
@@ -37,6 +38,9 @@ public class Tournament {
     @ManyToOne
     @JoinColumn(name = "course_executions_id")
     private CourseExecution courseExecution;
+
+    @OneToOne(mappedBy = "tournament")
+    private Quiz tournamentQuiz = null;
 
     private String name;
     private LocalDateTime beginningTime;
@@ -164,6 +168,14 @@ public class Tournament {
         this.name = name;
     }
 
+    public Quiz getTournamentQuiz() {
+        return tournamentQuiz;
+    }
+
+    public void setTournamentQuiz(Quiz tournamentQuiz) {
+        this.tournamentQuiz = tournamentQuiz;
+    }
+
     public void remove(int studentId) {
 
         if (this.createdByUser.getId() != studentId)
@@ -183,6 +195,8 @@ public class Tournament {
             topic.getTournaments().remove(this);
         }
         this.titles = null;
+
+        this.tournamentQuiz = null;
 
         this.courseExecution.getTournaments().remove(this);
         this.courseExecution = null;

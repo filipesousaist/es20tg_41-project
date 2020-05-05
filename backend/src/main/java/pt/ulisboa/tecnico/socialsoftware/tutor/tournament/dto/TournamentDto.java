@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.dto.QuizDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
@@ -22,6 +23,7 @@ public class TournamentDto implements Serializable {
     List<String> studentsUsername = new ArrayList<>();
     boolean isClosed;
     String creatorName;
+    QuizDto quizDto;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 
@@ -47,6 +49,10 @@ public class TournamentDto implements Serializable {
         Set<User> users = tournament.getStudentsEnrolled();
         for (User user : users) {
             studentsUsername.add(user.getUsername());
+        }
+
+        if (tournament.getTournamentQuiz() != null) {
+            quizDto = new QuizDto(tournament.getTournamentQuiz(), true);
         }
     }
 
