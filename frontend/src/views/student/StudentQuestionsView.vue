@@ -49,6 +49,14 @@
       </template>
 
       <template v-slot:item.action="{ item }">
+        <v-tooltip bottom v-if="isRejected(item)">
+          <template v-slot:activator="{ on }">
+            <v-icon small class="mr-2" v-on="on" @click="editQuestion(item)"
+              >edit</v-icon
+            >
+          </template>
+          <span>Edit Question</span>
+        </v-tooltip>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
             <v-icon
@@ -158,6 +166,15 @@ export default class CreateStudentQuestionsView extends Vue {
         .toLowerCase()
         .indexOf(search.toLowerCase()) !== -1
     );
+  }
+
+  isRejected(studentQuestion: StudentQuestion | null) {
+    return studentQuestion?.status == 'REJECTED';
+  }
+
+  editQuestion(studentQuestion: StudentQuestion) {
+    this.currentStudentQuestion = studentQuestion;
+    this.editStudentQuestionDialog = true;
   }
 
   newStudentQuestion() {
