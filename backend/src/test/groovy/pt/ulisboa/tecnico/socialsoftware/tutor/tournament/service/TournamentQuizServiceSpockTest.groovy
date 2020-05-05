@@ -101,18 +101,17 @@ class TournamentQuizServiceSpockTest extends Specification {
         def courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)
 
-
         courseEx1 = new CourseDto(courseExecution)
         def question1 = new Question()
         question1.setKey(1)
         question1.setTitle("Question Title")
         question1.setContent("Question Content")
-        question1.setCourse(course as Course)
+        question1.setCourse(course)
         def question2 = new Question()
         question2.setKey(2)
         question2.setTitle("Question Title")
         question2.setContent("Question Content")
-        question2.setCourse(course as Course)
+        question2.setCourse(course)
 
         topicDto1 = new TopicDto()
         topicDto2 = new TopicDto()

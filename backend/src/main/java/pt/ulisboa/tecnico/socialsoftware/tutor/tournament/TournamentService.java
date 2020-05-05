@@ -11,10 +11,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository;
-import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.QuizService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
-import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.dto.QuizDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.repository.QuizQuestionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.repository.QuizRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament;
@@ -26,10 +24,10 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler.toLocalDateTime;
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
 
@@ -64,18 +62,23 @@ public class TournamentService {
         if (!user.getRole().equals(User.Role.STUDENT)) {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
-
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        LocalDateTime begin = LocalDateTime.parse(tournamentDto.getBeginningTime(), inputFormatter);
-        LocalDateTime end = LocalDateTime.parse(tournamentDto.getEndingTime(), inputFormatter);
+        LocalDateTime begin = toLocalDateTime(tournamentDto.getBeginningTime());
+        LocalDateTime end = toLocalDateTime(tournamentDto.getEndingTime());
+        System.out.println(tournamentDto);
+        System.out.println(begin + " " +  end);
         int numberOfQuestions = tournamentDto.getNumberOfQuestions();
 
         CourseExecution courseEx = courseExecutionRepository.findById(courseExId).orElseThrow(() -> new TutorException(INVALID_COURSE_EXECUTION));
         List<Topic> topics = getTopics(tournamentDto, courseEx);
+
+        int i = topics.stream().mapToInt(topic -> topic.getQuestions().size()).sum();
+        if (i < numberOfQuestions) {
+            throw new TutorException(NOT_ENOUGH_QUESTIONS_TOURNAMENT);
+        }
+
         String name = tournamentDto.getName();
 
         if (tournamentRepository.findTournamentByName(name).orElse(null) != null) {
-
             throw new TutorException(INVALID_TOURNAMENT_NAME);
         }
 

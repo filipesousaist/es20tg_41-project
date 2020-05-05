@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler.toISOString;
+
 public class TournamentDto implements Serializable {
 
     Integer id;
@@ -24,7 +26,6 @@ public class TournamentDto implements Serializable {
     boolean isClosed;
     String creatorName;
     QuizDto quizDto;
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 
     public TournamentDto() {}
@@ -33,9 +34,9 @@ public class TournamentDto implements Serializable {
         id = tournament.getId();
         isClosed = tournament.getIsClosed();
         if (tournament.getBeginningTime() != null)
-            beginningTime = tournament.getBeginningTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+            beginningTime = toISOString(tournament.getBeginningTime());
         if (tournament.getEndingTime() != null)
-            endingTime = tournament.getEndingTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+            endingTime = toISOString(tournament.getEndingTime());
         numberOfQuestions = tournament.getNumberOfQuestions();
 
         List<Topic> tournamentTitles= tournament.getTitles();
@@ -94,6 +95,14 @@ public class TournamentDto implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public QuizDto getQuizDto() {
+        return quizDto;
+    }
+
+    public void setQuizDto(QuizDto quizDto) {
+        this.quizDto = quizDto;
     }
 
     public List<String> getStudentsUsername() {
