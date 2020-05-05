@@ -22,11 +22,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
@@ -98,10 +95,12 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId))
                 .getQuizAnswers()
                 .stream()
+                .sorted(Comparator.comparing(QuizAnswer::getAnswerDate).reversed())
                 .map(QuizAnswer::getQuestionAnswers)
                 .flatMap(Collection::stream)
                 .map(QuestionAnswer::getQuizQuestion)
                 .map(QuizQuestion::getQuestion)
+                .distinct()
                 .collect(Collectors.toList());
     }
 
