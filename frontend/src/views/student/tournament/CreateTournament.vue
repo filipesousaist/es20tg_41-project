@@ -15,19 +15,21 @@
               label="Name of the tournament"
               data-cy="tournamentName"
             />
-            <v-datetime-picker
+            <VueCtkDateTimePicker
               label="Select beginning"
               v-model="currentTournament.beginningTime"
               data-cy="Selectbeginning"
+              format="YYYY-MM-DDTHH:mm:ssZ"
             >
-            </v-datetime-picker>
-            <v-datetime-picker
+            </VueCtkDateTimePicker>
+            <VueCtkDateTimePicker
               class="text-left"
               label="Select ending"
               v-model="currentTournament.endingTime"
               data-cy="Select ending"
+              format="YYYY-MM-DDTHH:mm:ssZ"
             >
-            </v-datetime-picker>
+            </VueCtkDateTimePicker>
             <v-text-field
               v-model="currentTournament.numberOfQuestions"
               label="Number of questions (Maximum of 25)"
@@ -114,7 +116,6 @@ export default class CreateTournament extends Vue {
       return;
     }
     if (this.currentTournament) {
-      debugger;
       try {
         const result = await RemoteServices.createTournament(
           this.currentTournament

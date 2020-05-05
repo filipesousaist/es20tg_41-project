@@ -65,6 +65,9 @@ public class TournamentService {
         LocalDateTime begin = toLocalDateTime(tournamentDto.getBeginningTime());
         LocalDateTime end = toLocalDateTime(tournamentDto.getEndingTime());
         System.out.println(tournamentDto);
+        System.out.println(tournamentDto.getBeginningTime());
+        System.out.println(tournamentDto.getEndingTime());
+        System.out.println(tournamentDto.getCreatorName());
         System.out.println(begin + " " +  end);
         int numberOfQuestions = tournamentDto.getNumberOfQuestions();
 
@@ -126,7 +129,7 @@ public class TournamentService {
         tournament.addStudentEnrolled(user);
         user.addTournamentEnrolled(tournament);
 
-        if (tournament.getTournamentQuiz() == null && tournament.getStudentsEnrolled().size() > 1) {
+        if (tournament.getTournamentQuiz() == null && tournament.getStudentsEnrolled().size() >= 1) {
             createTournamentQuiz(tournament);
         }
 

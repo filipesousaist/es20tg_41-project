@@ -248,6 +248,12 @@ public class StatementService {
             throw new TutorException(USER_NOT_ENROLLED, user.getUsername());
         }
 
+        if (quiz.getType().equals(Quiz.QuizType.TOURNAMENT)) {
+            if (!user.getTournamentsEnrolled().contains(quiz.getTournament())) {
+                throw new TutorException(STUDENT_NOT_ENROLLED, user.getUsername());
+            }
+        }
+
         if (quiz.getConclusionDate() != null && DateHandler.now().isAfter(quiz.getConclusionDate())) {
             throw new TutorException(QUIZ_NO_LONGER_AVAILABLE);
         }

@@ -1,4 +1,7 @@
 import Topic from '../management/Topic';
+import { Quiz } from '@/models/management/Quiz';
+import StatementQuiz from '@/models/statement/StatementQuiz';
+import { ISOtoString } from '@/services/ConvertDateService';
 
 export default class Tournament {
   id!: number;
@@ -9,6 +12,7 @@ export default class Tournament {
   creatorName!: string;
   name!: string;
 
+  quiz: StatementQuiz | null = null;
   topics: Topic[] = [];
   studentsUsername: string[] = [];
 
@@ -16,21 +20,23 @@ export default class Tournament {
     if (jsonObj) {
       this.id = jsonObj.id;
 
-      this.beginningTime = jsonObj.beginningTime.replace('T', ' ').slice(0, 16);
-      this.endingTime = jsonObj.endingTime.replace('T', ' ').slice(0, 16);
+      this.beginningTime = ISOtoString(jsonObj.beginningTime);
+      this.endingTime = ISOtoString(jsonObj.endingTime);
       this.numberOfQuestions = jsonObj.numberOfQuestions;
       this.isClosed = jsonObj.isClosed;
       this.creatorName = jsonObj.creatorName;
       console.log(jsonObj.creatorName);
       this.name = jsonObj.name;
-
+      if (jsonObj.quiz) {
+        this.quiz = new StatementQuiz(jsonObj.quiz);
+      }
       if (jsonObj.topics) {
         this.topics = jsonObj.topics.map((topic: Topic) => new Topic(topic));
       }
 
       if (jsonObj.studentsUsername) {
         let student;
-        while(student = jsonObj.studentsUsername.pop()) {
+        while((student = jsonObj.studentsUsername.pop())) {
           this.studentsUsername.push(student);
         }
       }
