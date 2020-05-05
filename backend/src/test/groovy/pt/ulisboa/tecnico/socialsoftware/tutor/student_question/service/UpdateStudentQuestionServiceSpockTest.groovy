@@ -1,19 +1,19 @@
-package groovy.pt.ulisboa.tecnico.socialsoftware.tutor.student_question.service
+package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
-import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Option
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.OptionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.StudentQuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain.StudentQuestion
@@ -37,31 +37,34 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
     private static final String STUDENT_NAME = "Student Name"
     private static final String STUDENT_USERNAME = "Student Username"
     private static final int STUDENT_KEY = 1
-    private static final String TEACHER_NAME = "Teacher Name"
-    private static final String TEACHER_USERNAME = "Teacher Username"
-    private static final int TEACHER_KEY = 2
 
     @Autowired
-    StudentQuestionService studentQuestionService;
+    StudentQuestionService studentQuestionService
 
     @Autowired
-    CourseRepository courseRepository;
+    CourseRepository courseRepository
 
     @Autowired
-    CourseExecutionRepository courseExecutionRepository;
+    CourseExecutionRepository courseExecutionRepository
 
     @Autowired
-    QuestionRepository questionRepository;
+    QuestionRepository questionRepository
 
     @Autowired
-    UserRepository userRepository;
+    UserRepository userRepository
 
     @Autowired
-    StudentQuestionRepository studentQuestionRepository;
+    StudentQuestionRepository studentQuestionRepository
+
+    @Autowired
+    OptionRepository optionRepository
 
     def studentQuestion
     def studentQuestionDto
     def student
+    def option1
+    def option2
+    def question
 
     def setup() {
         // Create course and course execution
@@ -71,24 +74,27 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
         courseExecutionRepository.save(courseExecution)
 
         // Create question
-        def questionDto = new QuestionDto()
-        questionDto.setKey(1)
-        questionDto.setTitle(QUESTION_TITLE)
-        questionDto.setContent(QUESTION_CONTENT)
-        questionDto.setStatus(Question.Status.DISABLED.name())
-        questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()))
+        question = new Question()
+        question.setCourse(course)
+        question.setKey(1)
+        question.setTitle(QUESTION_TITLE)
+        question.setContent(QUESTION_CONTENT)
+        question.setStatus(Question.Status.DISABLED)
 
         // Create 2 options, and add them to question
-        def option1Dto = new OptionDto()
-        option1Dto.setContent(OPTION1_CONTENT)
-        option1Dto.setCorrect(true)
-        def option2Dto = new OptionDto()
-        option2Dto.setContent(OPTION2_CONTENT)
-        option2Dto.setCorrect(false)
-        def options = new ArrayList<OptionDto>()
-        options.add(option1Dto)
-        options.add(option2Dto)
-        questionDto.setOptions(options)
+        option1 = new Option()
+        option1.setContent(OPTION1_CONTENT)
+        option1.setCorrect(true)
+        option1.setSequence(0)
+        option1.setQuestion(question)
+        optionRepository.save(option1)
+        option2 = new Option()
+        option2.setContent(OPTION2_CONTENT)
+        option2.setCorrect(false)
+        option2.setSequence(1)
+        option2.setQuestion(question)
+        optionRepository.save(option2)
+        questionRepository.save(question)
 
         // Create student
         student = new User(STUDENT_NAME, STUDENT_USERNAME, STUDENT_KEY, User.Role.STUDENT)
@@ -96,11 +102,11 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
         courseExecution.getUsers().add(student)
         userRepository.save(student)
 
-        // Create student question, and get ID
-        def studentQuestionDto = new StudentQuestionDto()
-        studentQuestionDto.setQuestionDto(questionDto)
-        studentQuestion = new StudentQuestion(course, student, studentQuestionDto)
+        // Create student question
+        studentQuestion = new StudentQuestion()
         studentQuestion.setStatus(StudentQuestion.Status.ACCEPTED)
+        studentQuestion.setQuestion(question)
+        studentQuestion.setUser(student)
         studentQuestionRepository.save(studentQuestion)
     }
 
@@ -108,9 +114,19 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
         given: "a changed StudentQuestionDto"
         studentQuestionDto = new StudentQuestionDto(studentQuestion)
         studentQuestionDto.getQuestionDto().setTitle(NEW_QUESTION_TITLE)
-        studentQuestionDto.getQuestionDto().getOptions().get(0).setContent(NEW_OPTION_CONTENT)
+        def options = new ArrayList<OptionDto>()
+        def optionDto = new OptionDto(option1)
+        optionDto.setContent(NEW_OPTION_CONTENT)
+        optionDto.setCorrect(false)
+        options.add(optionDto)
+        optionDto = new OptionDto(option2)
+        optionDto.setCorrect(true)
+        options.add(optionDto)
+        studentQuestionDto.getQuestionDto().setOptions(options)
+
         when: "a student question is changed"
         studentQuestionService.updateStudentQuestion(studentQuestion.getId(), studentQuestionDto)
+
         then: "the returned data are correct"
         def result = this.studentQuestionRepository.findAll().get(0)
         result.getId() != null
@@ -123,20 +139,18 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
         resQuestion.getTitle() == NEW_QUESTION_TITLE
         resQuestion.getContent() == QUESTION_CONTENT
         resQuestion.getImage() == null
-        resQuestion.getOptions().size() == 1
+        resQuestion.getOptions().size() == 2
         resQuestion.getCourse().getName() == COURSE_NAME
         def resOption = resQuestion.getOptions().get(0)
         resOption.getContent() == NEW_OPTION_CONTENT
-        resOption.getCorrect()
+        !resOption.getCorrect()
         def resOption2 = resQuestion.getOptions().get(1)
         resOption2.getContent() == OPTION2_CONTENT
-        !resOption2.getCorrect()
-        result.getUser() == student
-        student.getStudentQuestions()contains(result)
+        resOption2.getCorrect()
     }
 
     def "make question title empty"(){
-        given: "a change studentQuestionDto"
+        given: "a changed studentQuestionDto"
         studentQuestionDto = new StudentQuestionDto(studentQuestion)
         studentQuestionDto.getQuestionDto().setTitle('     ')
         when: "a student question is changed"
@@ -144,6 +158,22 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
         then: "an exception is thrown"
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.INVALID_TITLE_FOR_QUESTION
+    }
+
+    def "cannot update a student question that isn't accepted"(){
+        given: "an unaccepted studentQuestion"
+        studentQuestion.setStatus(StudentQuestion.Status.PROPOSED)
+        and: "a changed studentQuestionDto"
+        studentQuestionDto = new StudentQuestionDto(studentQuestion)
+        studentQuestionDto.getQuestionDto().setTitle(NEW_QUESTION_TITLE)
+
+        when: "a student question is changed"
+        studentQuestionService.updateStudentQuestion(studentQuestion.getId(), studentQuestionDto)
+
+        then: "an exception is thrown"
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.STUDENT_QUESTION_NEEDS_ACCEPTANCE
+
     }
 
     @TestConfiguration
