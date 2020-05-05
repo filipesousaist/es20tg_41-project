@@ -108,6 +108,17 @@ public class StudentQuestionService {
             value = { SQLException.class },
             backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public StudentQuestionDto updateStudentQuestion(int studentQuestionId, StudentQuestionDto studentQuestionDto) {
+        StudentQuestion studentQuestion = studentQuestionRepository.findById(studentQuestionId).orElseThrow(
+                () -> new TutorException(STUDENT_QUESTION_NOT_FOUND, studentQuestionId));
+        studentQuestion.update(studentQuestionDto);
+        return new StudentQuestionDto(studentQuestion);
+    }
+
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public StudentQuestionDto findById(Integer studentQuestionId) {
         return this.studentQuestionRepository.findById(studentQuestionId).map(StudentQuestionDto::new)
                 .orElseThrow(() -> new TutorException(STUDENT_QUESTION_NOT_FOUND, studentQuestionId));
