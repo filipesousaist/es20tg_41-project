@@ -26,6 +26,7 @@ public class DashboardService {
                 .orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId))
                 .getUsers()
                 .stream()
+                .filter(user -> user.getRole().equals(User.Role.STUDENT))
                 .map(User::getDashboardStats)
                 .map(DashboardDto::new)
                 .collect(Collectors.toList());

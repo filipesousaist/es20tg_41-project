@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "dashboard_stats")
-public class Dashboard {
+public class DashboardStats {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -15,14 +15,15 @@ public class Dashboard {
     @JoinColumn
     private User user;
 
+    // TODO: insert each functionality's related stats
 
-    // TODO: insert each functionality related stats
-
-
-    public Dashboard(){
+    public DashboardStats() {
 
     }
 
+    public DashboardStats(User user) {
+        this.user = user;
+    }
 
     public Integer getId() {
         return id;

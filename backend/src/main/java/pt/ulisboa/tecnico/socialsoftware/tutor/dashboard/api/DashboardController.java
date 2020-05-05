@@ -12,12 +12,11 @@ import java.util.List;
 
 @RestController
 public class DashboardController {
-
     @Autowired
     private DashboardService dashboardService;
 
     @GetMapping("/executions/{executionId}/dashboard")
-    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#executionId, 'COURSE.ACCESS')")
+    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#executionId, 'EXECUTION.ACCESS')")
     public List<DashboardDto> getDashboardStats(@PathVariable int executionId){
         return this.dashboardService.getDashboardStats(executionId);
     }
