@@ -1,6 +1,6 @@
 describe('Create Clarification Request', () => {
   beforeEach(() => {
-    cy.demoStudentLogin();
+    cy.simpleDemoStudentLogin();
   });
 
   afterEach(() => {

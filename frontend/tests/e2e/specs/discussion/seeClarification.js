@@ -1,7 +1,7 @@
 describe('See Clarification', () => {
 
     beforeEach(() => {
-        cy.demoStudentLogin()
+        cy.simpleDemoStudentLogin()
     });
 
     afterEach(() => {

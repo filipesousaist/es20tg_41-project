@@ -27,7 +27,6 @@ public class StatsController {
         if (user == null) {
             throw new TutorException(AUTHENTICATION_ERROR);
         }
-
         return statsService.getStats(user.getId(), executionId);
     }
 }
