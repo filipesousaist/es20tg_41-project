@@ -98,10 +98,19 @@ public class StudentQuestion {
             throw new TutorException(STUDENT_QUESTION_NEEDS_ACCEPTANCE);
     }
 
-    public void update(StudentQuestionDto studentQuestionDto) {
+    public void updateByTeacher(StudentQuestionDto studentQuestionDto) {
         if (status == Status.ACCEPTED)
             this.question.update(studentQuestionDto.getQuestionDto());
         else
             throw new TutorException(STUDENT_QUESTION_NEEDS_ACCEPTANCE);
+    }
+
+    public void updateByStudent(StudentQuestionDto studentQuestionDto) {
+        if (status == Status.REJECTED) {
+            this.question.update(studentQuestionDto.getQuestionDto());
+            status = Status.PROPOSED;
+        }
+        else
+            throw new TutorException(STUDENT_QUESTION_IS_NOT_REJECTED);
     }
 }
