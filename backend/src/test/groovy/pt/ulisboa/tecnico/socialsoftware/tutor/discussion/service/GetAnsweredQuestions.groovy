@@ -184,16 +184,15 @@ class GetAnsweredQuestions extends Specification{
 
         then: "check if result isn't null"
         result != null
-        System.out.println(result)
 
         and:"result has 2 elements"
         result.size() == 2L
 
         and:"check if the first question is the correct one"
-        result.get(0).getId() == question1.getId()
+        result.get(0).getId() == question2.getId()//inverse order, therefore the first question on the list will be the last one created
 
         and:"check if the first question is the correct one"
-        result.get(1).getId() == question2.getId()
+        result.get(1).getId() == question1.getId()
 
     }
 
