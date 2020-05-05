@@ -89,7 +89,6 @@ import StudentQuestion from '@/models/student_question/StudentQuestion';
 import EditStudentQuestionDialog from '@/views/student/EditStudentQuestionDialog.vue';
 import Image from '@/models/management/Image';
 import ShowStudentQuestionDialog from '@/views/student/ShowStudentQuestionDialog.vue';
-import Question from '@/models/management/Question';
 
 @Component({
   components: {
