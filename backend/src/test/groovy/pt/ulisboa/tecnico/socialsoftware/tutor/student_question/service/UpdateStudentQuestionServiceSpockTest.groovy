@@ -37,6 +37,9 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
     private static final String STUDENT_NAME = "Student Name"
     private static final String STUDENT_USERNAME = "Student Username"
     private static final int STUDENT_KEY = 1
+    private static final String TEACHER_NAME = "Teacher Name";
+    private static final String TEACHER_USERNAME = "Teacher Username";
+    private static final int TEACHER_KEY = 2;
 
     @Autowired
     StudentQuestionService studentQuestionService
@@ -62,6 +65,7 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
     def studentQuestion
     def studentQuestionDto
     def student
+    def teacher
     def option1
     def option2
     def question
@@ -102,6 +106,12 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
         courseExecution.getUsers().add(student)
         userRepository.save(student)
 
+        // Create teacher, and get ID
+        teacher = new User(TEACHER_NAME, TEACHER_USERNAME, TEACHER_KEY, User.Role.TEACHER)
+        teacher.getCourseExecutions().add(courseExecution)
+        courseExecution.getUsers().add(teacher)
+        userRepository.save(teacher)
+
         // Create student question
         studentQuestion = new StudentQuestion()
         studentQuestion.setStatus(StudentQuestion.Status.ACCEPTED)
@@ -110,7 +120,7 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
         studentQuestionRepository.save(studentQuestion)
     }
 
-    def "change accepted student question title and option 1 content"(){
+    def "teacher change accepted student question title and option 1 content"(){
         given: "a changed StudentQuestionDto"
         studentQuestionDto = new StudentQuestionDto(studentQuestion)
         studentQuestionDto.getQuestionDto().setTitle(NEW_QUESTION_TITLE)
@@ -125,7 +135,7 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
         studentQuestionDto.getQuestionDto().setOptions(options)
 
         when: "a student question is changed"
-        studentQuestionService.updateStudentQuestion(studentQuestion.getId(), studentQuestionDto)
+        studentQuestionService.updateStudentQuestion(teacher.getId() ,studentQuestion.getId(), studentQuestionDto)
 
         then: "the returned data are correct"
         def result = this.studentQuestionRepository.findAll().get(0)
@@ -149,18 +159,20 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
         resOption2.getCorrect()
     }
 
-    def "make question title empty"(){
+    def "teacher makes question title empty"(){
         given: "a changed studentQuestionDto"
         studentQuestionDto = new StudentQuestionDto(studentQuestion)
         studentQuestionDto.getQuestionDto().setTitle('     ')
+
         when: "a student question is changed"
-        studentQuestionService.updateStudentQuestion(studentQuestion.getId(), studentQuestionDto)
+        studentQuestionService.updateStudentQuestion(teacher.getId(), studentQuestion.getId(), studentQuestionDto)
+
         then: "an exception is thrown"
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.INVALID_TITLE_FOR_QUESTION
     }
 
-    def "cannot update a student question that isn't accepted"(){
+    def "teacher cannot update a student question that isn't accepted"(){
         given: "an unaccepted studentQuestion"
         studentQuestion.setStatus(StudentQuestion.Status.PROPOSED)
         and: "a changed studentQuestionDto"
@@ -168,11 +180,83 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
         studentQuestionDto.getQuestionDto().setTitle(NEW_QUESTION_TITLE)
 
         when: "a student question is changed"
-        studentQuestionService.updateStudentQuestion(studentQuestion.getId(), studentQuestionDto)
+        studentQuestionService.updateStudentQuestion(teacher.getId(), studentQuestion.getId(), studentQuestionDto)
 
         then: "an exception is thrown"
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.STUDENT_QUESTION_NEEDS_ACCEPTANCE
+
+    }
+
+    def "student change rejected student question title and option 1 content"(){
+        given: "a rejected student question"
+        studentQuestion.setStatus(StudentQuestion.Status.REJECTED)
+        and: "a changed StudentQuestionDto"
+        studentQuestionDto = new StudentQuestionDto(studentQuestion)
+        studentQuestionDto.getQuestionDto().setTitle(NEW_QUESTION_TITLE)
+        def options = new ArrayList<OptionDto>()
+        def optionDto = new OptionDto(option1)
+        optionDto.setContent(NEW_OPTION_CONTENT)
+        optionDto.setCorrect(false)
+        options.add(optionDto)
+        optionDto = new OptionDto(option2)
+        optionDto.setCorrect(true)
+        options.add(optionDto)
+        studentQuestionDto.getQuestionDto().setOptions(options)
+
+        when: "a student question is changed"
+        studentQuestionService.updateStudentQuestion(student.getId() ,studentQuestion.getId(), studentQuestionDto)
+
+        then: "the returned data are correct"
+        def result = this.studentQuestionRepository.findAll().get(0)
+        result.getId() != null
+        result.getStatus() == StudentQuestion.Status.PROPOSED
+        def resQuestion = result.getQuestion()
+        resQuestion != null
+        resQuestion.getKey() == 1
+        resQuestion.getStatus() == Question.Status.DISABLED
+        and: "student question title is changed"
+        resQuestion.getTitle() == NEW_QUESTION_TITLE
+        resQuestion.getContent() == QUESTION_CONTENT
+        resQuestion.getImage() == null
+        resQuestion.getOptions().size() == 2
+        resQuestion.getCourse().getName() == COURSE_NAME
+        def resOption = resQuestion.getOptions().get(0)
+        resOption.getContent() == NEW_OPTION_CONTENT
+        !resOption.getCorrect()
+        def resOption2 = resQuestion.getOptions().get(1)
+        resOption2.getContent() == OPTION2_CONTENT
+        resOption2.getCorrect()
+    }
+
+    def "student makes question title empty"(){
+        given: "a rejected student question"
+        studentQuestion.setStatus(StudentQuestion.Status.REJECTED)
+        and: "a changed StudentQuestionDto"
+        studentQuestionDto = new StudentQuestionDto(studentQuestion)
+        studentQuestionDto.getQuestionDto().setTitle('     ')
+
+        when: "a student question is changed"
+        studentQuestionService.updateStudentQuestion(student.getId(), studentQuestion.getId(), studentQuestionDto)
+
+        then: "an exception is thrown"
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.INVALID_TITLE_FOR_QUESTION
+    }
+
+    def "student cannot update a student question that isn't rejected"(){
+        given: "an proposed studentQuestion"
+        studentQuestion.setStatus(StudentQuestion.Status.PROPOSED)
+        and: "a changed studentQuestionDto"
+        studentQuestionDto = new StudentQuestionDto(studentQuestion)
+        studentQuestionDto.getQuestionDto().setTitle(NEW_QUESTION_TITLE)
+
+        when: "a student question is changed"
+        studentQuestionService.updateStudentQuestion(student.getId(), studentQuestion.getId(), studentQuestionDto)
+
+        then: "an exception is thrown"
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.STUDENT_QUESTION_IS_NOT_REJECTED
 
     }
 

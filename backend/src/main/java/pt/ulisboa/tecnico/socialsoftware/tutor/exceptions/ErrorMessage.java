@@ -101,6 +101,7 @@ public enum ErrorMessage {
     QUESTION_EVALUATION_MISSING_JUSTIFICATION("Student question has no justification"),
     STUDENT_QUESTION_TEACHER_NOT_IN_COURSE("Teacher is not in course of student question"),
     STUDENT_QUESTION_NEEDS_ACCEPTANCE("Student question needs to be accepted"),
+    STUDENT_QUESTION_IS_NOT_REJECTED("Student question isn't rejected"),
 
     ACCESS_DENIED("You do not have permission to view this resource"),
     CANNOT_OPEN_FILE("Cannot open file"),
