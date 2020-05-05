@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
+import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.domain.Dashboard;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.DomainEntity;
@@ -81,6 +82,10 @@ public class User implements UserDetails, DomainEntity {
 
     @ManyToMany(mappedBy = "studentsEnrolled")
     private Set<Tournament> tournamentsEnrolled = new HashSet<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dashboard_stats_id")
+    private Dashboard dashboardStats;
 
 
     public User() {
@@ -441,7 +446,13 @@ public class User implements UserDetails, DomainEntity {
 
     public void addTournamentCreatedByMe(Tournament tournament) {this.tournamentsCreatedByMe.add(tournament);}
 
+    public Dashboard getDashboardStats() {
+        return dashboardStats;
+    }
 
+    public void setDashboardStats(Dashboard dashboardStats) {
+        this.dashboardStats = dashboardStats;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

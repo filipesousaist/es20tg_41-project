@@ -24,9 +24,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
@@ -172,4 +170,5 @@ public class UserService {
 
         return newDemoUser;
     }
+
 }
