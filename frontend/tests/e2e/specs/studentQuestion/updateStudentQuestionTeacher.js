@@ -11,11 +11,11 @@ describe('Update an aproved student question', () => {
   it('Change title and first option content from an aproved student question', () => {
     cy.updateStudentQuestion('titlee', 'New title', 'New option content');
 
-    // Question should still be in list and be available
+    // Question should still be in list
     cy.contains('New title').should('exist');
   });
 
-  it('Try to make available a proposed question', () => {
+  it('Try to change a proposed question', () => {
     cy.failClickEditButton('Q3');
   });
 });

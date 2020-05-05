@@ -51,7 +51,12 @@
       <template v-slot:item.action="{ item }">
         <v-tooltip bottom v-if="isRejected(item)">
           <template v-slot:activator="{ on }">
-            <v-icon small class="mr-2" v-on="on" @click="editQuestion(item)"
+            <v-icon
+              small
+              class="mr-2"
+              v-on="on"
+              @click="editQuestion(item)"
+              data-cy="editButton"
               >edit</v-icon
             >
           </template>

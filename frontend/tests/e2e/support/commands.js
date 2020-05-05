@@ -143,7 +143,10 @@ Cypress.Commands.add('failClickMakeAvailableButton', studentQuestionTitle => {
 Cypress.Commands.add(
   'updateStudentQuestion',
   (oldtitle, newTitle, newOptionContent) => {
-    cy.clickProposedQuestionButton(oldtitle, 'editButton');
+    cy.contains(oldtitle)
+      .get('[data-cy="editButton"]')
+      .scrollIntoView()
+      .click({ force: true });
     cy.get('[data-cy="Title"]')
       .scrollIntoView()
       .clear({ force: true })
