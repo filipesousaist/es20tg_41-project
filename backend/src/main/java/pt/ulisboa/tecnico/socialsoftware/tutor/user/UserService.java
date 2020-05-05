@@ -19,6 +19,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.UsersXmlExport;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.UsersXmlImport;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
 
 import java.sql.SQLException;
@@ -90,19 +91,6 @@ public class UserService {
        return xmlExporter.export(userRepository.findAll());
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public List<Question> getAnsweredQuestions(int userId){
-        return userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId))
-                .getQuizAnswers()
-                .stream()
-                .sorted(Comparator.comparing(QuizAnswer::getAnswerDate).reversed())
-                .map(QuizAnswer::getQuestionAnswers)
-                .flatMap(Collection::stream)
-                .map(QuestionAnswer::getQuizQuestion)
-                .map(QuizQuestion::getQuestion)
-                .distinct()
-                .collect(Collectors.toList());
-    }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<ClarificationRequest> getClarificationRequests(int userId){

@@ -133,7 +133,7 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
     }
 
     private boolean userHasAnsweredQuestion(int userId, int id){
-        return userService.getAnsweredQuestions(userId).stream()
+        return questionService.getAnsweredQuestions(userId).stream()
                 .anyMatch(question -> question.getId() == id);
     }
 

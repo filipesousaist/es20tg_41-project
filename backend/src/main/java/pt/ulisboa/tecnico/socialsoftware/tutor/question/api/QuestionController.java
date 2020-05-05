@@ -5,12 +5,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -19,14 +23,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
+
+import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.AUTHENTICATION_ERROR;
 
 @RestController
 public class QuestionController {
     private static Logger logger = LoggerFactory.getLogger(QuestionController.class);
 
     private QuestionService questionService;
+
+    private UserService userService;
 
     @Value("${figures.dir}")
     private String figuresDir;
@@ -128,6 +137,16 @@ public class QuestionController {
         questionService.updateQuestionTopics(questionId, topics);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/questions/answered_questions")
+    public List<QuestionDto> getUserAnsweredQuestions(Principal principal){
+        User user = (User) ((Authentication) principal).getPrincipal();
+
+        if (user == null) {
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+        return this.questionService.getAnsweredQuestions(user.getId());
     }
 
     private Path getTargetLocation(String url) {

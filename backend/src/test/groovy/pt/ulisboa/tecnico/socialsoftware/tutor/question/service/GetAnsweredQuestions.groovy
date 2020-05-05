@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.service
+package pt.ulisboa.tecnico.socialsoftware.tutor.question.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -37,6 +37,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
 import spock.lang.Specification
+
+import java.util.stream.Collectors
 
 @DataJpaTest
 class GetAnsweredQuestions extends Specification{
@@ -187,12 +189,14 @@ class GetAnsweredQuestions extends Specification{
 
         and:"result has 2 elements"
         result.size() == 2L
+        List<Integer> idList = new ArrayList<>();
+        for(Question q: result) idList.add(q.getId())
 
         and:"check if the first question is the correct one"
-        result.get(0).getId() == question2.getId()//inverse order, therefore the first question on the list will be the last one created
+        idList.contains(question1.getId())
 
-        and:"check if the first question is the correct one"
-        result.get(1).getId() == question1.getId()
+        and:"check if the second question is the correct one"
+        idList.contains(question2.getId())
 
     }
 
