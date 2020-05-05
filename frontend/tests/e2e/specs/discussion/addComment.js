@@ -8,7 +8,7 @@ describe('Create Comment', () => {
       cy.contains('Allocation viewtype').click();
       cy.contains('View Clarification Request').click();
       cy.get('[data-cy=commentText]').type('I still dont get it.');
-      cy.get('[data-cy=sendCommentButton]');
+      cy.get('[data-cy=sendCommentButton]').click();
       cy.wait(2500);
       cy.contains('Logout').click();
 
@@ -23,7 +23,7 @@ describe('Create Comment', () => {
         .type('In the software architecture of a system, the Deployment a');
         cy.get('[data-cy="clarificationRequests"]').click();
         cy.get('[data-cy=commentText]').type('Then Ill get into more detaisl.');
-        cy.get('[data-cy=sendCommentButton]');
+        cy.get('[data-cy=sendCommentButton]').click();
         cy.wait(2500);
         cy.contains('Logout').click();
         
