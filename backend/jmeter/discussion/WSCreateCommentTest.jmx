@@ -51,7 +51,7 @@
           <stringProp name="query">INSERT INTO clarification_requests (id, text, title, question_id, user_id) VALUES (1, &apos;Não sei o que se passa&apos;,&apos;ola&apos;, 1984, 676);
 INSERT INTO users_clarification_requests (user_id, clarification_requests_id) VALUES (676, 1);
 INSERT INTO clarifications (id, text, clarification_request_id, user_id) VALUES (1, &apos;é isto que se passa&apos;, 1, 677);
-/*INSERT INTO users_clarifications (user_id, clarifications_id) VALUES (677, 1);*/</stringProp>
+INSERT INTO users_clarifications (user_id, clarifications_id) VALUES (677, 1);</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
@@ -333,7 +333,8 @@ INSERT INTO clarifications (id, text, clarification_request_id, user_id) VALUES 
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">DELETE FROM users_clarification_requests WHERE user_id = 676;
+          <stringProp name="query">DELETE FROM users_clarifications WHERE user_id = 677;
+DELETE FROM users_clarification_requests WHERE user_id = 676;
 DELETE FROM clarifications_comments;
 DELETE FROM clarifications WHERE id = 1;
 DELETE FROM clarification_requests WHERE text LIKE &apos;Não sei o que se passa&apos;;

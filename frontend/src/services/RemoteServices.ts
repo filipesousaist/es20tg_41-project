@@ -18,6 +18,8 @@ import Tournament from '@/models/tournament/Tournament';
 
 import ClarificationRequest from '@/models/discussion/ClarificationRequest';
 import Clarification from '@/models/discussion/Clarification';
+import Comment from '@/models/discussion/Comment';
+
 
 import StudentQuestion from '@/models/management/StudentQuestion';
 import QuestionEvaluation from '@/models/management/QuestionEvaluation';

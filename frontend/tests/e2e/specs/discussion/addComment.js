@@ -1,7 +1,7 @@
 describe('Create Comment', () => {
 
   
-    it('create a comment for a question after a teacher created a clarification', () => {
+    it('create a comment for a question after a teacher created a clarification as student', () => {
         cy.simpleDemoStudentLogin();
       cy.get('[data-cy="QuizzesButton"]').click();
       cy.contains('Solved').click();
@@ -15,7 +15,7 @@ describe('Create Comment', () => {
     });
 
 
-    it('create a comment for a question after a teacher created a clarification', () => {
+    it('create a comment for a question after a teacher created a clarification as teacher', () => {
         cy.demoTeacherLogin();
         cy.contains('Questions').click()
         cy.get('[data-cy="searchBox"]')
