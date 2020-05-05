@@ -68,9 +68,16 @@ public class StudentQuestionController {
         return studentQuestionService.makeStudentQuestionAvailable(studentQuestionId);
     }
 
-    /*@PutMapping("studentQuestions/{studentQuestionId}/update")
-    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#studentQuestionId, 'STUDENT_QUESTION.ACCESS')")
-    public StudentQuestionDto updateStudentQuestion(@PathVariable int studentQuestionId, @RequestBody StudentQuestionDto studentQuestionDto) {
-        return studentQuestionService.updateStudentQuestion(studentQuestionId, studentQuestionDto);
-    }*/
+    @PutMapping("studentQuestions/{studentQuestionId}/update")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#studentQuestionId, 'STUDENT_QUESTION.ACCESS')" +
+            "or (hasRole('ROLE_STUDENT') and hasPermission(#studentQuestionId, 'STUDENT_QUESTION.ACCESS'))")
+    public StudentQuestionDto updateStudentQuestion(Principal principal, @PathVariable int studentQuestionId, @RequestBody StudentQuestionDto studentQuestionDto) {
+        User user = (User) ((Authentication) principal).getPrincipal();
+
+        if (user == null) {
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+
+        return studentQuestionService.updateStudentQuestion(user.getId(), studentQuestionId, studentQuestionDto);
+    }
 }
