@@ -67,7 +67,7 @@ class GetStudentQuestionsServiceSpockPerformanceTest extends Specification {
         questionDto.setKey(1)
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
-        questionDto.setStatus(Question.Status.PROPOSED.name())
+        questionDto.setStatus(Question.Status.DISABLED.name())
         questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()));
         and: 'a optionDto'
         def optionDto = new OptionDto()
