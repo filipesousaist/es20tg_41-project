@@ -112,8 +112,10 @@ public enum ErrorMessage {
     CLARIFICATION_TEXT_IS_EMPTY("The clarification text is empty"),
     CLARIFICATION_SUMMARY_IS_EMPTY("The clarification summary is empty"),
     CLARIFICATION_NOT_CONSISTENT("Field %s of clarification not consistent"),
-    CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION("The Clarification Request has no clarification associated with it.");
+    CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION("The Clarification Request has no clarification associated with it."),
 
+    COMMENT_INVALID_USER("The user did no asked for the clarification nor answered it."),
+    COMMENT_EMPTY_TEXT("The comment text is empty!");
 
 
     public final String label;

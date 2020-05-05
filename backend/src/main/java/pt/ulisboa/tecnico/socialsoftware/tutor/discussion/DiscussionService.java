@@ -8,6 +8,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Comment;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto;
 
 import org.springframework.retry.annotation.Backoff;
@@ -17,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.CommentDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository;
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionRepository;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.CommentRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 
@@ -46,7 +49,7 @@ public class DiscussionService {
     private UserRepository userRepository;
 
     @Autowired
-    private DiscussionRepository discussionRepository;
+    private ClarificationRepository clarificationRepository;
 
     @Autowired
     private UserService userService;
@@ -59,6 +62,9 @@ public class DiscussionService {
 
     @Autowired
     private ClarificationRequestRepository clarificationRequestRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -122,7 +128,6 @@ public class DiscussionService {
                     .orElseThrow(() -> new TutorException(ErrorMessage.COURSE_EXECUTION_NOT_FOUND));
     }
 
-
     private Question getQuestion(Integer questionId) {
         return this.questionRepository.findById(questionId)
                     .orElseThrow(() -> new TutorException(ErrorMessage.QUESTION_NOT_FOUND));
@@ -159,12 +164,12 @@ public class DiscussionService {
         Clarification clarification = new Clarification(teacher, clarificationRequest, clarificationDto);
         clarificationRequest.setClarification(clarification);
         teacher.addClarification(clarification);
-        discussionRepository.save(clarification);
+        clarificationRepository.save(clarification);
         return clarification;
     }
 
     private void checkForDuplicateClarification(ClarificationRequest clarificationRequest, User teacher){
-        if(this.discussionRepository.findByUserIdAndClarificationRequestId(teacher.getId(), clarificationRequest.getId()).isPresent())
+        if(this.clarificationRepository.findByUserIdAndClarificationRequestId(teacher.getId(), clarificationRequest.getId()).isPresent())
             throw new TutorException(ErrorMessage.CLARIFICATION_ALREADY_EXISTS);
     }
 
@@ -223,7 +228,7 @@ public class DiscussionService {
     }
 
     private Clarification getClarification(Integer clarificationId) {
-        return discussionRepository.findById(clarificationId)
+        return clarificationRepository.findById(clarificationId)
                 .orElseThrow(() -> new TutorException(CLARIFICATION_NOT_FOUND));
     }
 
@@ -249,4 +254,46 @@ public class DiscussionService {
         return new ClarificationDto(clarificationRequest.getClarification());
     }
 
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public CommentDto createComment(Integer clarificationId, CommentDto commentDto){
+        Clarification clarification = checkClarifcation(clarificationId);
+
+        checkCommentText(commentDto);
+
+        User user = getUser(commentDto, clarification);
+
+        Comment comment = getComment(commentDto, clarification, user);
+        return new CommentDto(comment);
+    }
+
+    private Comment getComment(CommentDto commentDto, Clarification clarification, User user) {
+        Comment comment = new Comment(commentDto, user);
+        comment.setCreationDate(DateHandler.now());
+        commentRepository.save(comment);
+        clarification.addComment(comment);
+        return comment;
+    }
+
+    private Clarification checkClarifcation(Integer clarificationId) {
+        return clarificationRepository.findById(clarificationId)
+                    .orElseThrow(() -> new TutorException(CLARIFICATION_NOT_FOUND, clarificationId));
+    }
+
+    private User getUser(CommentDto commentDto, Clarification clarification) {
+        User user = userRepository.findById(commentDto.getUserId())
+                .orElseThrow(() -> new TutorException(USER_NOT_FOUND, commentDto.getUserId()));
+        if(!user.getId().equals(clarification.getTeacher().getId())
+           && !user.getId().equals(clarification.getClarificationRequest().getStudent().getId()))
+            throw new TutorException(COMMENT_INVALID_USER, user.getId());
+        return user;
+    }
+
+    private void checkCommentText(CommentDto commentDto) {
+        String text = commentDto.getText();
+        if(text == null || text.trim().equals(""))
+            throw new TutorException(COMMENT_EMPTY_TEXT);
+    }
 }

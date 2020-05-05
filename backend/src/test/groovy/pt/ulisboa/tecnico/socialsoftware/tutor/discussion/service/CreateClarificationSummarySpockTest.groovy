@@ -16,8 +16,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
@@ -72,7 +72,7 @@ class CreateClarificationSummarySpockTest extends Specification{
     QuizService quizService
 
     @Autowired
-    DiscussionRepository discussionRepository
+    ClarificationRepository clarificationRepository
 
     @Autowired
     ClarificationRequestRepository clarificationRequestRepository
@@ -165,7 +165,7 @@ class CreateClarificationSummarySpockTest extends Specification{
         clarification.setText(CLARIFICATION_TEXT)
         clarification.setTeacher(teacher1)
         clarification.setClarificationRequest(request)
-        discussionRepository.save(clarification)
+        clarificationRepository.save(clarification)
 
     }
 
@@ -177,7 +177,7 @@ class CreateClarificationSummarySpockTest extends Specification{
         discussionService.createClarificationSummary(clarification.getId(), clarificationDto)
 
         then:"the value of the clarification summary is correct"
-        def result = discussionRepository.findAll().get(0)
+        def result = clarificationRepository.findAll().get(0)
         result.getSummary() == CLARIFICATION_SUMMARY
     }
 

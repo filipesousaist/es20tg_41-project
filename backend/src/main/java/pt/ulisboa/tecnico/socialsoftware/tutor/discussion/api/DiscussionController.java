@@ -2,10 +2,12 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.CommentDto;
 
 import javax.validation.Valid;
 
@@ -39,4 +41,9 @@ public class DiscussionController {
         return this.discussionService.createClarificationSummary(clarificationId, clarificationDto);
     }
 
+    @PostMapping("/clarifications/{clarificationId}/comment")
+    @PreAuthorize("(hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER')) and hasPermission(#clarificationId, 'COMMENT.ACCESS')")
+    public CommentDto createComment(@PathVariable int clarificationId, @Valid @RequestBody CommentDto commentDto){
+        return this.discussionService.createComment(clarificationId, commentDto);
+    }
 }

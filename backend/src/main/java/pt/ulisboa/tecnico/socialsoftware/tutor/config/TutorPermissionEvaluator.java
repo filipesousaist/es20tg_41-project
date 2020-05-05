@@ -5,6 +5,10 @@ import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository;
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService;
@@ -15,9 +19,11 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.TopicService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.QuizService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.StudentQuestionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService;
 
 import java.io.Serializable;
+import java.util.stream.Collectors;
 
 @Component
 public class TutorPermissionEvaluator implements PermissionEvaluator {
@@ -44,6 +50,12 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
 
     @Autowired
     private DiscussionService discussionService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ClarificationRepository clarificationRepository;
 
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
@@ -91,6 +103,11 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
                     return userHasThisClarificationRequest(userId, id);
                 case "SUMMARY.ACCESS":
                     return userHasThisClarification(userId, id);
+                case "COMMENT.ACCESS":
+                    return userHasThisClarification(userId, id)
+                            || userHasThisClarificationRequest(userId, clarificationRepository.findById(id)
+                            .orElseThrow(() -> new TutorException(ErrorMessage.CLARIFICATION_NOT_FOUND, id)).getClarificationRequest().getId());
+
                 default: return false;
             }
         }

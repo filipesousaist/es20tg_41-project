@@ -158,12 +158,13 @@ export default class ResultsView extends Vue {
     if(!!result) 
       this.currClarification = result;
     else
-      this.currClarification = null;
+    this.currClarification = null;
     this.viewClarificationRequestDialog = true;
     }
   }
 
   onCloseDialog(): void{
+    console.log('yikes');
     this.clarificationRequestDialog = false;
     this.clarificationRequest = null;
     this.existsClarificationRequest = !!this.statementManager.statementQuiz!.questions[this.questionOrder].clarificationRequest;
