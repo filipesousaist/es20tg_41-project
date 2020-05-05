@@ -55,6 +55,20 @@
           </template>
           <span>Make Available</span>
         </v-tooltip>
+        <v-tooltip bottom v-if="isAccepted(item) && !isAvailable(item)">
+          <template v-slot:activator="{ on }">
+            <v-icon
+              small
+              class="mr-2"
+              v-on="on"
+              @click="editQuestion(item)"
+              data-cy="editButton"
+            >
+              edit
+            </v-icon>
+          </template>
+          <span>Edit Question</span>
+        </v-tooltip>
       </template>
     </v-data-table>
     <evaluate-question-dialog
@@ -64,6 +78,13 @@
       v-on:submit-approval="onSubmitEvaluation(true)"
       v-on:submit-refusal="onSubmitEvaluation(false)"
     />
+    <edit-student-question-dialog
+      v-if="currentStudentQuestion"
+      v-model="editStudentQuestionDialog"
+      :studentQuestion="currentStudentQuestion"
+      v-on:save-student-question="onSaveStudentQuestion"
+      v-on:close-dialog="onCloseDialog"
+    />
   </v-card>
 </template>
 
@@ -72,16 +93,19 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import StudentQuestion from '@/models/student_question/StudentQuestion';
 import RemoteServices from '@/services/RemoteServices';
 import EvaluateQuestionDialog from '@/views/teacher/proposed-questions/EvaluateQuestionDialog.vue';
+import EditStudentQuestionDialog from '@/views/teacher/proposed-questions/EditStudentQuestionDialog.vue';
 
 @Component({
   components: {
-    'evaluate-question-dialog': EvaluateQuestionDialog
+    'evaluate-question-dialog': EvaluateQuestionDialog,
+    'edit-student-question-dialog': EditStudentQuestionDialog
   }
 })
 export default class ProposedQuestionsView extends Vue {
   studentQuestions: StudentQuestion[] = [];
   search: string = '';
   evaluateQuestionDialog: boolean = false;
+  editStudentQuestionDialog: boolean = false;
   currentStudentQuestion: StudentQuestion | null = null;
   headers: object = [
     { text: 'Title', value: 'questionDto.title', align: 'center' },
@@ -164,6 +188,25 @@ export default class ProposedQuestionsView extends Vue {
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
+  }
+
+  editQuestion(studentQuestion: StudentQuestion) {
+    this.currentStudentQuestion = studentQuestion;
+    this.editStudentQuestionDialog = true;
+  }
+
+  async onSaveStudentQuestion(studentQuestion: StudentQuestion) {
+    this.studentQuestions = this.studentQuestions.filter(
+            q => q.id !== studentQuestion.id
+    );
+    this.studentQuestions.unshift(studentQuestion);
+    this.editStudentQuestionDialog = false;
+    this.currentStudentQuestion = null;
+  }
+
+  onCloseDialog() {
+    this.editStudentQuestionDialog = false;
+    this.currentStudentQuestion = null;
   }
 
   getStatusColor(status: string) {
