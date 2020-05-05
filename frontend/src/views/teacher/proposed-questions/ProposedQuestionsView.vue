@@ -197,7 +197,7 @@ export default class ProposedQuestionsView extends Vue {
 
   async onSaveStudentQuestion(studentQuestion: StudentQuestion) {
     this.studentQuestions = this.studentQuestions.filter(
-            q => q.id !== studentQuestion.id
+      q => q.id !== studentQuestion.id
     );
     this.studentQuestions.unshift(studentQuestion);
     this.editStudentQuestionDialog = false;

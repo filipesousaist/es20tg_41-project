@@ -140,6 +140,30 @@ Cypress.Commands.add('failClickMakeAvailableButton', studentQuestionTitle => {
     .should('not.exist');
 });
 
+Cypress.Commands.add(
+  'updateStudentQuestion',
+  (oldtitle, newTitle, newOptionContent) => {
+    cy.clickProposedQuestionButton(oldtitle, 'editButton');
+    cy.get('[data-cy="Title"]')
+      .scrollIntoView()
+      .clear({ force: true })
+      .type(newTitle, { force: true });
+    cy.get('[data-cy="Content"]')
+      .eq(0)
+      .clear()
+      .type(newOptionContent);
+    cy.get('[data-cy="saveButton"]').click();
+  }
+);
+
+Cypress.Commands.add('failClickEditButton', studentQuestionTitle => {
+  cy.contains(studentQuestionTitle)
+    .parent()
+    .children()
+    .find('[data-cy="editButton"]')
+    .should('not.exist');
+});
+
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
   cy.get('[data-cy="courseExecutionNameInput"]').type(name);

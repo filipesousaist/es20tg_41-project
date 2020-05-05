@@ -9,13 +9,13 @@ describe('Make Question Available', () => {
   });
 
   it('Make accepted question available', () => {
-    cy.clickMakeStudentQuestionAvailable('titlee');
+    cy.clickMakeStudentQuestionAvailable(/*'titlee'*/'New title');
 
     // Question should still be in list and be available
-    cy.contains('titlee').should('exist');
+    cy.contains(/*'titlee'*/'New title').should('exist');
     cy.contains('AVAILABLE').should('exist');
     // Make available button should have disappeared
-    cy.failClickMakeAvailableButton('titlee');
+    cy.failClickMakeAvailableButton(/*'titlee'*/'New title');
   });
 
   it('Try to make available a proposed question', () => {
