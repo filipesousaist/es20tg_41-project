@@ -34,6 +34,33 @@
           <span>{{ item.name }}</span>
         </v-chip>
       </template>
+
+      <template v-slot:item.numProposedQuestions="{ item }">
+        <div data-cy="numProposedQuestions">
+          {{ item.numProposedQuestions }}
+        </div>
+      </template>
+
+      <template v-slot:item.numAcceptedQuestions="{ item }">
+        <div data-cy="numAcceptedQuestions">
+          {{ item.numAcceptedQuestions }}
+        </div>
+      </template>
+      <!--
+      <template
+        v-slot:item.numProposedQuestions="{ item }"
+        data-cy="numProposedQuestions"
+      >
+        <span>{{ item.numProposedQuestions }}</span>
+      </template>
+
+      <template
+        v-slot:item.numAcceptedQuestions="{ item }"
+        data-cy="numAcceptedQuestions"
+      >
+        <span>{{ item.numAcceptedQuestions }}</span>
+      </template>
+      -->
     </v-data-table>
   </v-card>
 </template>
@@ -99,4 +126,7 @@ export default class DashboardView extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.no-style {
+}
+</style>

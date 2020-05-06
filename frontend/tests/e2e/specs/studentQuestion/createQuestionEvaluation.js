@@ -1,6 +1,5 @@
 describe('Create Question Evaluation Walkthrough', () => {
   beforeEach(() => {
-    // Login with student to create questions
     cy.demoTeacherLogin();
     cy.contains('Proposed Questions').click();
   });
