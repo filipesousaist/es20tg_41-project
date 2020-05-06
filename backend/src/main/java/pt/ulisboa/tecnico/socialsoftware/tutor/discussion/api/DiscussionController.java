@@ -23,6 +23,12 @@ public class DiscussionController {
 
     }
 
+    @PutMapping("/clarificationRequests/{clarificationRequestId}/privacy")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#clarificationRequestId, 'CLARIFICATION.REQUEST.ACCESS')")
+    public ClarificationRequestDto updateClarificationRequestPrivacy(@PathVariable int clarificationRequestId, @Valid @RequestBody ClarificationRequestDto clarificationRequestDto) {
+        return this.discussionService.updateClarificationRequestPrivacy(clarificationRequestId, clarificationRequestDto);
+    }
+
     @PostMapping("clarificationRequests/{clarificationRequestId}/clarifications")
     @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#clarificationRequestId, 'CLARIFICATION.REQUEST.ACCESS')")
     public ClarificationDto createClarification(@PathVariable int clarificationRequestId, @Valid @RequestBody ClarificationDto clarificationDto){
