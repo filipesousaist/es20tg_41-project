@@ -1,10 +1,7 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.service
+package groovy.pt.ulisboa.tecnico.socialsoftware.tutor.discussion.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
-import pt.ulisboa.tecnico.socialsoftware.tutor.answer.AnswerService
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuestionAnswer
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.repository.QuizAnswerRepository
@@ -13,14 +10,11 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
-import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
@@ -29,15 +23,13 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.repository.QuizQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.repository.QuizRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.statement.StatementService
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
 import spock.lang.Specification
-import spock.lang.Unroll
 
 @DataJpaTest
-class CreateClarificationSummarySpockTest extends Specification{
+class UpdateClarificationRequestPrivacySpockTest extends Specification {
     static final String COURSE_NAME_1 = "Software Architecture"
     static final String ACRONYM_1 = "AS1"
     static final String COURSE_NAME_2 = "CourseTwo"
@@ -72,9 +64,6 @@ class CreateClarificationSummarySpockTest extends Specification{
     QuizService quizService
 
     @Autowired
-    ClarificationRepository clarificationRepository
-
-    @Autowired
     ClarificationRequestRepository clarificationRequestRepository
 
     @Autowired
@@ -105,12 +94,11 @@ class CreateClarificationSummarySpockTest extends Specification{
     def teacher1
     def teacher2
     def request
-    def clarification
-    def clarificationDto
+    def requestDto
     def question
     def user
 
-    def setup(){
+    def setup() {
 
         user = userService.createUser(NAME, USERNAME, ROLE)
         userRepository.save(user)
@@ -146,8 +134,7 @@ class CreateClarificationSummarySpockTest extends Specification{
         questionRepository.save(question)
 
 
-
-        def quizQuestion = new QuizQuestion(quiz,question, 1)
+        def quizQuestion = new QuizQuestion(quiz, question, 1)
         def quizAnswer = new QuizAnswer(user, quiz)
         def questionAnswer = new QuestionAnswer(quizAnswer, quizQuestion, 1)
         quizAnswer.addQuestionAnswer(questionAnswer)
@@ -155,106 +142,50 @@ class CreateClarificationSummarySpockTest extends Specification{
         quizQuestionRepository.save(quizQuestion)
         quizAnswerRepository.save(quizAnswer)
 
-        clarificationDto = new ClarificationDto()
+        requestDto = new ClarificationRequestDto()
 
         request = new ClarificationRequest()
         request.setQuestion(question)
         request.setStudent(user)
         clarificationRequestRepository.save(request)
-        clarification = new Clarification()
-        clarification.setText(CLARIFICATION_TEXT)
-        clarification.setTeacher(teacher1)
-        clarification.setClarificationRequest(request)
-        clarificationRepository.save(clarification)
-
     }
 
-    def "Create Clarification Summary" (){
-        given:"A clarification summary"
-        clarificationDto.setSummary(CLARIFICATION_SUMMARY)
+    def "Turn a clarification Request public" () {
+        given: "A clarification request to turn public"
+        requestDto.setPrivacy(false)
 
         when:
-        discussionService.createClarificationSummary(clarification.getId(), clarificationDto)
+        discussionService.updateClarificationRequestPrivacy(request.getId(), requestDto)
 
-        then:"the value of the clarification summary is correct"
-        def result = clarificationRepository.findAll().get(0)
-        result.getSummary() == CLARIFICATION_SUMMARY
+        then:"The clarification request is now public"
+        def result = clarificationRequestRepository.findAll().get(0)
+        result.getPrivacy() == false
     }
 
-    def "Create a summary for a clarification that doesn't exist" () {
-        given:"A clarificationDto"
-        clarification.setSummary(CLARIFICATION_SUMMARY)
+    def "Turn a clarification Request private" () {
+        given: "A clarification request to turn private"
+        requestDto.setPrivacy(true)
 
         when:
-        discussionService.createClarificationSummary(-1, clarificationDto)
+        discussionService.updateClarificationRequestPrivacy(request.getId(), requestDto)
 
-        then: "Check for exceptions"
+        then:"The clarification request is now public"
+        def result = clarificationRequestRepository.findAll().get(0)
+        result.getPrivacy() == true
+    }
+
+    def "Try to change the privacy of a clarification request that doesn't exist" () {
+        given: "A clarificationDto"
+        requestDto.setPrivacy(!request.getPrivacy())
+
+        when:
+        discussionService.updateClarificationRequestPrivacy(-1, requestDto)
+
+        then: "check for exceptions"
         def error = thrown(TutorException)
-        error.getErrorMessage() == ErrorMessage.CLARIFICATION_NOT_FOUND
+        error.getErrorMessage() == ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND
 
-        and: "The clarification doesn't have a summary"
-        clarificationRepository.findAll().get(0).getSummary() == null
-    }
-
-    @Unroll
-    def "invalid argument: summary=#summary" (){
-        given:"A clarificationDto"
-        clarificationDto.setSummary(summary)
-
-        when:
-        discussionService.createClarificationSummary(clarification.getId(), clarificationDto)
-
-        then:"check for exceptions"
-        def error = thrown(TutorException)
-        error.getErrorMessage() == errorMessage
-
-        and:"clarification has no summary"
-        clarification.getSummary() == null
-
-        where:
-        summary                 || errorMessage
-        null                    || ErrorMessage.CLARIFICATION_NOT_CONSISTENT
-        "  "                    || ErrorMessage.CLARIFICATION_SUMMARY_IS_EMPTY
-
-    }
-
-    @TestConfiguration
-    static class ServiceImplTestContextConfiguration {
-
-        @Bean
-        UserService userService() {
-            return new UserService()
-        }
-
-        @Bean
-        DiscussionService discussionService() {
-            return new DiscussionService()
-        }
-
-        @Bean
-        QuizService quizService() {
-            return new QuizService()
-        }
-
-        @Bean
-        QuestionService questionService() {
-            return new QuestionService()
-        }
-
-        @Bean
-        StatementService statementService() {
-            return new StatementService()
-        }
-
-        @Bean
-        AnswerService answerService() {
-            return new AnswerService()
-        }
-
-        @Bean
-        AnswersXmlImport answersXmlImport() {
-            return new AnswersXmlImport()
-        }
-
+        and: "the clarification request privacy didn't change"
+        clarificationRequestRepository.findAll().get(0).getPrivacy() != requestDto.getPrivacy()
     }
 }
