@@ -190,7 +190,17 @@ public class DiscussionService {
         }
 
         else if (clarificationDto.getText().trim().equals("")){
-            throw  new TutorException(ErrorMessage.CLARIFICATION_TEXT_IS_EMPTY);
+            throw new TutorException(ErrorMessage.CLARIFICATION_TEXT_IS_EMPTY);
+        }
+    }
+
+    private void checkClarificationSummary(ClarificationDto clarificationDto) {
+        if(clarificationDto.getSummary() == null) {
+            throw new TutorException(CLARIFICATION_NOT_CONSISTENT, "Summary");
+        }
+
+        else if (clarificationDto.getSummary().trim().equals("")) {
+            throw new TutorException(ErrorMessage.CLARIFICATION_SUMMARY_IS_EMPTY);
         }
     }
 
@@ -199,6 +209,21 @@ public class DiscussionService {
             throw new TutorException(ErrorMessage.TEACHER_COURSE_EXECUTION_MISMATCH,
                     teacher.getId(), clarificationRequest.getQuestion().getCourse().getId());
         }
+    }
+
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ClarificationDto createClarificationSummary(int clarificationId, ClarificationDto clarificationDto){
+
+        Clarification clarification = getClarification(clarificationId);
+
+        checkClarificationSummary(clarificationDto);
+
+        clarification.setSummary(clarificationDto.getSummary());
+
+        return new ClarificationDto(clarification);
     }
 
     private List<Course> getCourses(User teacher) {
@@ -213,6 +238,11 @@ public class DiscussionService {
                     .orElseThrow(() -> new TutorException(ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND));
     }
 
+    private Clarification getClarification(Integer clarificationId) {
+        return clarificationRepository.findById(clarificationId)
+                .orElseThrow(() -> new TutorException(CLARIFICATION_NOT_FOUND));
+    }
+
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public CourseDto findClarificationRequestCourse(Integer clarificationRequestId){
@@ -225,7 +255,7 @@ public class DiscussionService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public ClarificationDto getClarification(Integer clarificationRequestId){
+    public ClarificationDto getClarificationByRequest(Integer clarificationRequestId){
         ClarificationRequest clarificationRequest = clarificationRequestRepository.findById(clarificationRequestId)
                 .orElseThrow(() -> new TutorException(CLARIFICATION_REQUEST_NOT_FOUND));
 

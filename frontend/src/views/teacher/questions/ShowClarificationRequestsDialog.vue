@@ -31,6 +31,29 @@
                   {{ request.clarification.text }}
                 </p>
               </v-flex>
+              <div v-if="request.clarification.summary != null">
+                <v-flex xs24 sm12 md8>
+                  <b>Summary of discussion:</b>
+                </v-flex>
+                <v-flex xs24 sm12 md8>
+                  <p>
+                    {{ request.clarification.summary }}
+                  </p>
+                </v-flex>
+              </div>
+              <div v-else>
+                <v-text-field
+                  v-model="currentClarification.summary"
+                  label="Summary"
+                  data-cy="clarificationSummary"
+                />
+                <v-btn
+                  color="blue"
+                  @click="createClarificationSummary(request.clarification)"
+                  data-cy="submitSummary"
+                  >Submit</v-btn
+                >
+              </div>
             </div>
             <div v-else>
               <v-text-field
@@ -50,11 +73,11 @@
           </v-card-text>
 
           <div v-if="!!request.clarification">
-              <comment-view
-                v-model="CommentView"
-                :clarification="request.clarification"
-              />
-            </div>
+            <comment-view
+              v-model="CommentView"
+              :clarification="request.clarification"
+            />
+          </div>
         </span>
         <v-card-actions>
           <v-spacer />
@@ -106,10 +129,38 @@ export default class ClarificationRequestsDialog extends Vue {
     if (this.currentClarification) {
       this.currentClarification.userId = this.$store.getters.getUser.id;
       try {
-        const result = await RemoteServices.createClarification(this.currentClarification, request.id);
+        const result = await RemoteServices.createClarification(
+          this.currentClarification,
+          request.id
+        );
         this.$emit('new-clarification-request', result);
         request.clarification = result;
         this.currentClarification.text = '';
+      } catch (error) {
+        await this.$store.dispatch('error', 'Error' + error);
+      }
+    }
+  }
+
+  async createClarificationSummary(clarification: Clarification) {
+    if (this.currentClarification && !this.currentClarification.summary) {
+      await this.$store.dispatch(
+        'error',
+        'Error: Clarification summary cannot be empty.'
+      );
+      this.currentClarification = null;
+      return;
+    }
+    if (this.currentClarification) {
+      this.currentClarification.userId = this.$store.getters.getUser.id;
+      try {
+        const result = await RemoteServices.createClarificationSummary(
+          this.currentClarification,
+          clarification.id
+        );
+        this.$emit('new-clarification-summary', result);
+        clarification.summary = result.summary;
+        this.currentClarification.summary = '';
       } catch (error) {
         await this.$store.dispatch('error', 'Error' + error);
       }

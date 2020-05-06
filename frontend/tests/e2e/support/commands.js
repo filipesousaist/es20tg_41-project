@@ -40,9 +40,7 @@ Cypress.Commands.add('demoStudentLogin', () => {
 Cypress.Commands.add('simpleDemoStudentLogin', () => {
   cy.visit('/');
   cy.get('[data-cy="demoStudentLoginButton"]').click();
-
 });
-
 
 Cypress.Commands.add('demoTeacherLogin', () => {
   cy.visit('/');
@@ -75,7 +73,8 @@ Cypress.Commands.add(
       .type(option4);
 
     cy.get('[data-cy="saveButton"]').click();
-});
+  }
+);
 
 Cypress.Commands.add(
   'createStudentQuestionWithOneOption',
@@ -235,24 +234,30 @@ Cypress.Commands.add(
     cy.get('[data-cy="courseExecutionAcronymInput"]').type(acronym);
     cy.get('[data-cy="courseExecutionAcademicTermInput"]').type(academicTerm);
     cy.get('[data-cy="saveButton"]').click();
-  });
+  }
+);
 
-  Cypress.Commands.add('answerQuiz', (title) => {
-    cy.contains(title).click()
-    cy.contains("End Quiz").click()
-    cy.contains("I'm sure").click()
-
+Cypress.Commands.add('answerQuiz', title => {
+  cy.contains(title).click();
+  cy.contains('End Quiz').click();
+  cy.contains('I\'m sure').click();
 });
 
 Cypress.Commands.add('createClarificationRequest', (title, text) => {
-    cy.contains("Request Clarification").click()
-    if(!!title) cy.get('[data-cy="clarificationRequestTitle"]').type(title)
-    if(!!text) cy.get('[data-cy="clarificationRequestText"]').type(text)
-    cy.get('[data-cy="submitClarificationRequest"').click()
+  cy.contains('Request Clarification').click();
+  if (!!title) cy.get('[data-cy="clarificationRequestTitle"]').type(title);
+  if (!!text) cy.get('[data-cy="clarificationRequestText"]').type(text);
+  cy.get('[data-cy="submitClarificationRequest"').click();
 });
 
-Cypress.Commands.add('createClarification', (text) => {
+Cypress.Commands.add('createClarification', text => {
   cy.get('[data-cy="clarificationRequests"]').click();
-  if(!!text) cy.get('[data-cy="clarificationText"]').type(text);
+  if (!!text) cy.get('[data-cy="clarificationText"]').type(text);
   cy.get('[data-cy="submitClarification"]').click();
+});
+
+Cypress.Commands.add('createClarificationSummary', text => {
+  cy.get('[data-cy="clarificationRequests"]').click();
+  if (!!text) cy.get('[data-cy="clarificationSummary"]').type(text);
+  cy.get('[data-cy="submitSummary"]').click();
 });

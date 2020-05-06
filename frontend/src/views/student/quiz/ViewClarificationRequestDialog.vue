@@ -38,16 +38,27 @@
               <v-flex xs24 sm12 md8>
                 <h2>Clarification</h2>
               </v-flex>
-            <v-flex xs24 sm12 md8>
+              <v-flex xs24 sm12 md8>
                 <b>{{ clarification.username }} said at {{ clarification.creationDate }}:</b>
-            </v-flex>
-            <v-flex xs24 sm12 md8>
-              <p>
-                {{ clarificationRequest.clarification.text }}
-              </p>
-            </v-flex>
+              </v-flex>
+              <v-flex xs24 sm12 md8>
+                <p>
+                  {{ clarificationRequest.clarification.text }}
+                </p>
+              </v-flex>
 
-            <v-divider></v-divider>
+              <v-divider></v-divider>
+
+              <div v-if="clarification.summary != null">
+                <v-flex x24 sm12 md8>
+                  <h2>DiscussionSummary</h2>
+                </v-flex>
+                <v-flex xs24 sm12 md8>
+                  {{ clarificationRequest.clarification.summary }}
+                </v-flex>
+              </div>
+
+              <v-divider></v-divider>
 
               <comment-view
                 v-model="CommentView"

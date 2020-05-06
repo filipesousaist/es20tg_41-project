@@ -101,6 +101,8 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
                     return userHasAnExecutionOfTheCourse(userId, discussionService.findClarificationRequestCourse(id).getCourseId());
                 case "CLARIFICATION.ACCESS":
                     return userHasThisClarificationRequest(userId, id);
+                case "SUMMARY.ACCESS":
+                    return userHasThisClarification(userId, id);
                 case "COMMENT.ACCESS":
                     return userHasThisClarification(userId, id)
                             || userHasThisClarificationRequest(userId, clarificationRepository.findById(id)
