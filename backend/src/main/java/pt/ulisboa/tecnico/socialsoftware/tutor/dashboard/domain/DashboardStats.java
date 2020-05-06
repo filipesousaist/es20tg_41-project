@@ -15,6 +15,9 @@ public class DashboardStats {
     @JoinColumn
     private User user;
 
+    private int numProposedQuestions;
+    private int numAcceptedQuestions;
+
     // TODO: insert each functionality's related stats
 
     public DashboardStats() {
@@ -23,6 +26,8 @@ public class DashboardStats {
 
     public DashboardStats(User user) {
         this.user = user;
+        this.numProposedQuestions = user.getNumProposedQuestions();
+        this.numAcceptedQuestions = user.getNumAcceptedQuestions();
     }
 
     public Integer getId() {
@@ -39,5 +44,21 @@ public class DashboardStats {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getNumAcceptedQuestions() {
+        return numAcceptedQuestions;
+    }
+
+    public void setNumAcceptedQuestions(int numAcceptedQuestions) {
+        this.numAcceptedQuestions = numAcceptedQuestions;
+    }
+
+    public int getNumProposedQuestions() {
+        return numProposedQuestions;
+    }
+
+    public void setNumProposedQuestions(int numProposedQuestions) {
+        this.numProposedQuestions = numProposedQuestions;
     }
 }

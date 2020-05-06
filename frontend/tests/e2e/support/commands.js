@@ -172,6 +172,20 @@ Cypress.Commands.add('failClickEditButton', studentQuestionTitle => {
     .should('not.exist');
 });
 
+Cypress.Commands.add(
+  'checkDashboardStudentQuestionsStats',
+  (studentName, numProposed, numAccepted) => {
+    grandparent(cy.contains(studentName), 4)
+      .children()
+      .find('[data-cy="numProposedQuestions"]')
+      .contains(numProposed.toString());
+    grandparent(cy.contains(studentName), 4)
+      .children()
+      .find('[data-cy="numAcceptedQuestions"]')
+      .contains(numAccepted.toString());
+  }
+);
+
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
   cy.get('[data-cy="courseExecutionNameInput"]').type(name);
@@ -184,6 +198,7 @@ Cypress.Commands.add('enrollTournament', name => {
   cy.contains('Enroll').click({ force: true });
   cy.contains(name)
     .parent()
+    .children()
     .find('[data-cy="enroll"]')
     .click();
 });
@@ -304,3 +319,9 @@ Cypress.Commands.add('createClarification', text => {
   if (!!text) cy.get('[data-cy="clarificationText"]').type(text);
   cy.get('[data-cy="submitClarification"]').click();
 });
+
+function grandparent(element, n) {
+  for (let i = 0; i < n; i++)
+    element = element.parent();
+  return element;
+}
