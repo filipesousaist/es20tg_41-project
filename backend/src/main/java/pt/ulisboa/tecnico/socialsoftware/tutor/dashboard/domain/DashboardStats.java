@@ -18,6 +18,9 @@ public class DashboardStats {
     private int numProposedQuestions;
     private int numAcceptedQuestions;
 
+    private boolean showNumProposedQuestions = true;
+    private boolean showNumAcceptedQuestions = true;
+
     // TODO: insert each functionality's related stats
 
     public DashboardStats() {
@@ -60,5 +63,21 @@ public class DashboardStats {
 
     public void setNumProposedQuestions(int numProposedQuestions) {
         this.numProposedQuestions = numProposedQuestions;
+    }
+
+    public boolean getShowNumProposedQuestions() {
+        return showNumProposedQuestions;
+    }
+
+    public void setShowNumProposedQuestions(boolean showNumProposedQuestions) {
+        this.showNumProposedQuestions = showNumProposedQuestions;
+    }
+
+    public boolean getShowNumAcceptedQuestions() {
+        return showNumAcceptedQuestions;
+    }
+
+    public void setShowNumAcceptedQuestions(boolean showNumAcceptedQuestions) {
+        this.showNumAcceptedQuestions = showNumAcceptedQuestions;
     }
 }

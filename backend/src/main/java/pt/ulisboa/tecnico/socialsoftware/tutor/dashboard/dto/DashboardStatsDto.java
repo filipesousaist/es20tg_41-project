@@ -5,7 +5,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import java.io.Serializable;
 
-public class DashboardDto implements Serializable {
+public class DashboardStatsDto implements Serializable {
     private int userId;
     private String username;
     private String name;
@@ -15,7 +15,7 @@ public class DashboardDto implements Serializable {
 
     // TODO: insert each functionality related stats
 
-    public DashboardDto(DashboardStats dashboardStats) {
+    public DashboardStatsDto(DashboardStats dashboardStats) {
         User user = dashboardStats.getUser();
         this.userId = user.getId();
         this.username = user.getUsername();

@@ -25,41 +25,41 @@ import spock.lang.Specification
 
 @DataJpaTest
 class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification {
-    private static final String COURSE_NAME = "Engenharia de Software";
-    private static final String ACRONYM = "ES";
-    private static final String ACADEMIC_TERM = "2 SEM";
-    private static final String QUESTION_TITLE = "Question 1";
-    private static final String QUESTION_CONTENT = "What is the answer to this question?";
-    private static final String OPTION1_CONTENT = "Option 1";
-    private static final String OPTION2_CONTENT = "Option 2";
-    private static final String STUDENT_NAME = "Student Name";
-    private static final String STUDENT_USERNAME = "Student Username";
-    private static final int STUDENT_KEY = 1;
-    private static final String JUSTIFICATION = "Good question";
-    private static final String TEACHER_NAME = "Teacher Name";
-    private static final String TEACHER_USERNAME = "Teacher Username";
-    private static final int TEACHER_KEY = 2;
+    private static final String COURSE_NAME = "Engenharia de Software"
+    private static final String ACRONYM = "ES"
+    private static final String ACADEMIC_TERM = "2 SEM"
+    private static final String QUESTION_TITLE = "Question 1"
+    private static final String QUESTION_CONTENT = "What is the answer to this question?"
+    private static final String OPTION1_CONTENT = "Option 1"
+    private static final String OPTION2_CONTENT = "Option 2"
+    private static final String STUDENT_NAME = "Student Name"
+    private static final String STUDENT_USERNAME = "Student Username"
+    private static final int STUDENT_KEY = 1
+    private static final String JUSTIFICATION = "Good question"
+    private static final String TEACHER_NAME = "Teacher Name"
+    private static final String TEACHER_USERNAME = "Teacher Username"
+    private static final int TEACHER_KEY = 2
 
     @Autowired
-    StudentQuestionService studentQuestionService;
+    StudentQuestionService studentQuestionService
 
     @Autowired
-    CourseRepository courseRepository;
+    CourseRepository courseRepository
 
     @Autowired
-    CourseExecutionRepository courseExecutionRepository;
+    CourseExecutionRepository courseExecutionRepository
 
     @Autowired
-    QuestionRepository questionRepository;
+    QuestionRepository questionRepository
 
     @Autowired
-    UserRepository userRepository;
+    UserRepository userRepository
 
     @Autowired
-    StudentQuestionRepository studentQuestionRepository;
+    StudentQuestionRepository studentQuestionRepository
 
     @Autowired
-    QuestionEvaluationRepository questionEvaluationRepository;
+    QuestionEvaluationRepository questionEvaluationRepository
 
     def studentQuestion
     def studentQuestionID
@@ -121,11 +121,11 @@ class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification 
 
         when: "a question evaluation is created"
         1.upto(/*10000*/1, {
-            questionEvaluationDto.setJustification(JUSTIFICATION + it);
-            questionEvaluationDto.setApproved(it % 3 == 0);
+            questionEvaluationDto.setJustification(JUSTIFICATION + it)
+            questionEvaluationDto.setApproved(it % 3 == 0)
             studentQuestionService.createQuestionEvaluation(
-                teacherID, studentQuestionID, questionEvaluationDto);
-        });
+                teacherID, studentQuestionID, questionEvaluationDto)
+        })
 
         then:
         true

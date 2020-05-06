@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
-import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.dto.DashboardDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.dto.DashboardStatsDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
@@ -21,14 +21,14 @@ public class DashboardService {
     private CourseExecutionRepository courseExecutionRepository;
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public List<DashboardDto> getDashboardStats(Integer courseExecutionId){
+    public List<DashboardStatsDto> getDashboardStats(Integer courseExecutionId){
         return courseExecutionRepository.findById(courseExecutionId)
                 .orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId))
                 .getUsers()
                 .stream()
                 .filter(user -> user.getRole().equals(User.Role.STUDENT))
                 .map(User::getDashboardStats)
-                .map(DashboardDto::new)
+                .map(DashboardStatsDto::new)
                 .collect(Collectors.toList());
     }
 }
