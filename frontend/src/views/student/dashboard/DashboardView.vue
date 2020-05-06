@@ -56,6 +56,16 @@ export default class DashboardView extends Vue {
       text: 'Name',
       value: 'name',
       align: 'center'
+    },
+    {
+      text: 'Proposed questions',
+      value: 'numProposedQuestions',
+      align: 'center'
+    },
+    {
+      text: 'Accepted questions',
+      value: 'numAcceptedQuestions',
+      align: 'center'
     }
     // TODO: add fields for each stat
   ];
