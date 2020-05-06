@@ -27,6 +27,9 @@ class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
     public static final String QUESTION_TITLE = 'question title'
     public static final String QUESTION_CONTENT = 'question content'
     public static final String OPTION_CONTENT = "optionId content"
+    private static final String STUDENT_NAME = "Student Name";
+    private static final String STUDENT_USERNAME = "Student Username";
+    private static final int STUDENT_KEY = 1;
 
     @Autowired
     StudentQuestionRepository studentQuestionRepository
@@ -55,7 +58,7 @@ class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
         courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)
 
-        user = new User()
+        user = new User(STUDENT_NAME, STUDENT_USERNAME, STUDENT_KEY, User.Role.STUDENT)
         user.setKey(1)
         userRepository.save(user)
 
