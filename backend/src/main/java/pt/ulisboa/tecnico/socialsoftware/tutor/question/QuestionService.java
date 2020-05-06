@@ -153,20 +153,6 @@ public class QuestionService {
         question.setStatus(status);
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public List<QuestionDto> getAnsweredQuestions(int userId){
-        return userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId))
-                .getQuizAnswers()
-                .stream()
-                .map(QuizAnswer::getQuestionAnswers)
-                .flatMap(Collection::stream)
-                .map(QuestionAnswer::getQuizQuestion)
-                .map(QuizQuestion::getQuestion)
-                .distinct()
-                .map(QuestionDto::new)
-                .collect(Collectors.toList());
-    }
-
 
     @Retryable(
       value = { SQLException.class },

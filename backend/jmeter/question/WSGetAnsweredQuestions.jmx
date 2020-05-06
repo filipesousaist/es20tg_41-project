@@ -48,8 +48,7 @@
       <hashTree>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">INSERT INTO users (id, name, username) VALUES (100000, &apos;Pedro&apos;, &apos;Pedro&apos;);
-INSERT INTO quiz_answers (id, completed, user_id, quiz_id, used_in_statistics) VALUES (100000, true, 100000, 5370, true);
+          <stringProp name="query">INSERT INTO quiz_answers (id, completed, user_id, quiz_id, used_in_statistics) VALUES (100000, true, 676, 5370, true);
 INSERT INTO quiz_questions(id, sequence, question_id, quiz_id) VALUES (100000, 5, 1984, 5370);
 INSERT INTO question_answers (id, quiz_answer_id, quiz_question_id) VALUES (100000, 100000, 100000);</stringProp>
           <stringProp name="queryArguments"></stringProp>
@@ -182,7 +181,7 @@ INSERT INTO question_answers (id, quiz_answer_id, quiz_question_id) VALUES (1000
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/questions/100000/answered_questions</stringProp>
+            <stringProp name="HTTPSampler.path">courses/11/questions/answered</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -325,8 +324,7 @@ INSERT INTO question_answers (id, quiz_answer_id, quiz_question_id) VALUES (1000
           <stringProp name="dataSource">sampleReq</stringProp>
           <stringProp name="query">DELETE FROM question_answers WHERE id = 100000;
 DELETE FROM quiz_questions WHERE id = 100000;
-DELETE FROM quiz_answers WHERE id = 100000;
-DELETE FROM users WHERE id = 100000;</stringProp>
+DELETE FROM quiz_answers WHERE id = 100000;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>

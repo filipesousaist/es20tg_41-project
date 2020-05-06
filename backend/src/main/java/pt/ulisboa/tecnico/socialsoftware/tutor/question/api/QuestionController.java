@@ -36,8 +36,6 @@ public class QuestionController {
 
     private QuestionService questionService;
 
-    private UserService userService;
-
     @Value("${figures.dir}")
     private String figuresDir;
 
@@ -138,13 +136,6 @@ public class QuestionController {
         questionService.updateQuestionTopics(questionId, topics);
 
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/questions/{userId}/answered_questions")
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public List<QuestionDto> getUserAnsweredQuestions(@PathVariable Integer userId){
-
-        return this.questionService.getAnsweredQuestions(userId);
     }
 
     private Path getTargetLocation(String url) {

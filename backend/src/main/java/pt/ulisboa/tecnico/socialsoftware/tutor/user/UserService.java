@@ -143,6 +143,20 @@ public class UserService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<QuestionDto> getAnsweredQuestions(int userId){
+        return userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId))
+                .getQuizAnswers()
+                .stream()
+                .map(QuizAnswer::getQuestionAnswers)
+                .flatMap(Collection::stream)
+                .map(QuestionAnswer::getQuizQuestion)
+                .map(QuizQuestion::getQuestion)
+                .distinct()
+                .map(QuestionDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public User createDemoStudent() {
         String birthDate = DateHandler.now().toString();
         User newDemoUser = createUser("Demo-Student-" + birthDate, "Demo-Student-" + birthDate, User.Role.STUDENT);
