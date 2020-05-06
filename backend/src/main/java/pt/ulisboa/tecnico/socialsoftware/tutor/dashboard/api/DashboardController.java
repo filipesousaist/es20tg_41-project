@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.DashboardService;
-import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.dto.DashboardDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.dto.DashboardStatsDto;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class DashboardController {
 
     @GetMapping("/executions/{executionId}/dashboard")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#executionId, 'EXECUTION.ACCESS')")
-    public List<DashboardDto> getDashboardStats(@PathVariable int executionId){
+    public List<DashboardStatsDto> getDashboardStats(@PathVariable int executionId){
         return this.dashboardService.getDashboardStats(executionId);
     }
 }
