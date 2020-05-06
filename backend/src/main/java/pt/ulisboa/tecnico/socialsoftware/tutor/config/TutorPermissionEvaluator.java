@@ -55,6 +55,9 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
     private UserRepository userRepository;
 
     @Autowired
+    private ClarificationRequestRepository clarificationRequestRepository;
+
+    @Autowired
     private ClarificationRepository clarificationRepository;
 
     @Override
@@ -101,6 +104,9 @@ public class TutorPermissionEvaluator implements PermissionEvaluator {
                     return userHasAnExecutionOfTheCourse(userId, discussionService.findClarificationRequestCourse(id).getCourseId());
                 case "CLARIFICATION.ACCESS":
                     return userHasThisClarificationRequest(userId, id);
+                case "PRIVACY.ACCESS":
+                    return userHasThisClarification(userId, clarificationRequestRepository.findById(id)
+                    .orElseThrow(() -> new TutorException(ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND, id)).getClarification().getId());
                 case "SUMMARY.ACCESS":
                     return userHasThisClarification(userId, id);
                 case "COMMENT.ACCESS":

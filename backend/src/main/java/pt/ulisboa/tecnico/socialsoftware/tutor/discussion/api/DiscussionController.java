@@ -24,7 +24,7 @@ public class DiscussionController {
     }
 
     @PutMapping("/clarificationRequests/{clarificationRequestId}/privacy")
-    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#clarificationRequestId, 'CLARIFICATION.REQUEST.ACCESS')")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#clarificationRequestId, 'PRIVACY.ACCESS')")
     public ClarificationRequestDto updateClarificationRequestPrivacy(@PathVariable int clarificationRequestId, @Valid @RequestBody ClarificationRequestDto clarificationRequestDto) {
         return this.discussionService.updateClarificationRequestPrivacy(clarificationRequestId, clarificationRequestDto);
     }

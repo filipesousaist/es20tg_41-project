@@ -19,7 +19,7 @@ public class ClarificationRequestDto implements Serializable {
 
     private ClarificationDto clarification;
 
-    private boolean privacy;
+    private Boolean privacy;
 
     private String creationDate;
 
@@ -88,11 +88,11 @@ public class ClarificationRequestDto implements Serializable {
         this.userId = userId;
     }
 
-    public boolean getPrivacy() {
+    public Boolean getPrivacy() {
         return privacy;
     }
 
-    public void setPrivacy(boolean privacy) {
+    public void setPrivacy(Boolean privacy) {
         this.privacy = privacy;
     }
 

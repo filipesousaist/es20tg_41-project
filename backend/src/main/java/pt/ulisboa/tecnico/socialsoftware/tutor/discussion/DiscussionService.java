@@ -91,6 +91,7 @@ public class DiscussionService {
         checkForDuplicateClarificationRequest(question, user);
 
         ClarificationRequest clarificationRequest = createClarificationRequest(clarificationRequestDto, question, user);
+        clarificationRequest.setPrivacy(true);
         clarificationRequest.setCreationDate(DateHandler.now());
         return new ClarificationRequestDto(clarificationRequest);
     }
