@@ -5,7 +5,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.QuestionEvaluationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
@@ -30,8 +29,6 @@ public class StudentQuestionController {
         if (user == null) {
             throw new TutorException(AUTHENTICATION_ERROR);
         }
-
-        studentQuestionDto.getQuestionDto().setStatus(Question.Status.PROPOSED.name());
 
         return studentQuestionService.createStudentQuestion(courseId, user.getId(), studentQuestionDto);
     }
@@ -59,9 +56,28 @@ public class StudentQuestionController {
         return studentQuestionService.getStudentQuestions(user.getId());
     }
 
-    @GetMapping("courses/{courseId}/studentQuestions/proposed")
+    @GetMapping("courses/{courseId}/studentQuestions/non-rejected")
     @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#courseId, 'COURSE.ACCESS')")
-    public List<StudentQuestionDto> getProposedStudentQuestions(@PathVariable int courseId) {
-        return studentQuestionService.getProposedStudentQuestions(courseId);
+    public List<StudentQuestionDto> getNonRejectedStudentQuestions(@PathVariable int courseId) {
+        return studentQuestionService.getNonRejectedStudentQuestions(courseId);
+    }
+
+    @PutMapping("studentQuestions/{studentQuestionId}/available")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#studentQuestionId, 'STUDENT_QUESTION.ACCESS')")
+    public StudentQuestionDto makeStudentQuestionAvailable(@PathVariable int studentQuestionId) {
+        return studentQuestionService.makeStudentQuestionAvailable(studentQuestionId);
+    }
+
+    @PutMapping("studentQuestions/{studentQuestionId}/update")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#studentQuestionId, 'STUDENT_QUESTION.ACCESS')" +
+            "or (hasRole('ROLE_STUDENT') and hasPermission(#studentQuestionId, 'STUDENT_QUESTION.ACCESS'))")
+    public StudentQuestionDto updateStudentQuestion(Principal principal, @PathVariable int studentQuestionId, @RequestBody StudentQuestionDto studentQuestionDto) {
+        User user = (User) ((Authentication) principal).getPrincipal();
+
+        if (user == null) {
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+
+        return studentQuestionService.updateStudentQuestion(user.getId(), studentQuestionId, studentQuestionDto);
     }
 }

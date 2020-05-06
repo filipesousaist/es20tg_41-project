@@ -18,6 +18,7 @@ import SolvedQuizzesView from '@/views/student/SolvedQuizzesView.vue';
 import QuizView from '@/views/student/quiz/QuizView.vue';
 import ResultsView from '@/views/student/quiz/ResultsView.vue';
 import StatsView from '@/views/student/StatsView.vue';
+import DashboardView from '@/views/student/dashboard/DashboardView.vue';
 import ScanView from '@/views/student/ScanView.vue';
 
 import CreateTournament from './views/student/tournament/CreateTournament.vue';
@@ -25,8 +26,6 @@ import EnrollTournament from './views/student/tournament/EnrollTournament.vue';
 import ShowTournaments from './views/student/tournament/ShowTournaments.vue';
 import ParticipateTournament from './views/student/tournament/ParticipateTournament.vue';
 
-import ClarificationRequestView from './views/teacher/requests/ClarificationRequestsView.vue';
-import ClarificationRequestsView from './views/student/clarificationRequest/ClarificationRequestsView.vue';
 import AdminManagementView from './views/admin/AdminManagementView.vue';
 import NotFoundView from './views/NotFoundView.vue';
 import ImpExpView from '@/views/teacher/impexp/ImpExpView.vue';
@@ -200,6 +199,15 @@ let router = new Router({
           component: StatsView,
           meta: {
             title: process.env.VUE_APP_NAME + ' - Stats',
+            requiredAuth: 'Student'
+          }
+        },
+        {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: DashboardView,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Dashboard',
             requiredAuth: 'Student'
           }
         },

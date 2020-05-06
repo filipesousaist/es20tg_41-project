@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
@@ -18,7 +19,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.Stude
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
-import java.time.LocalDateTime
 
 @DataJpaTest
 class GetStudentQuestionsServiceSpockTest extends Specification {
@@ -70,8 +70,8 @@ class GetStudentQuestionsServiceSpockTest extends Specification {
         def questionDto = new QuestionDto()
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
-        questionDto.setStatus(Question.Status.AVAILABLE.name()) // mudar para PROPOSED
-        def time = LocalDateTime.now().format(Course.formatter)
+        questionDto.setStatus(Question.Status.DISABLED.name())
+        def time = DateHandler.toISOString(DateHandler.now())
         questionDto.setCreationDate(time)
         and: 'a optionDto'
         def optionDto = new OptionDto()
@@ -100,15 +100,15 @@ class GetStudentQuestionsServiceSpockTest extends Specification {
         and: "user is correct"
         resStudentQuestionDto.getUserDto().getId() == userId
         and: "question is correct"
+
         def resQuestionDto = resStudentQuestionDto.getQuestionDto()
         resQuestionDto != null
         resQuestionDto.getId() != null
-        resQuestionDto.getStatus() == Question.Status.AVAILABLE.toString()
+        resQuestionDto.getStatus() == Question.Status.DISABLED.toString()
         resQuestionDto.getTitle() == QUESTION_TITLE
         resQuestionDto.getContent() == QUESTION_CONTENT
         resQuestionDto.getImage() == null
         resQuestionDto.getOptions().size() == 1
-        resQuestionDto.getCreationDate() == time
         and: "option is correct"
         def resOptionDto = resQuestionDto.getOptions().get(0)
         resOptionDto.getContent() == OPTION_CONTENT

@@ -80,6 +80,9 @@ public enum ErrorMessage {
     AUTHENTICATION_ERROR("Authentication Error"),
     FENIX_CONFIGURATION_ERROR("Incorrect server configuration files for fenix"),
 
+    ACCESS_DENIED("You do not have permission to view this resource"),
+    CANNOT_OPEN_FILE("Cannot open file"),
+
     // Tournament
     TOPICS_IS_EMPTY("The Tournament topics is empty"),
     EMPTY_TOPIC("Empty topic"),
@@ -102,20 +105,20 @@ public enum ErrorMessage {
     STUDENT_QUESTION_NOT_FOUND("Student question not found with id %d"),
     QUESTION_EVALUATION_MISSING_JUSTIFICATION("Student question has no justification"),
     STUDENT_QUESTION_TEACHER_NOT_IN_COURSE("Teacher is not in course of student question"),
-
-    ACCESS_DENIED("You do not have permission to view this resource"),
-    CANNOT_OPEN_FILE("Cannot open file"),
+    STUDENT_QUESTION_NEEDS_ACCEPTANCE("Student question needs to be accepted"),
+    STUDENT_QUESTION_IS_NOT_REJECTED("Student question isn't rejected"),
 
     // Discussion
     CLARIFICATION_REQUEST_ALREADY_EXISTS("You can not request another clarification for this question"),
-    CLARIFICATION_REQUEST_TITLE_IS_EMTPY("The Clarification Request title is empty"),
-    CLARIFICATION_REQUEST_TEXT_IS_EMTPY("The Clarification Request text is empty"),
+    CLARIFICATION_REQUEST_TITLE_IS_EMPTY("The Clarification Request title is empty"),
+    CLARIFICATION_REQUEST_TEXT_IS_EMPTY("The Clarification Request text is empty"),
     CLARIFICATION_ALREADY_EXISTS("You can not submit another clarification for this request"),
     CLARIFICATION_TEXT_IS_EMPTY("The clarification text is empty"),
     CLARIFICATION_NOT_CONSISTENT("Field %s of clarification not consistent"),
-    CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION("The Clarification Request has no clarification associated with it.");
+    CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION("The Clarification Request has no clarification associated with it."),
 
-
+    COMMENT_INVALID_USER("The user did no asked for the clarification nor answered it."),
+    COMMENT_EMPTY_TEXT("The comment text is empty!");
 
     public final String label;
 

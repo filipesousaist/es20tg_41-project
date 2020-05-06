@@ -48,8 +48,14 @@
             <p></p>
             <v-divider></v-divider>
           </v-card-text>
-        </span>
 
+          <div v-if="!!request.clarification">
+              <comment-view
+                v-model="CommentView"
+                :clarification="request.clarification"
+              />
+            </div>
+        </span>
         <v-card-actions>
           <v-spacer />
           <v-btn
@@ -70,8 +76,14 @@ import Question from '@/models/management/Question';
 import Clarification from '@/models/discussion/Clarification';
 import ClarificationRequest from '@/models/discussion/ClarificationRequest';
 import RemoteServices from '@/services/RemoteServices';
+import CommentView from '@views/CommentView.vue';
 
-@Component
+
+@Component({
+  components: {
+    'comment-view': CommentView,
+  }
+})
 export default class ClarificationRequestsDialog extends Vue {
   @Model('dialog', Boolean) dialog!: boolean;
   @Prop({ type: Question, required: true }) readonly question!: Question;
@@ -92,7 +104,7 @@ export default class ClarificationRequestsDialog extends Vue {
       return;
     }
     if (this.currentClarification) {
-      this.currentClarification.username = this.$store.getters.getUser.username;
+      this.currentClarification.userId = this.$store.getters.getUser.id;
       try {
         const result = await RemoteServices.createClarification(this.currentClarification, request.id);
         this.$emit('new-clarification-request', result);

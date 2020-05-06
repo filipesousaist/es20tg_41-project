@@ -19,7 +19,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRe
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
@@ -110,7 +110,7 @@ class GetClarificationServiceSpockTest extends Specification{
     CourseExecutionRepository courseExecutionRepository
 
     @Autowired
-    DiscussionRepository discussionRepository
+    ClarificationRepository discussionRepository
 
 
     def user1
@@ -146,7 +146,7 @@ class GetClarificationServiceSpockTest extends Specification{
         quiz.setKey(1)
         quiz.setKey(quizService.getMaxQuizKey()+1)
         quiz.setCourseExecution(courseExecution);
-        quiz.setType(Quiz.QuizType.GENERATED)
+        quiz.setType(Quiz.QuizType.GENERATED.toString())
         quizRepository.save(quiz)
 
         question1 = new Question()
