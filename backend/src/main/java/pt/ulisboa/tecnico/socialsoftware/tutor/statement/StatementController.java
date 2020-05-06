@@ -109,7 +109,7 @@ public class StatementController {
         return statementService.concludeQuiz(user.getId(), quizId);
     }
 
-    @GetMapping("/courses/{executionId}/questions/answered")
+    @GetMapping("/executions/{executionId}/questions/answered")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#executionId, 'EXECUTION.ACCESS')")
     public List<QuestionDto> getUserAnsweredQuestions(Principal principal, @PathVariable Integer executionId){
         User user = (User) ((Authentication) principal).getPrincipal();
