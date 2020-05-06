@@ -67,7 +67,7 @@
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">INSERT INTO student_questions VALUES (1, 1339, 616);</stringProp>
+          <stringProp name="query">INSERT INTO student_questions VALUES (1, &apos;PROPOSED&apos;, 1339, 616);</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>

@@ -10,6 +10,9 @@ public class DashboardDto implements Serializable {
     private String username;
     private String name;
 
+    private int numProposedQuestions;
+    private int numAcceptedQuestions;
+
     // TODO: insert each functionality related stats
 
     public DashboardDto(DashboardStats dashboardStats) {
@@ -17,6 +20,9 @@ public class DashboardDto implements Serializable {
         this.userId = user.getId();
         this.username = user.getUsername();
         this.name = user.getName();
+
+        this.numProposedQuestions = dashboardStats.getNumProposedQuestions();
+        this.numAcceptedQuestions = dashboardStats.getNumAcceptedQuestions();
     }
 
     public int getUserId() {
@@ -41,5 +47,21 @@ public class DashboardDto implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getNumProposedQuestions() {
+        return numProposedQuestions;
+    }
+
+    public void setNumProposedQuestions(int numProposedQuestions) {
+        this.numProposedQuestions = numProposedQuestions;
+    }
+
+    public int getNumAcceptedQuestions() {
+        return numAcceptedQuestions;
+    }
+
+    public void setNumAcceptedQuestions(int numAcceptedQuestions) {
+        this.numAcceptedQuestions = numAcceptedQuestions;
     }
 }

@@ -42,7 +42,8 @@ import java.util.Collection;
 import java.util.List;
 import java.sql.SQLException;
 import java.util.Optional;
-import java.util.stream.Collector;
+
+
 import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
@@ -85,9 +86,9 @@ public class DiscussionService {
 
         User user = getUser(clarificationRequestDto.getUserId());
 
-        checkClarificationRequest(clarificationRequestDto.getTitle(), ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMTPY);
+        checkClarificationRequest(clarificationRequestDto.getTitle(), ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMPTY);
 
-        checkClarificationRequest(clarificationRequestDto.getText(), ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMTPY);
+        checkClarificationRequest(clarificationRequestDto.getText(), ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMPTY);
 
         List<Question> questions = user.getQuizAnswers().stream()
                 .map(QuizAnswer::getQuestionAnswers)
@@ -129,13 +130,13 @@ public class DiscussionService {
             throw new TutorException(ErrorMessage.QUESTION_ANSWER_NOT_FOUND);
     }
 
-    private void checkClarificationRequest(String title, ErrorMessage clarificationRequestTitleIsEmtpy) {
+    private void checkClarificationRequest(String title, ErrorMessage clarificationRequestTitleIsEmpty) {
         if (title == null || title.trim().equals(""))
-            throw new TutorException(clarificationRequestTitleIsEmtpy);
+            throw new TutorException(clarificationRequestTitleIsEmpty);
     }
 
-    private CourseExecution getCourseExecution(Integer courseExectutionId) {
-        return this.courseExecutionRepository.findById(courseExectutionId)
+    private CourseExecution getCourseExecution(Integer courseExecutionId) {
+        return this.courseExecutionRepository.findById(courseExecutionId)
                     .orElseThrow(() -> new TutorException(ErrorMessage.COURSE_EXECUTION_NOT_FOUND));
     }
 

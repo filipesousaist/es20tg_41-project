@@ -32,9 +32,9 @@
         </v-card-title>
       </template>
 
-      <template v-slot:item.questionDto.status="{ item }">
-        <v-chip :color="getStatusColor(item.questionDto.status)" medium>
-          <span>{{ item.questionDto.status }}</span>
+      <template v-slot:item.status="{ item }">
+        <v-chip :color="getStatusColor(item.status)" medium>
+          <span>{{ item.status }}</span>
         </v-chip>
       </template>
 
@@ -49,6 +49,19 @@
       </template>
 
       <template v-slot:item.action="{ item }">
+        <v-tooltip bottom v-if="isRejected(item)">
+          <template v-slot:activator="{ on }">
+            <v-icon
+              small
+              class="mr-2"
+              v-on="on"
+              @click="editQuestion(item)"
+              data-cy="editButton"
+              >edit</v-icon
+            >
+          </template>
+          <span>Edit Question</span>
+        </v-tooltip>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
             <v-icon
@@ -106,7 +119,7 @@ export default class CreateStudentQuestionsView extends Vue {
     { text: 'Title', value: 'questionDto.title', align: 'left', width: '30%' },
     {
       text: 'Status',
-      value: 'questionDto.status',
+      value: 'status',
       align: 'center',
       width: '10%'
     },
@@ -160,6 +173,15 @@ export default class CreateStudentQuestionsView extends Vue {
     );
   }
 
+  isRejected(studentQuestion: StudentQuestion | null) {
+    return studentQuestion?.status == 'REJECTED';
+  }
+
+  editQuestion(studentQuestion: StudentQuestion) {
+    this.currentStudentQuestion = studentQuestion;
+    this.editStudentQuestionDialog = true;
+  }
+
   newStudentQuestion() {
     this.studentQuestionDialog = false;
     this.currentStudentQuestion = new StudentQuestion();
@@ -208,9 +230,14 @@ export default class CreateStudentQuestionsView extends Vue {
   }
 
   getStatusColor(status: string) {
-    if (status === 'REJECTED') return 'red';
-    else if (status === 'PROPOSED') return 'blue';
-    else return 'green';
+    switch (status) {
+      case 'PROPOSED':
+        return 'blue';
+      case 'ACCEPTED':
+        return 'green';
+      case 'REJECTED':
+        return 'red';
+    }
   }
 }
 </script>

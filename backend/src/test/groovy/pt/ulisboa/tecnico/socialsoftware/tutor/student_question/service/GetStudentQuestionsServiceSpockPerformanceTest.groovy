@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
@@ -30,6 +31,9 @@ class GetStudentQuestionsServiceSpockPerformanceTest extends Specification {
     public static final String QUESTION_TITLE = 'question title'
     public static final String QUESTION_CONTENT = 'question content'
     public static final String OPTION_CONTENT = "optionId content"
+    private static final String STUDENT_NAME = "Student Name";
+    private static final String STUDENT_USERNAME = "Student Username";
+    private static final int STUDENT_KEY = 1;
 
     @Autowired
     StudentQuestionRepository studentQuestionRepository
@@ -55,7 +59,7 @@ class GetStudentQuestionsServiceSpockPerformanceTest extends Specification {
         def courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)
         and:"a user"
-        def user = new User()
+        def user = new User(STUDENT_NAME, STUDENT_USERNAME, STUDENT_KEY, User.Role.STUDENT)
         user.setKey(1)
         userRepository.save(user)
         def userID = user.getId()
@@ -66,8 +70,8 @@ class GetStudentQuestionsServiceSpockPerformanceTest extends Specification {
         questionDto.setKey(1)
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
-        questionDto.setStatus(Question.Status.PROPOSED.name())
-        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter));
+        questionDto.setStatus(Question.Status.DISABLED.name())
+        questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()));
         and: 'a optionDto'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)

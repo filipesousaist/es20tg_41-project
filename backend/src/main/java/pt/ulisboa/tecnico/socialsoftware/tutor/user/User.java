@@ -446,8 +446,10 @@ public class User implements UserDetails, DomainEntity {
     public void addTournamentCreatedByMe(Tournament tournament) {this.tournamentsCreatedByMe.add(tournament);}
 
     public DashboardStats getDashboardStats() {
+        System.out.println("null dashboardStats: " + (dashboardStats == null));
+        System.out.println("null role: " + (role == null));
         if (dashboardStats == null && role.equals(Role.STUDENT))
-            this.dashboardStats = new DashboardStats(this);
+            dashboardStats = new DashboardStats(this);
         return dashboardStats;
     }
 
@@ -528,5 +530,13 @@ public class User implements UserDetails, DomainEntity {
         }
 
         return result;
+    }
+
+    public int getNumProposedQuestions() {
+        return studentQuestions.size();
+    }
+
+    public int getNumAcceptedQuestions() {
+        return (int) studentQuestions.stream().filter(StudentQuestion::isAccepted).count();
     }
 }
