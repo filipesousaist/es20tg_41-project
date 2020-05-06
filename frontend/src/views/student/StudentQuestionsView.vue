@@ -85,11 +85,10 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
-import StudentQuestion from '@/models/management/StudentQuestion';
+import StudentQuestion from '@/models/student_question/StudentQuestion';
 import EditStudentQuestionDialog from '@/views/student/EditStudentQuestionDialog.vue';
 import Image from '@/models/management/Image';
 import ShowStudentQuestionDialog from '@/views/student/ShowStudentQuestionDialog.vue';
-import Question from '@/models/management/Question';
 
 @Component({
   components: {
