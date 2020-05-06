@@ -37,6 +37,11 @@ Cypress.Commands.add('demoStudentLogin', () => {
   cy.contains('Student Questions').click();
 });
 
+Cypress.Commands.add('simpleDemoStudentLogin', () => {
+  cy.visit('/');
+  cy.get('[data-cy="demoStudentLoginButton"]').click();
+});
+
 Cypress.Commands.add('demoTeacherLogin', () => {
   cy.visit('/');
   cy.get('[data-cy="demoTeacherLoginButton"]').click();
@@ -284,7 +289,6 @@ Cypress.Commands.add(
 Cypress.Commands.add('answerQuiz', title => {
   cy.contains(title).click();
   cy.contains('End Quiz').click();
-  //cy.get(['data-cy=endQuizSure']).click()
   cy.contains('I\'m sure').click();
 });
 

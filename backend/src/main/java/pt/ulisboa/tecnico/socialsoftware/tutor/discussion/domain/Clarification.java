@@ -5,6 +5,9 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "clarifications")
@@ -22,8 +25,14 @@ public  class Clarification {
     @JoinColumn(name = "clarification_request_id")
     private ClarificationRequest clarificationRequest;
 
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
+
     @Autowired
     private String text;
+
+    @OneToMany
+    List<Comment> comments = new ArrayList<>();
 
     public Clarification(){
     }
@@ -65,5 +74,25 @@ public  class Clarification {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

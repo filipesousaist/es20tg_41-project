@@ -21,6 +21,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.OptionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz
 
@@ -62,9 +63,6 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
     static final String COURSE_EXECUTION_ACRONYM = "C1"
     static final String COURSE_EXECUTION_ACADEMIC_TERM = "T1";
 
-    static final String OPTION_CONTENT = "Resposta A"
-
-    static final String QUIZ_TITLE = "Random quiz"
 
     @Autowired
     DiscussionService discussionService
@@ -106,9 +104,9 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
     CourseExecutionRepository courseExecutionRepository
 
 
-    def user1
+    User user1
 
-    def user2
+    User user2
 
     def question1
 
@@ -134,7 +132,7 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         def quiz = new Quiz()
         quiz.setKey(quizService.getMaxQuizKey()+1)
         quiz.setCourseExecution(courseExecution);
-        quiz.setType(Quiz.QuizType.GENERATED)
+        quiz.setType(Quiz.QuizType.GENERATED.toString())
         quizRepository.save(quiz)
 
         question1 = new Question()
@@ -142,12 +140,6 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         question1.setContent(QUESTION_CONTENT)
         question1.setCourse(course)
         questionRepository.save(question1)
-
-        def option = new Option()
-        option.setCorrect(false)
-        option.setContent(OPTION_CONTENT)
-        option.setQuestion(question1)
-        question1.addOption(option)
 
         def quizQuestion = new QuizQuestion(quiz,question1, 1)
         def quizAnswer = new QuizAnswer(user1, quiz)
@@ -169,23 +161,23 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setUsername(user1.getUsername())
+        clarificationRequestDto.setUserId(user1.getId())
 
         when:
-        discussionService.submitClarificationRequest(900, clarificationRequestDto)
+        discussionService.submitClarificationRequest(-1, clarificationRequestDto)
 
         then: "check for exceptions"
         def error = thrown(TutorException)
         error.getErrorMessage() == ErrorMessage.QUESTION_NOT_FOUND
 
         and: " the clarification request is not added to the repository"
-        clarificationRequestRepository.count() == 0L
+        clarificationRequestRepository.findAll().size() == 0
 
         and: "the clarification request is not associated with the question"
         question1.getClarificationRequests().size() == 0L
 
         and: "the clarification request is not associated with the user"
-        user1.getClarificationRequests().size() == 0L
+        user1.getClarificationRequests().size() == 0
     }
 
     def "the user does not exist" (){
@@ -193,7 +185,7 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setUsername("Username_not_used")
+        clarificationRequestDto.setUserId(-1)
 
         when:
         discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
@@ -203,7 +195,7 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         error.getErrorMessage() == ErrorMessage.USER_NOT_FOUND
 
         and: " the clarification request is not added to the repository"
-        clarificationRequestRepository.count() == 0L
+        clarificationRequestRepository.findAll().size() == 0
 
         and: "the clarification request is not associated with the question"
         question1.getClarificationRequests().size() == 0L
@@ -217,7 +209,7 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setUsername(user2.getUsername())
+        clarificationRequestDto.setUserId(user2.getId())
 
         when:
         discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
@@ -227,7 +219,7 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         error.getErrorMessage() == ErrorMessage.QUESTION_ANSWER_NOT_FOUND
 
         and: " the clarification request is not added to the repository"
-        clarificationRequestRepository.count() == 0L
+        clarificationRequestRepository.findAll().size() == 0L
 
         and: "the clarification request is not added associated with the question"
         question1.getClarificationRequests().size() == 0L
@@ -242,14 +234,14 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setUsername(user1.getUsername())
+        clarificationRequestDto.setUserId(user1.getId())
 
 
         when:
         discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
 
         then: "the ClarificationRequest is in the repository"
-        clarificationRequestRepository.count() == 1L
+        clarificationRequestRepository.findAll().size() == 1L
         def result = clarificationRequestRepository.findAll().get(0)
         result != null
 
@@ -273,7 +265,7 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_TEXT)
-        clarificationRequestDto.setUsername(user1.getUsername())
+        clarificationRequestDto.setUserId(user1.getId())
         discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
 
         when:
@@ -284,7 +276,7 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         error.getErrorMessage() == ErrorMessage.CLARIFICATION_REQUEST_ALREADY_EXISTS
 
         and: " the clarification request is not added to the repository"
-        clarificationRequestRepository.count() == 1L
+        clarificationRequestRepository.findAll().size() == 1L
 
         and: "the clarification request is not associated with the question"
         question1.getClarificationRequests().size() == 1L
@@ -299,7 +291,7 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(title)
         clarificationRequestDto.setText(text)
-        clarificationRequestDto.setUsername(user1.getUsername())
+        clarificationRequestDto.setUserId(user1.getId())
 
         when:
         discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
@@ -309,7 +301,7 @@ class CreateClarificationRequestServiceSpockTest extends Specification {
         error.getErrorMessage() == errorMessage
 
         and: " the clarification request is not added to the repository"
-        clarificationRequestRepository.count() == 0L
+        clarificationRequestRepository.findAll().size() == 0L
 
         and: "the clarification request is not associated with the question"
         question1.getClarificationRequests().size() == 0L

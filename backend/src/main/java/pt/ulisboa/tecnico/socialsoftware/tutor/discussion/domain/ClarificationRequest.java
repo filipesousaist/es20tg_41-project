@@ -6,6 +6,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "clarification_requests")
@@ -22,6 +23,9 @@ public class ClarificationRequest {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User student;
+
+    @Column(name="creationDate")
+    private LocalDateTime creationDate;
 
 
     @OneToOne(mappedBy = "clarificationRequest")
@@ -92,5 +96,12 @@ public class ClarificationRequest {
         this.text = text;
     }
 
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
 }
 

@@ -16,13 +16,12 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Option
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.QuizService
@@ -72,7 +71,7 @@ class CreateClarificationServiceSpockTest extends Specification {
     QuizService quizService
 
     @Autowired
-    DiscussionRepository discussionRepository
+    ClarificationRepository discussionRepository
 
     @Autowired
     ClarificationRequestRepository clarificationRequestRepository
@@ -146,12 +145,7 @@ class CreateClarificationServiceSpockTest extends Specification {
         question.setCourse(course1)
         questionRepository.save(question)
 
-        def option = new Option()
-        option.setCorrect(false)
-        option.setContent(OPTION_CONTENT)
-        option.setQuestion(question)
 
-        question.addOption(option)
 
         def quizQuestion = new QuizQuestion(quiz,question, 1)
         def quizAnswer = new QuizAnswer(user, quiz)
@@ -170,7 +164,7 @@ class CreateClarificationServiceSpockTest extends Specification {
     def "create Clarification" (){
         given:"A clarificationRequest"
         clarificationDto.setText(CLARIFICATION_TEXT)
-        clarificationDto.setUsername(teacher1.getUsername())
+        clarificationDto.setUserId(teacher1.getId())
 
         when:
         discussionService.createClarification(request.getId(), clarificationDto)
@@ -194,7 +188,7 @@ class CreateClarificationServiceSpockTest extends Specification {
     def "the request does not exist" (){
         given:"createClarification a clarification"
         clarificationDto.setText(CLARIFICATION_TEXT)
-        clarificationDto.setUsername(teacher1.getUsername())
+        clarificationDto.setUserId(teacher1.getId())
 
         when:
         discussionService.createClarification(-1, clarificationDto)
@@ -213,7 +207,7 @@ class CreateClarificationServiceSpockTest extends Specification {
     def "the teacher does not exist" (){
         given:"createClarification a clarification"
         clarificationDto.setText(CLARIFICATION_TEXT)
-        clarificationDto.setUsername("Eu não existo")
+        clarificationDto.setUserId(-1)
 
         when:
         discussionService.createClarification(request.getId(), clarificationDto)
@@ -237,7 +231,7 @@ class CreateClarificationServiceSpockTest extends Specification {
         teacher2.setCourseExecutions(courses)
         userRepository.save(teacher2)
         clarificationDto.setText(CLARIFICATION_TEXT)
-        clarificationDto.setUsername(teacher2.getUsername())
+        clarificationDto.setUserId(teacher2.getId())
 
         when:
         discussionService.createClarification(request.getId(), clarificationDto)
@@ -260,7 +254,7 @@ class CreateClarificationServiceSpockTest extends Specification {
     def "invalid argument: text=#text" (){
         given: "a clarification dto"
         clarificationDto.setText(text)
-        clarificationDto.setUsername(teacher1.getUsername())
+        clarificationDto.setUserId(teacher1.getId())
 
         when:
         discussionService.createClarification(request.getId(), clarificationDto)
