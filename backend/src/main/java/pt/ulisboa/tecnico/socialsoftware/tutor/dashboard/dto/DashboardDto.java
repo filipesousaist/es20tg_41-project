@@ -10,6 +10,10 @@ public class DashboardDto implements Serializable {
     private String username;
     private String name;
 
+    /*Tournaments Stats*/
+    private Integer totalTournaments;
+    private Integer highestResult;
+
     // TODO: insert each functionality related stats
 
     public DashboardDto(DashboardStats dashboardStats) {
@@ -17,6 +21,8 @@ public class DashboardDto implements Serializable {
         this.userId = user.getId();
         this.username = user.getUsername();
         this.name = user.getName();
+        this.totalTournaments = dashboardStats.getTotalTournaments();
+        this.highestResult = dashboardStats.getHighestResult();
     }
 
     public int getUserId() {
@@ -41,5 +47,21 @@ public class DashboardDto implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Integer getTotalTournaments() {
+        return totalTournaments;
+    }
+
+    public void setTotalTournaments(Integer totalTournaments) {
+        this.totalTournaments = totalTournaments;
+    }
+
+    public Integer getHighestResult() {
+        return highestResult;
+    }
+
+    public void setHighestResult(Integer highestResult) {
+        this.highestResult = highestResult;
     }
 }

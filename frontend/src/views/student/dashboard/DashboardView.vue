@@ -56,6 +56,16 @@ export default class DashboardView extends Vue {
       text: 'Name',
       value: 'name',
       align: 'center'
+    },
+    {
+      text: 'Tournaments participated',
+      value: 'totalTournaments',
+      align: 'center'
+    },
+    {
+      text: 'Highest Tournament result',
+      value: 'highestResult',
+      align: 'center'
     }
     // TODO: add fields for each stat
   ];
