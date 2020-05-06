@@ -69,7 +69,7 @@
           <stringProp name="dataSource">sampleReq</stringProp>
           <stringProp name="query">INSERT INTO clarification_requests (id, private, text, title, question_id, user_id) VALUES (1, true,&apos;Não sei o que se passa&apos;, &apos;ola&apos;, 1339, 676);
 INSERT INTO users_clarification_requests VALUES (676, 1);
-INSERT INTO clarifications (id, text, clarification_request_id, user_id) VALUES (1, &apos;Passa-se isto&apos;, 1, 677);
+INSERT INTO clarifications (id, text, summary, clarification_request_id, user_id) VALUES (1, &apos;Passa-se isto&apos;, &apos;Chegou-se a esta conclusão&apos;, 1, 677);
 INSERT INTO users_clarifications VALUES(677,1);</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>

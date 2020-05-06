@@ -106,6 +106,15 @@ public class DiscussionService {
 
         clarificationRequest.setPrivacy(clarificationRequestDto.getPrivacy());
 
+        Clarification clarification;
+
+        if ((clarification = clarificationRequest.getClarification()) != null) {
+            if (clarification.getSummary() == null)
+                throw new TutorException(ErrorMessage.CLARIFICATION_HAS_NO_SUMMARY);
+        }
+        else
+            throw new TutorException(CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION);
+
         return new ClarificationRequestDto(clarificationRequest);
     }
 

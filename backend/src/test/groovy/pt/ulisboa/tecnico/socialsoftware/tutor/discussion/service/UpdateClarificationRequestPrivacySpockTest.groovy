@@ -13,8 +13,10 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
@@ -50,6 +52,8 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
 
     static final String TEACHER_NAME_1 = "António Rito"
     static final String TEACHER_USERNAME_1 = "António Rito"
+    static final String CLARIFICATION_TEXT = "A opção correta é 1), porque sim."
+    static final String CLARIFICATION_SUMMARY = "Depois de discutido com o aluno, chegou-se à conclusão que a opção 1 é a correta."
 
     @Autowired
     DiscussionService discussionService
@@ -65,6 +69,9 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
 
     @Autowired
     ClarificationRequestRepository clarificationRequestRepository
+
+    @Autowired
+    ClarificationRepository clarificationRepository
 
     @Autowired
     CourseRepository courseRepository
@@ -92,9 +99,9 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
     def courseExecution1
     def courseExecution2
     def teacher1
-    def teacher2
     def request
     def requestDto
+    def clarification
     def question
     def user
 
@@ -148,10 +155,16 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
         request.setQuestion(question)
         request.setStudent(user)
         clarificationRequestRepository.save(request)
+        clarification = new Clarification()
+        clarification.setText(CLARIFICATION_TEXT)
+        clarification.setTeacher(teacher1)
+        clarificationRepository.save(clarification)
     }
 
     def "Turn a clarification Request public" () {
         given: "A clarification request to turn public"
+        clarification.setClarificationRequest(request)
+        clarification.setSummary(CLARIFICATION_SUMMARY)
         requestDto.setPrivacy(false)
 
         when:
@@ -164,6 +177,8 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
 
     def "Turn a clarification Request private" () {
         given: "A clarification request to turn private"
+        clarification.setClarificationRequest(request)
+        clarification.setSummary(CLARIFICATION_SUMMARY)
         requestDto.setPrivacy(true)
 
         when:
@@ -176,6 +191,8 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
 
     def "Try to change the privacy of a clarification request that doesn't exist" () {
         given: "A clarificationDto"
+        clarification.setClarificationRequest(request)
+        clarification.setSummary(CLARIFICATION_SUMMARY)
         requestDto.setPrivacy(!request.getPrivacy())
 
         when:
@@ -184,6 +201,37 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
         then: "check for exceptions"
         def error = thrown(TutorException)
         error.getErrorMessage() == ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND
+
+        and: "the clarification request privacy didn't change"
+        clarificationRequestRepository.findAll().get(0).getPrivacy() != requestDto.getPrivacy()
+    }
+
+    def "Try to change the privacy of a clarification request that doesn't have a clarification" () {
+        given: "A clarificationDto"
+        requestDto.setPrivacy(!request.getPrivacy())
+
+        when:
+        discussionService.updateClarificationRequestPrivacy(request, requestDto)
+
+        then: "check for exceptions"
+        def error = thrown(TutorException)
+        error.getErrorMessage() == ErrorMessage.CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION
+
+        and: "the clarification request privacy didn't change"
+        clarificationRequestRepository.findAll().get(0).getPrivacy() != requestDto.getPrivacy()
+    }
+
+    def "Try to change the privacy of a clarification request that has a clarification with no summary" () {
+        given: "A clarificationDto"
+        clarification.setClarificationRequest(request)
+        requestDto.setPrivacy(!request.getPrivacy())
+
+        when:
+        discussionService.updateClarificationRequestPrivacy(request, requestDto)
+
+        then: "check for exceptions"
+        def error = thrown(TutorException)
+        error.getErrorMessage() == ErrorMessage.CLARIFICATION_HAS_NO_SUMMARY
 
         and: "the clarification request privacy didn't change"
         clarificationRequestRepository.findAll().get(0).getPrivacy() != requestDto.getPrivacy()
