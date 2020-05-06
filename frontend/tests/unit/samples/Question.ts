@@ -66,6 +66,7 @@ export const questionWithFigure = new Question({
       userId: 676,
       username: 'Demo-Student',
       clarification: null,
+      privacy: true,
       creationDate: ''
     },
     {
@@ -75,6 +76,7 @@ export const questionWithFigure = new Question({
       userId: 676,
       username: 'Demo-Student',
       clarification: null,
+      privacy: true,
       creationDate: ''
     }
   ]
@@ -143,6 +145,7 @@ export const questionWithoutFigure = new Question({
       userId: 676,
       username: 'Demo-Student',
       clarification: null,
+      privacy: true,
       creationDate: ''
     },
     {
@@ -152,6 +155,7 @@ export const questionWithoutFigure = new Question({
       userId: 676,
       username: 'Demo-Student',
       clarification: null,
+      privacy: true,
       creationDate: ''
     }
   ]

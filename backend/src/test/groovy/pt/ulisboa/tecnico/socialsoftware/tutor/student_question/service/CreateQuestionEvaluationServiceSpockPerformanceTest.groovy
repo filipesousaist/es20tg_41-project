@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
@@ -21,8 +22,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.Stude
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
-
-import java.time.LocalDateTime
 
 @DataJpaTest
 class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification {
@@ -81,7 +80,7 @@ class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification 
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
         questionDto.setStatus(Question.Status.AVAILABLE.name())
-        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter))
+        questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()))
 
         // Create 2 options, and add them to question
         def option1Dto = new OptionDto()

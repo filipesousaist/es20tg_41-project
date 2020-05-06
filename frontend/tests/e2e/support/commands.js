@@ -94,16 +94,6 @@ Cypress.Commands.add(
   }
 );
 
-Cypress.Commands.add('clickEvaluateQuestion', studentQuestionTitle => {
-  cy.contains(studentQuestionTitle)
-    .parent()
-    .children()
-    .should('have.length', 5)
-    .find('[data-cy="evaluateButton"]')
-    .scrollIntoView()
-    .click({ force: true });
-});
-
 Cypress.Commands.add(
   'createQuestionEvaluation',
   (studentQuestionTitle, approved, justification) => {
@@ -123,6 +113,79 @@ Cypress.Commands.add(
   }
 );
 
+Cypress.Commands.add('clickEvaluateQuestion', studentQuestionTitle => {
+  cy.clickProposedQuestionButton(studentQuestionTitle, 'evaluateButton');
+});
+
+Cypress.Commands.add(
+  'clickMakeStudentQuestionAvailable',
+  studentQuestionTitle => {
+    cy.clickProposedQuestionButton(studentQuestionTitle, 'makeAvailableButton');
+  }
+);
+
+Cypress.Commands.add(
+  'clickProposedQuestionButton',
+  (studentQuestionTitle, buttonName) => {
+    cy.contains(studentQuestionTitle)
+      .parent()
+      .children()
+      .should('have.length', 6)
+      .find('[data-cy="' + buttonName + '"]')
+      .scrollIntoView()
+      .click({ force: true });
+  }
+);
+
+Cypress.Commands.add('failClickMakeAvailableButton', studentQuestionTitle => {
+  cy.contains(studentQuestionTitle)
+    .parent()
+    .children()
+    .find('[data-cy="makeAvailableButton"]')
+    .should('not.exist');
+});
+
+Cypress.Commands.add(
+  'updateStudentQuestion',
+  (oldtitle, newTitle, newOptionContent) => {
+    cy.contains(oldtitle)
+      .get('[data-cy="editButton"]')
+      .scrollIntoView()
+      .click({ force: true });
+    cy.get('[data-cy="Title"]')
+      .scrollIntoView()
+      .clear({ force: true })
+      .type(newTitle, { force: true });
+    cy.get('[data-cy="Content"]')
+      .eq(0)
+      .clear()
+      .type(newOptionContent);
+    cy.get('[data-cy="saveButton"]').click();
+  }
+);
+
+Cypress.Commands.add('failClickEditButton', studentQuestionTitle => {
+  cy.contains(studentQuestionTitle)
+    .parent()
+    .children()
+    .find('[data-cy="editButton"]')
+    .should('not.exist');
+});
+
+Cypress.Commands.add(
+  'checkDashboardStudentQuestionsStats',
+  (studentName, numProposed, numAccepted) => {
+    grandparent(cy.contains(studentName), 4)
+      .children()
+      .find('[data-cy="numProposedQuestions"]')
+      .contains(numProposed.toString());
+    grandparent(cy.contains(studentName), 4)
+      .children()
+      .find('[data-cy="numAcceptedQuestions"]')
+      .contains(numAccepted.toString());
+  }
+);
+
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
   cy.get('[data-cy="courseExecutionNameInput"]').type(name);
@@ -135,6 +198,7 @@ Cypress.Commands.add('enrollTournament', name => {
   cy.contains('Enroll').click({ force: true });
   cy.contains(name)
     .parent()
+    .children()
     .find('[data-cy="enroll"]')
     .click();
 });
@@ -261,3 +325,9 @@ Cypress.Commands.add('createClarificationSummary', text => {
   if (!!text) cy.get('[data-cy="clarificationSummary"]').type(text);
   cy.get('[data-cy="submitSummary"]').click();
 });
+
+function grandparent(element, n) {
+  for (let i = 0; i < n; i++)
+    element = element.parent();
+  return element;
+}

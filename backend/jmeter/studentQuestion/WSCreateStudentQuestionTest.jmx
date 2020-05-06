@@ -104,7 +104,7 @@
 		&quot;title&quot;:&quot;question title&quot;,&#xd;
 		&quot;content&quot;:&quot;question content&quot;,&#xd;
 		&quot;creationDate&quot;:&quot;2019-10-22 20:19&quot;,&#xd;
-		&quot;status&quot;:&quot;PROPOSED&quot;,&#xd;
+		&quot;status&quot;:&quot;DISABLED&quot;,&#xd;
 		&quot;options&quot;: [{&#xd;
 			&quot;content&quot;:&quot;optionId content&quot;,&#xd;
 			&quot;correct&quot;:&quot;true&quot;&#xd;
@@ -155,7 +155,7 @@
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert question status" enabled="true">
               <stringProp name="JSON_PATH">$.questionDto.status</stringProp>
-              <stringProp name="EXPECTED_VALUE">PROPOSED</stringProp>
+              <stringProp name="EXPECTED_VALUE">DISABLED</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -308,13 +308,13 @@
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">joao</stringProp>
+          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">joao</stringProp>
+          <stringProp name="username">filipe</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">

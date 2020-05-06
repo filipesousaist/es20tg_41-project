@@ -3,6 +3,8 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.discussion;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuestionAnswer;
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
@@ -25,6 +27,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.CommentRepo
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository;
@@ -35,9 +38,12 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.util.Collection;
 import java.util.List;
 import java.sql.SQLException;
 import java.util.Optional;
+
+
 import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
@@ -80,11 +86,17 @@ public class DiscussionService {
 
         User user = getUser(clarificationRequestDto.getUserId());
 
-        checkClarificationRequest(clarificationRequestDto.getTitle(), ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMTPY);
+        checkClarificationRequest(clarificationRequestDto.getTitle(), ErrorMessage.CLARIFICATION_REQUEST_TITLE_IS_EMPTY);
 
-        checkClarificationRequest(clarificationRequestDto.getText(), ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMTPY);
+        checkClarificationRequest(clarificationRequestDto.getText(), ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMPTY);
 
-        List<Question> questions = userService.getAnsweredQuestions(clarificationRequestDto.getUserId());
+        List<Question> questions = user.getQuizAnswers().stream()
+                .map(QuizAnswer::getQuestionAnswers)
+                .flatMap(Collection::stream)
+                .map(QuestionAnswer::getQuizQuestion)
+                .map(QuizQuestion::getQuestion)
+                .collect(Collectors.toList());
+
 
         checkQuestionAnswer(question, questions);
 
@@ -141,13 +153,13 @@ public class DiscussionService {
             throw new TutorException(ErrorMessage.QUESTION_ANSWER_NOT_FOUND);
     }
 
-    private void checkClarificationRequest(String title, ErrorMessage clarificationRequestTitleIsEmtpy) {
+    private void checkClarificationRequest(String title, ErrorMessage clarificationRequestTitleIsEmpty) {
         if (title == null || title.trim().equals(""))
-            throw new TutorException(clarificationRequestTitleIsEmtpy);
+            throw new TutorException(clarificationRequestTitleIsEmpty);
     }
 
-    private CourseExecution getCourseExecution(Integer courseExectutionId) {
-        return this.courseExecutionRepository.findById(courseExectutionId)
+    private CourseExecution getCourseExecution(Integer courseExecutionId) {
+        return this.courseExecutionRepository.findById(courseExecutionId)
                     .orElseThrow(() -> new TutorException(ErrorMessage.COURSE_EXECUTION_NOT_FOUND));
     }
 
