@@ -8,16 +8,17 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuest
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
 @Entity
 @Table(name = "student_questions")
 public class StudentQuestion {
+    public enum Status {
+        PROPOSED, ACCEPTED, REJECTED
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +32,13 @@ public class StudentQuestion {
     @JoinColumn(name = "question_id")
     private Question question;
 
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.PROPOSED;
+
     @OneToMany
     private Set<QuestionEvaluation> questionEvaluations = new HashSet<>();
 
-    public static Logger logger=Logger.getLogger("global");
-
-    public StudentQuestion(){
+    public StudentQuestion() {
     }
 
     public StudentQuestion(Course course, User user, StudentQuestionDto studentQuestionDto){
@@ -77,7 +79,38 @@ public class StudentQuestion {
         this.question = question;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public Set<QuestionEvaluation> getQuestionEvaluations() { return questionEvaluations; }
 
     public void addQuestionEvaluation(QuestionEvaluation questionEvaluation) { questionEvaluations.add(questionEvaluation); }
+
+    public void makeAvailable() {
+        if (status == Status.ACCEPTED)
+            question.setStatus(Question.Status.AVAILABLE);
+        else
+            throw new TutorException(STUDENT_QUESTION_NEEDS_ACCEPTANCE);
+    }
+
+    public void updateByTeacher(StudentQuestionDto studentQuestionDto) {
+        if (status == Status.ACCEPTED)
+            this.question.update(studentQuestionDto.getQuestionDto());
+        else
+            throw new TutorException(STUDENT_QUESTION_NEEDS_ACCEPTANCE);
+    }
+
+    public void updateByStudent(StudentQuestionDto studentQuestionDto) {
+        if (status == Status.REJECTED) {
+            this.question.update(studentQuestionDto.getQuestionDto());
+            status = Status.PROPOSED;
+        }
+        else
+            throw new TutorException(STUDENT_QUESTION_IS_NOT_REJECTED);
+    }
 }

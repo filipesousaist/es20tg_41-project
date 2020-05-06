@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
@@ -17,9 +18,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.repository.Stude
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
-
-import java.time.LocalDateTime
-
 
 @DataJpaTest
 class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
@@ -50,7 +48,7 @@ class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
     def courseExecution
     def user
 
-    def setup(){
+    def setup() {
         course = new Course(COURSE_NAME, Course.Type.TECNICO)
         courseRepository.save(course)
 
@@ -72,8 +70,8 @@ class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
         questionDto.setKey(1)
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
-        questionDto.setStatus(Question.Status.PROPOSED.name())
-        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter));
+        questionDto.setStatus(Question.Status.DISABLED.name())
+        questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()));
         and: 'a optionDto'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)

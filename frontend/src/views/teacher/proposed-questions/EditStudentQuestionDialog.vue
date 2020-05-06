@@ -1,8 +1,8 @@
 <template>
   <v-dialog
     :value="dialog"
-    @input="$emit('close-dialog')"
-    @keydown.esc="$emit('close-dialog')"
+    @input="$emit('dialog', false)"
+    @keydown.esc="$emit('dialog', false)"
     max-width="75%"
     max-height="80%"
     persistent
@@ -10,11 +10,7 @@
     <v-card max-height="30%">
       <v-card-title>
         <span class="headline">
-          {{
-            editStudentQuestion && editStudentQuestion.id === null
-              ? 'New Question'
-              : 'Edit Question'
-          }}
+          Edit Student Question
         </span>
       </v-card-title>
 
@@ -112,14 +108,9 @@ export default class EditStudentQuestionDialog extends Vue {
 
     if (this.editStudentQuestion) {
       try {
-        const result =
-          this.editStudentQuestion.id != null
-            ? await RemoteServices.updateStudentQuestion(
-                this.editStudentQuestion
-              )
-            : await RemoteServices.createStudentQuestion(
-                this.editStudentQuestion
-              );
+        const result = await RemoteServices.updateStudentQuestion(
+          this.editStudentQuestion
+        );
         this.$emit('save-student-question', result);
       } catch (error) {
         await this.$store.dispatch('error', error);

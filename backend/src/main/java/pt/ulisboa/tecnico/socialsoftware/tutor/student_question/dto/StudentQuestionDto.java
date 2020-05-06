@@ -7,33 +7,47 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
 import java.io.Serializable;
 
 public class StudentQuestionDto implements Serializable {
-
     private Integer id;
-
+    private String status;
     private QuestionDto questionDto;
-
     private UserDto userDto;
 
-
-    public StudentQuestionDto(){
+    public StudentQuestionDto() {
     }
 
     public StudentQuestionDto(StudentQuestion studentQuestion) {
-
         this.id = studentQuestion.getId();
+
+        this.status = studentQuestion.getStatus().name();
 
         this.questionDto = new QuestionDto(studentQuestion.getQuestion());
 
         this.userDto = new UserDto(studentQuestion.getUser());
     }
 
-    public Integer getId() { return id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public void setId(Integer id) { this.id = id; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public UserDto getUserDto() { return userDto; }
+    public String getStatus() {
+        return status;
+    }
 
-    public void setUserDto(UserDto userDto) { this.userDto = userDto;}
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public UserDto getUserDto() {
+        return userDto;
+    }
+
+    public void setUserDto(UserDto userDto) {
+        this.userDto = userDto;
+    }
 
     public QuestionDto getQuestionDto() {
         return questionDto;
@@ -42,6 +56,5 @@ public class StudentQuestionDto implements Serializable {
     public void setQuestionDto(QuestionDto questionDto) {
         this.questionDto = questionDto;
     }
-
 }
 
