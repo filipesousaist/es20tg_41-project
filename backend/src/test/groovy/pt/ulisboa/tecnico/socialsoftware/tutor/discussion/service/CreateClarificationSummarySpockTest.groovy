@@ -183,7 +183,7 @@ class CreateClarificationSummarySpockTest extends Specification{
 
     def "Create a summary for a clarification that doesn't exist" () {
         given:"A clarificationDto"
-        clarification.setSummary(CLARIFICATION_SUMMARY)
+        clarificationDto.setSummary(CLARIFICATION_SUMMARY)
 
         when:
         discussionService.createClarificationSummary(-1, clarificationDto)

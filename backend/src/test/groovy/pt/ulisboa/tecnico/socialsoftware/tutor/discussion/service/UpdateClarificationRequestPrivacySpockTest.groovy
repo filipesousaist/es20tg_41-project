@@ -2,6 +2,9 @@ package groovy.pt.ulisboa.tecnico.socialsoftware.tutor.discussion.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.AnswerService
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuestionAnswer
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.repository.QuizAnswerRepository
@@ -15,6 +18,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationReque
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
+import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
@@ -23,6 +27,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.repository.QuizQuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.repository.QuizRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.statement.StatementService
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
@@ -38,7 +43,6 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
 
     static final String QUESTION_TITLE = "question1"
     static final String QUESTION_CONTENT = "o que é uma classe?"
-    static final String OPTION_CONTENT = "Resposta A"
 
     static final String NAME = "Joao"
     static final String USERNAME = "Joao123"
@@ -46,10 +50,6 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
 
     static final String TEACHER_NAME_1 = "António Rito"
     static final String TEACHER_USERNAME_1 = "António Rito"
-    static final String TEACHER_NAME_2 = "Teacher Name"
-    static final String TEACHER_USERNAME_2 = "Teacher Username"
-    static final String CLARIFICATION_TEXT = "A opção correta é 1), porque sim."
-    static final String CLARIFICATION_SUMMARY = "Depois de discutido com o aluno, chegou-se à conclusão que a opção 1 é a correta."
 
     @Autowired
     DiscussionService discussionService
@@ -159,7 +159,7 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
 
         then:"The clarification request is now public"
         def result = clarificationRequestRepository.findAll().get(0)
-        result.getPrivacy() == false
+        !result.getPrivacy()
     }
 
     def "Turn a clarification Request private" () {
@@ -171,7 +171,7 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
 
         then:"The clarification request is now public"
         def result = clarificationRequestRepository.findAll().get(0)
-        result.getPrivacy() == true
+        result.getPrivacy()
     }
 
     def "Try to change the privacy of a clarification request that doesn't exist" () {
@@ -187,5 +187,45 @@ class UpdateClarificationRequestPrivacySpockTest extends Specification {
 
         and: "the clarification request privacy didn't change"
         clarificationRequestRepository.findAll().get(0).getPrivacy() != requestDto.getPrivacy()
+    }
+
+    @TestConfiguration
+    static class ServiceImplTestContextConfiguration {
+
+        @Bean
+        UserService userService() {
+            return new UserService()
+        }
+
+        @Bean
+        DiscussionService discussionService() {
+            return new DiscussionService()
+        }
+
+        @Bean
+        QuizService quizService() {
+            return new QuizService()
+        }
+
+        @Bean
+        QuestionService questionService() {
+            return new QuestionService()
+        }
+
+        @Bean
+        StatementService statementService() {
+            return new StatementService()
+        }
+
+        @Bean
+        AnswerService answerService() {
+            return new AnswerService()
+        }
+
+        @Bean
+        AnswersXmlImport answersXmlImport() {
+            return new AnswersXmlImport()
+        }
+
     }
 }

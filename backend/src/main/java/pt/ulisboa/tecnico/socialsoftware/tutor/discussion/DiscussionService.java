@@ -95,6 +95,19 @@ public class DiscussionService {
         return new ClarificationRequestDto(clarificationRequest);
     }
 
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ClarificationRequestDto updateClarificationRequestPrivacy(int clarificationRequestId, ClarificationRequestDto clarificationRequestDto) {
+
+        ClarificationRequest clarificationRequest = getClarificationRequest(clarificationRequestId);
+
+        clarificationRequest.setPrivacy(clarificationRequestDto.getPrivacy());
+
+        return new ClarificationRequestDto(clarificationRequest);
+    }
+
     private User getUser(Integer id) {
         Optional<User> user = this.userRepository.findById(id);
         return user.orElseThrow(() -> new TutorException(USER_NOT_FOUND,id));

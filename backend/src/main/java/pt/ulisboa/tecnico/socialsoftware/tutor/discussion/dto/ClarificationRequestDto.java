@@ -19,6 +19,8 @@ public class ClarificationRequestDto implements Serializable {
 
     private ClarificationDto clarification;
 
+    private boolean privacy;
+
     private String creationDate;
 
     public ClarificationRequestDto(){}
@@ -32,6 +34,7 @@ public class ClarificationRequestDto implements Serializable {
         if (clarificationRequest.getClarification() != null){
             this.clarification = new ClarificationDto(clarificationRequest.getClarification());
         }
+        this.privacy = clarificationRequest.getPrivacy();
         this.creationDate = DateHandler.toISOString(clarificationRequest.getCreationDate());
     }
 
@@ -83,6 +86,14 @@ public class ClarificationRequestDto implements Serializable {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public boolean getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(boolean privacy) {
+        this.privacy = privacy;
     }
 
     public String getCreationDate() {
