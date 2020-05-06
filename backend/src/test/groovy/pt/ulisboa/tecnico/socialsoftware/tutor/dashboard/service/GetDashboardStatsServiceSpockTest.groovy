@@ -62,11 +62,13 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         student = new User(STUDENT_NAME, STUDENT_USERNAME, 1, User.Role.STUDENT)
         userRepository.save(student)
         courseExecution.addUser(student)
+        student.addCourse(courseExecution)
 
         // Create teacher and add him to course
         teacher = new User(TEACHER_NAME, TEACHER_USERNAME, 2, User.Role.TEACHER)
         userRepository.save(teacher)
         courseExecution.addUser(teacher)
+        teacher.addCourse(courseExecution)
     }
 
     def "get dashboard stats and check if stats are at initial state"() {
@@ -86,12 +88,16 @@ class GetDashboardStatsServiceSpockTest extends Specification {
     }
 
     def "propose and accept questions, and check stats"() {
-        given: "3 student questions are created, one is accepted, and other is rejected"
+        given: "4 student questions are created"
         def studentQuestionId1 = createStudentQuestion(1).getId()
         def studentQuestionId2 = createStudentQuestion(2).getId()
-        createStudentQuestion(3)
+        def studentQuestionId3 = createStudentQuestion(3).getId()
+        createStudentQuestion(4)
+        and: "some are accepted and others rejected"
         createQuestionEvaluation(studentQuestionId1, true)
         createQuestionEvaluation(studentQuestionId2, false)
+        createQuestionEvaluation(studentQuestionId3, true) // first accept
+        createQuestionEvaluation(studentQuestionId3, false) // then reject the same one
 
         when:
         def result = dashboardService.getDashboardStats(courseExecution.getId())
@@ -100,23 +106,22 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         result != null
         def myDashboardStats = result.get(0)
         myDashboardStats != null
-        myDashboardStats.getNumProposedQuestions() == 3
-        myDashboardStats.getNumAcceptedQuestions() == 1
+        myDashboardStats.getNumProposedQuestions() == 4
+        myDashboardStats.getNumAcceptedQuestions() == 1 // only student question 1
     }
 
     // Auxiliary methods:
 
     def createStudentQuestion(key) {
-        given: "a studentQuestionDto"
         def studentQuestionDto = new StudentQuestionDto()
-        and: "a questionDto"
+
         def questionDto = new QuestionDto()
         questionDto.setKey(key)
         questionDto.setTitle("QUESTION_TITLE")
         questionDto.setContent("QUESTION_CONTENT")
         questionDto.setStatus(Question.Status.DISABLED.name())
         questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()));
-        and: 'a optionDto'
+
         def optionDto = new OptionDto()
         optionDto.setContent("OPTION_CONTENT")
         optionDto.setCorrect(true)

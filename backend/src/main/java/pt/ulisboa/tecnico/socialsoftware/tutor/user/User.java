@@ -529,4 +529,12 @@ public class User implements UserDetails, DomainEntity {
 
         return result;
     }
+
+    public int getNumProposedQuestions() {
+        return studentQuestions.size();
+    }
+
+    public int getNumAcceptedQuestions() {
+        return (int) studentQuestions.stream().filter(StudentQuestion::isAccepted).count();
+    }
 }
