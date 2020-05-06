@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.question.api;
 
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -139,14 +140,11 @@ public class QuestionController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/questions/answered_questions")
-    public List<QuestionDto> getUserAnsweredQuestions(Principal principal){
-        User user = (User) ((Authentication) principal).getPrincipal();
+    @GetMapping("/questions/{userId}/answered_questions")
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public List<QuestionDto> getUserAnsweredQuestions(@PathVariable Integer userId){
 
-        if (user == null) {
-            throw new TutorException(AUTHENTICATION_ERROR);
-        }
-        return this.questionService.getAnsweredQuestions(user.getId());
+        return this.questionService.getAnsweredQuestions(userId);
     }
 
     private Path getTargetLocation(String url) {
