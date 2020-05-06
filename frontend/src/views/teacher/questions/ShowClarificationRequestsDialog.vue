@@ -40,6 +40,22 @@
                     {{ request.clarification.summary }}
                   </p>
                 </v-flex>
+                <div v-if="request.privacy">
+                  <v-btn
+                    color="blue lighten-1"
+                    @click="updateClarificationRequestPrivacy(request)"
+                    data-cy="requestMakePublic"
+                    >Make Public</v-btn
+                  >
+                </div>
+                <div v-else>
+                  <v-btn
+                    color="blue darken-1"
+                    @click="updateClarificationRequestPrivacy(request)"
+                    data-cy="requestMakePrivate"
+                    >Make Private</v-btn
+                  >
+                </div>
               </div>
               <div v-else>
                 <v-text-field
@@ -161,6 +177,24 @@ export default class ClarificationRequestsDialog extends Vue {
         this.$emit('new-clarification-summary', result);
         clarification.summary = result.summary;
         this.currentClarification.summary = '';
+      } catch (error) {
+        await this.$store.dispatch('error', 'Error' + error);
+      }
+    }
+  }
+
+  async updateClarificationRequestPrivacy(request: ClarificationRequest) {
+    if (this.currentClarification) {
+      this.currentClarification.userId = this.$store.getters.getUser.id;
+      let currentRequest: ClarificationRequest = new ClarificationRequest();
+      currentRequest.privacy = !request.privacy;
+      try {
+        const result = await RemoteServices.updateClarificationRequestPrivacy(
+          currentRequest,
+          request.id
+        );
+        this.$emit('updated-clarification-request-privacy', result);
+        request.privacy = result.privacy;
       } catch (error) {
         await this.$store.dispatch('error', 'Error' + error);
       }

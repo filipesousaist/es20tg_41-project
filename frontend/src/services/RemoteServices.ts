@@ -659,6 +659,23 @@ export default class RemoteServices {
       });
   }
 
+  static async updateClarificationRequestPrivacy(
+    request: ClarificationRequest,
+    clarificationRequestId: number | undefined
+  ): Promise<ClarificationRequest> {
+    return httpClient
+      .put(
+        '/clarificationRequests/' + clarificationRequestId + '/privacy',
+        request
+      )
+      .then(response => {
+        return new ClarificationRequest(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
   static async createClarificationSummary(
     clarification: Clarification,
     clarificationId: number | undefined
