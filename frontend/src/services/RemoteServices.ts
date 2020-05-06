@@ -24,6 +24,9 @@ import Comment from '@/models/discussion/Comment';
 import StudentQuestion from '@/models/student_question/StudentQuestion';
 import QuestionEvaluation from '@/models/student_question/QuestionEvaluation';
 
+import DashboardStats from '@/models/dashboard/DashboardStats';
+
+
 const httpClient = axios.create();
 httpClient.defaults.timeout = 10000;
 httpClient.defaults.baseURL = process.env.VUE_APP_ROOT_API;
@@ -95,6 +98,21 @@ export default class RemoteServices {
       )
       .then(response => {
         return new StudentStats(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async getDashboardStats(): Promise<DashboardStats[]> {
+    return httpClient
+      .get(
+        `/executions/${Store.getters.getCurrentCourse.courseExecutionId}/dashboard`
+      )
+      .then(response => {
+        return response.data.map((dashboardStats: DashboardStats) => {
+          return new DashboardStats(dashboardStats);
+        });
       })
       .catch(async error => {
         throw Error(await this.errorMessage(error));
