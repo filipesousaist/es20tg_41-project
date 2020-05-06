@@ -72,7 +72,7 @@
       dark
       @click="createClarificationRequest"
       v-if="!existsClarificationRequest"
-      class="m4-4"
+      class="mr-4"
       data-cy="requestButton"
     >Request Clarification</v-btn>
 
