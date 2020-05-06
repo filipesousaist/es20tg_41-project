@@ -72,12 +72,10 @@
             <v-divider></v-divider>
           </v-card-text>
 
-          <div v-if="!!request.clarification">
             <comment-view
               v-model="CommentView"
-              :clarification="request.clarification"
+              :clarificationRequest="request"
             />
-          </div>
         </span>
         <v-card-actions>
           <v-spacer />

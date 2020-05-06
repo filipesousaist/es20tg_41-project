@@ -5,7 +5,7 @@
                 <h2>Followup Comments</h2>
               </v-flex>
 
-            <div v-for="comment in clarification.commentList" :key="comment.id">
+            <div v-for="comment in clarificationRequest.clarification.commentList" :key="comment.id">
                  <v-flex xs24 sm12 md8>
                   <b>{{ comment.username}}:</b>{{ comment.text }}
                 </v-flex>
@@ -13,6 +13,7 @@
 
             <v-flex xs24 sm12 md8>
             <v-text-field
+                
                 label="Text"
                 v-model="comment.text"
                 data-cy="commentText"
@@ -41,8 +42,9 @@ import Comment from '@/models/discussion/Comment';
 
 @Component
 export default class CommentView extends Vue{
-    @Prop({ type: Clarification, required: true }) clarification! : Clarification|null;
+    @Prop({ type: ClarificationRequest, required: true }) clarificationRequest! : ClarificationRequest|null;
 
+    // TODO Only Render input box if the clarificationRequest does not have a summary
 
     comment! : Comment;
 
@@ -60,13 +62,13 @@ export default class CommentView extends Vue{
         return;
     }
 
-    if(!!this.comment && !!this.clarification){
+    if(!!this.comment && this.clarificationRequest && !!this.clarificationRequest.clarification){
       try{
-        result = await RemoteServices.createComment(this.comment, this.clarification.id);
+        result = await RemoteServices.createComment(this.comment, this.clarificationRequest.clarification.id);
         this.$emit('new-clarification-request', result);
         this.comment.username = this.$store.getters.getUser.username;
-        this.clarification.commentList.push(this.comment);
-        console.log(this.clarification);
+        this.clarificationRequest.clarification.commentList.push(this.comment);
+        console.log(this.clarificationRequest.clarification);
         this.comment = new Comment();
         this.comment.text = '';
       }catch(error){
