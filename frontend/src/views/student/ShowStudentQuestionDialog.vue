@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import StudentQuestion from '@/models/management/StudentQuestion';
+import StudentQuestion from '@/models/student_question/StudentQuestion';
 import ShowStudentQuestion from '@/views/student/ShowStudentQuestion.vue';
 
 @Component({

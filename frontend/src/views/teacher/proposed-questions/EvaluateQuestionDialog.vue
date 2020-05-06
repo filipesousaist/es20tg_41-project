@@ -59,8 +59,8 @@
 <script lang="ts">
 import { Component, Model, Prop, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
-import StudentQuestion from '@/models/management/StudentQuestion';
-import QuestionEvaluation from '@/models/management/QuestionEvaluation';
+import StudentQuestion from '@/models/student_question/StudentQuestion';
+import QuestionEvaluation from '@/models/student_question/QuestionEvaluation';
 
 @Component
 export default class EvaluateQuestionDialog extends Vue {

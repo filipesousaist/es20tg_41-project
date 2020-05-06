@@ -82,7 +82,7 @@
 </template>
 <script lang="ts">
 import { Component, Model, Prop, Vue } from 'vue-property-decorator';
-import StudentQuestion from '@/models/management/StudentQuestion';
+import StudentQuestion from '@/models/student_question/StudentQuestion';
 import RemoteServices from '@/services/RemoteServices';
 
 @Component
