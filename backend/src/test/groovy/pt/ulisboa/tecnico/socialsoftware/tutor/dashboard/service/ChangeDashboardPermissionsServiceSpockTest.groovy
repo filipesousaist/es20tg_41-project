@@ -53,11 +53,11 @@ class ChangeDashboardPermissionsServiceSpockTest extends Specification {
         when: "permissions are got from the database, changed and resubmitted"
         def dashboardPermissionsDto = dashboardService.getDashboardPermissions(studentId)
         dashboardPermissionsDto.setShowNumProposedQuestions(false)
-        dashboardPermissionsDto = dashboardService.setDashboardPermissions(studentId, dashboardPermissionsDto)
+        dashboardPermissionsDto = dashboardService.updateDashboardPermissions(studentId, dashboardPermissionsDto)
 
         then:
-        dashboardPermissionsDto.getShowNumProposedQuestions() == false
-        dashboardPermissionsDto.getShowNumAcceptedQuestions() == true
+        !dashboardPermissionsDto.getShowNumProposedQuestions()
+        dashboardPermissionsDto.getShowNumAcceptedQuestions()
     }
 
     @TestConfiguration

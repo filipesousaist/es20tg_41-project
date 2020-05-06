@@ -446,8 +446,6 @@ public class User implements UserDetails, DomainEntity {
     public void addTournamentCreatedByMe(Tournament tournament) {this.tournamentsCreatedByMe.add(tournament);}
 
     public DashboardStats getDashboardStats() {
-        System.out.println("null dashboardStats: " + (dashboardStats == null));
-        System.out.println("null role: " + (role == null));
         if (dashboardStats == null && role.equals(Role.STUDENT))
             dashboardStats = new DashboardStats(this);
         return dashboardStats;

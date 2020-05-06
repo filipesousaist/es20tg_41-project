@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.domain;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.dto.DashboardPermissionsDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
@@ -79,5 +80,10 @@ public class DashboardStats {
 
     public void setShowNumAcceptedQuestions(boolean showNumAcceptedQuestions) {
         this.showNumAcceptedQuestions = showNumAcceptedQuestions;
+    }
+
+    public void updatePermissions(DashboardPermissionsDto dashboardPermissionsDto) {
+        this.showNumProposedQuestions = dashboardPermissionsDto.getShowNumProposedQuestions();
+        this.showNumAcceptedQuestions = dashboardPermissionsDto.getShowNumAcceptedQuestions();
     }
 }
