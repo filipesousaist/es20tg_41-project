@@ -15,26 +15,31 @@
               label="Name of the tournament"
               data-cy="tournamentName"
             />
-            <VueCtkDateTimePicker
-              label="Select beginning"
-              v-model="currentTournament.beginningTime"
-              data-cy="Selectbeginning"
-              format="YYYY-MM-DDTHH:mm:ssZ"
-            >
-            </VueCtkDateTimePicker>
-            <VueCtkDateTimePicker
-              class="text-left"
-              label="Select ending"
-              v-model="currentTournament.endingTime"
-              data-cy="Select ending"
-              format="YYYY-MM-DDTHH:mm:ssZ"
-            >
-            </VueCtkDateTimePicker>
             <v-text-field
               v-model="currentTournament.numberOfQuestions"
               label="Number of questions (Maximum of 25)"
               data-cy="Number of questions"
             />
+            <v-row>
+              <v-col>
+                <VueCtkDateTimePicker
+                  label="Select beginning"
+                  v-model="currentTournament.beginningTime"
+                  data-cy="Selectbeginning"
+                  format="YYYY-MM-DDTHH:mm:ssZ"
+                >
+                </VueCtkDateTimePicker>
+              </v-col>
+              <v-col>
+                <VueCtkDateTimePicker
+                  label="Select ending"
+                  v-model="currentTournament.endingTime"
+                  data-cy="Select ending"
+                  format="YYYY-MM-DDTHH:mm:ssZ"
+                >
+                </VueCtkDateTimePicker>
+              </v-col>
+            </v-row>
             <v-row>
               <v-col cols="12" sm="12">
                 <v-select

@@ -1,5 +1,4 @@
 import Topic from '../management/Topic';
-import { Quiz } from '@/models/management/Quiz';
 import StatementQuiz from '@/models/statement/StatementQuiz';
 import { ISOtoString } from '@/services/ConvertDateService';
 
@@ -12,7 +11,7 @@ export default class Tournament {
   creatorName!: string;
   name!: string;
 
-  quiz: StatementQuiz | null = null;
+  quizDto: StatementQuiz | null = null;
   topics: Topic[] = [];
   studentsUsername: string[] = [];
 
@@ -28,7 +27,7 @@ export default class Tournament {
       console.log(jsonObj.creatorName);
       this.name = jsonObj.name;
       if (jsonObj.quiz) {
-        this.quiz = new StatementQuiz(jsonObj.quiz);
+        this.quiz = new StatementQuiz(jsonObj.quizDto);
       }
       if (jsonObj.topics) {
         this.topics = jsonObj.topics.map((topic: Topic) => new Topic(topic));

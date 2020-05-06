@@ -64,11 +64,6 @@ public class TournamentService {
         }
         LocalDateTime begin = toLocalDateTime(tournamentDto.getBeginningTime());
         LocalDateTime end = toLocalDateTime(tournamentDto.getEndingTime());
-        System.out.println(tournamentDto);
-        System.out.println(tournamentDto.getBeginningTime());
-        System.out.println(tournamentDto.getEndingTime());
-        System.out.println(tournamentDto.getCreatorName());
-        System.out.println(begin + " " +  end);
         int numberOfQuestions = tournamentDto.getNumberOfQuestions();
 
         CourseExecution courseEx = courseExecutionRepository.findById(courseExId).orElseThrow(() -> new TutorException(INVALID_COURSE_EXECUTION));
@@ -131,6 +126,7 @@ public class TournamentService {
 
         if (tournament.getTournamentQuiz() == null && tournament.getStudentsEnrolled().size() >= 1) {
             createTournamentQuiz(tournament);
+            System.out.println(tournament.getTournamentQuiz());
         }
 
         return new TournamentDto(tournament);
