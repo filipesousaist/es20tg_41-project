@@ -80,7 +80,7 @@ BEGIN
 for r in 1..500 loop
 
 	INSERT INTO questions (id, title, content) VALUES (question_id ,&apos;question title&apos;, &apos;question content&apos;);
-	INSERT INTO clarification_requests (id, question_id, user_id, title,text) VALUES (clarification_request_id, question_id, 676, &apos;Requst title&apos;, &apos;Request text&apos;);
+	INSERT INTO clarification_requests (id, question_id, user_id, title,text, private) VALUES (clarification_request_id, question_id, 676, &apos;Requst title&apos;, &apos;Request text&apos;, &apos;false&apos;);
 	INSERT INTO clarifications (id, user_id, clarification_request_id, text) VALUES (clarification_id, 677, clarification_request_id, &apos;Passa-se isto&apos;);
 	INSERT INTO users_clarification_requests (user_id, clarification_requests_id) VALUES (676, clarification_request_id);
 

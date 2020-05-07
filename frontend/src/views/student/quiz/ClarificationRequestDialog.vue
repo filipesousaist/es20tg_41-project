@@ -9,7 +9,7 @@
     <v-card>
       <v-card-title>
         <span class="headline">
-          New Clarification Request for question {{ question.questionId }}
+          New Clarification Request
         </span>
       </v-card-title>
 
@@ -55,7 +55,7 @@
 import { Component, Model, Prop, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import ClarificationRequest from '@/models/discussion/ClarificationRequest';
-import StatementQuestion from '../../../models/statement/StatementQuestion';
+import StatementQuestion from '@/models/statement/StatementQuestion';
 import { Store } from 'vuex';
 
 @Component

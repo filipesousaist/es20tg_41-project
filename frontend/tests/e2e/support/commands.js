@@ -360,6 +360,12 @@ Cypress.Commands.add('createClarification', text => {
   cy.get('[data-cy="submitClarification"]').click();
 });
 
+Cypress.Commands.add('createClarificationSummary', text => {
+  cy.get('[data-cy="clarificationRequests"]').click();
+  if (!!text) cy.get('[data-cy="clarificationSummary"]').type(text);
+  cy.get('[data-cy="submitSummary"]').click();
+});
+
 function grandparent(element, n) {
   for (let i = 0; i < n; i++) element = element.parent();
   return element;

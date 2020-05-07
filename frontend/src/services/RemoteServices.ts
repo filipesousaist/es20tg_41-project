@@ -244,6 +244,19 @@ export default class RemoteServices {
       });
   }
 
+  static async getAnsweredQuestions(): Promise<Question[]> {
+    return httpClient
+      .get(`/executions/${Store.getters.getCurrentCourse.courseExecutionId}/questions/answered`)
+      .then(response => {
+        return response.data.map((question: any) => {
+          return new Question(question);
+        });
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
   static async exportCourseQuestions(): Promise<Blob> {
     return httpClient
       .get(
@@ -719,6 +732,40 @@ export default class RemoteServices {
       .post(
         '/clarificationRequests/' + clarificationRequestId + '/clarifications',
         clarification
+      )
+      .then(response => {
+        return new Clarification(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async updateClarificationRequestPrivacy(
+    request: ClarificationRequest,
+    clarificationRequestId: number | undefined
+  ): Promise<ClarificationRequest> {
+    return httpClient
+      .put(
+        '/clarificationRequests/' + clarificationRequestId + '/privacy',
+        request
+      )
+      .then(response => {
+        return new ClarificationRequest(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async createClarificationSummary(
+    clarification: Clarification,
+    clarificationId: number | undefined
+  ): Promise<Clarification> {
+    return httpClient
+      .put(
+         '/clarification/' + clarificationId,
+         clarification
       )
       .then(response => {
         return new Clarification(response.data);

@@ -3,6 +3,9 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.discussion;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionUsageException;
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuestionAnswer;
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
@@ -25,6 +28,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.CommentRepo
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository;
@@ -35,9 +39,11 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.util.Collection;
 import java.util.List;
 import java.sql.SQLException;
 import java.util.Optional;
+
 
 import java.util.stream.Collectors;
 
@@ -85,14 +91,43 @@ public class DiscussionService {
 
         checkClarificationRequest(clarificationRequestDto.getText(), ErrorMessage.CLARIFICATION_REQUEST_TEXT_IS_EMPTY);
 
-        List<Question> questions = userService.getAnsweredQuestions(clarificationRequestDto.getUserId());
+        List<Question> questions = user.getQuizAnswers().stream()
+                .map(QuizAnswer::getQuestionAnswers)
+                .flatMap(Collection::stream)
+                .map(QuestionAnswer::getQuizQuestion)
+                .map(QuizQuestion::getQuestion)
+                .collect(Collectors.toList());
+
 
         checkQuestionAnswer(question, questions);
 
         checkForDuplicateClarificationRequest(question, user);
 
         ClarificationRequest clarificationRequest = createClarificationRequest(clarificationRequestDto, question, user);
+        clarificationRequest.setPrivacy(true);
         clarificationRequest.setCreationDate(DateHandler.now());
+        return new ClarificationRequestDto(clarificationRequest);
+    }
+
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ClarificationRequestDto updateClarificationRequestPrivacy(int clarificationRequestId, ClarificationRequestDto clarificationRequestDto) {
+
+        ClarificationRequest clarificationRequest = getClarificationRequest(clarificationRequestId);
+
+        clarificationRequest.setPrivacy(clarificationRequestDto.getPrivacy());
+
+        Clarification clarification;
+
+        if ((clarification = clarificationRequest.getClarification()) != null) {
+            if (clarification.getSummary() == null)
+                throw new TutorException(ErrorMessage.CLARIFICATION_HAS_NO_SUMMARY);
+        }
+        else
+            throw new TutorException(CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION);
+
         return new ClarificationRequestDto(clarificationRequest);
     }
 
@@ -180,7 +215,17 @@ public class DiscussionService {
         }
 
         else if (clarificationDto.getText().trim().equals("")){
-            throw  new TutorException(ErrorMessage.CLARIFICATION_TEXT_IS_EMPTY);
+            throw new TutorException(ErrorMessage.CLARIFICATION_TEXT_IS_EMPTY);
+        }
+    }
+
+    private void checkClarificationSummary(ClarificationDto clarificationDto) {
+        if(clarificationDto.getSummary() == null) {
+            throw new TutorException(CLARIFICATION_NOT_CONSISTENT, "Summary");
+        }
+
+        else if (clarificationDto.getSummary().trim().equals("")) {
+            throw new TutorException(ErrorMessage.CLARIFICATION_SUMMARY_IS_EMPTY);
         }
     }
 
@@ -189,6 +234,21 @@ public class DiscussionService {
             throw new TutorException(ErrorMessage.TEACHER_COURSE_EXECUTION_MISMATCH,
                     teacher.getId(), clarificationRequest.getQuestion().getCourse().getId());
         }
+    }
+
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ClarificationDto createClarificationSummary(int clarificationId, ClarificationDto clarificationDto){
+
+        Clarification clarification = getClarification(clarificationId);
+
+        checkClarificationSummary(clarificationDto);
+
+        clarification.setSummary(clarificationDto.getSummary());
+
+        return new ClarificationDto(clarification);
     }
 
     private List<Course> getCourses(User teacher) {
@@ -203,6 +263,11 @@ public class DiscussionService {
                     .orElseThrow(() -> new TutorException(ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND));
     }
 
+    private Clarification getClarification(Integer clarificationId) {
+        return clarificationRepository.findById(clarificationId)
+                .orElseThrow(() -> new TutorException(CLARIFICATION_NOT_FOUND));
+    }
+
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public CourseDto findClarificationRequestCourse(Integer clarificationRequestId){
@@ -215,7 +280,7 @@ public class DiscussionService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public ClarificationDto getClarification(Integer clarificationRequestId){
+    public ClarificationDto getClarificationByRequest(Integer clarificationRequestId){
         ClarificationRequest clarificationRequest = clarificationRequestRepository.findById(clarificationRequestId)
                 .orElseThrow(() -> new TutorException(CLARIFICATION_REQUEST_NOT_FOUND));
 
@@ -266,5 +331,22 @@ public class DiscussionService {
         String text = commentDto.getText();
         if(text == null || text.trim().equals(""))
             throw new TutorException(COMMENT_EMPTY_TEXT);
+    }
+
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<ClarificationRequestDto> getPublicClarificationRequests(Integer questionId, Integer userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
+        return questionRepository.findById(questionId)
+                .orElseThrow(() -> new TutorException(QUESTION_NOT_FOUND, questionId))
+                .getClarificationRequests()
+                .stream()
+                .filter(cr -> !cr.getPrivacy())
+                .filter(cr -> !cr.getStudent().getId().equals(user.getId()))
+                .map(ClarificationRequestDto::new)
+                .collect(Collectors.toList());
+
     }
 }

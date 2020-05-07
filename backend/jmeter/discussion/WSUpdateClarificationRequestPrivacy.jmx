@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.2.1">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Web Service createClarifications" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Web Service updateClarificationRequestPrivacy" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
@@ -67,7 +67,10 @@
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">INSERT INTO clarification_requests(id, text, title, question_id, user_id, private) VALUES (1, &apos;Não sei o que se passa&apos;,&apos;ola&apos;, 1339, 676, &apos;false&apos;);</stringProp>
+          <stringProp name="query">INSERT INTO clarification_requests (id, private, text, title, question_id, user_id) VALUES (1, true,&apos;Não sei o que se passa&apos;, &apos;ola&apos;, 1339, 676);
+INSERT INTO users_clarification_requests VALUES (676, 1);
+INSERT INTO clarifications (id, text, summary, clarification_request_id, user_id) VALUES (1, &apos;Passa-se isto&apos;, &apos;Chegou-se a esta conclusão&apos;, 1, 677);
+INSERT INTO users_clarifications VALUES(677,1);</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
@@ -171,16 +174,14 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request to create clarification" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-	&quot;commentList&quot;: [],&#xd;
-	&quot;text&quot;: &quot;Passa-se isto&quot;,&#xd;
-	&quot;userId&quot;:&quot;677&quot;&#xd;
+  &quot;privacy&quot;: false&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -191,8 +192,8 @@
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/clarificationRequests/1/clarifications</stringProp>
-            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <stringProp name="HTTPSampler.path">/clarificationRequests/1/privacy</stringProp>
+            <stringProp name="HTTPSampler.method">PUT</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -202,18 +203,9 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert text" enabled="true">
-              <stringProp name="JSON_PATH">$.text</stringProp>
-              <stringProp name="EXPECTED_VALUE">Passa-se isto</stringProp>
-              <boolProp name="JSONVALIDATION">true</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">false</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert user username" enabled="true">
-              <stringProp name="JSON_PATH">$.username</stringProp>
-              <stringProp name="EXPECTED_VALUE">Demo-Teacher</stringProp>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert privacy" enabled="true">
+              <stringProp name="JSON_PATH">$.privacy</stringProp>
+              <stringProp name="EXPECTED_VALUE">false</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -316,7 +308,7 @@
           <stringProp name="checkQuery"></stringProp>
           <stringProp name="connectionAge">5000</stringProp>
           <stringProp name="connectionProperties"></stringProp>
-          <stringProp name="dataSource">sampleReq</stringProp>
+          <stringProp name="dataSource">SampleReq</stringProp>
           <stringProp name="dbUrl">jdbc:postgresql://localhost:5432/tutordb</stringProp>
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
@@ -331,10 +323,12 @@
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
-          <stringProp name="dataSource">sampleReq</stringProp>
+          <stringProp name="dataSource">SampleReq</stringProp>
           <stringProp name="query">DELETE FROM users_clarifications WHERE user_id = 677;
-DELETE FROM clarifications WHERE text LIKE &apos;Passa-se%&apos;;
-DELETE FROM clarification_requests WHERE text LIKE &apos;Não sei o que se passa&apos;;</stringProp>
+DELETE FROM clarifications WHERE text LIKE &apos;Passa-se isto&apos;;
+DELETE FROM users_clarification_requests WHERE user_id = 676;
+DELETE FROM clarification_requests WHERE text LIKE &apos;Não sei o que se passa&apos;;
+</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>

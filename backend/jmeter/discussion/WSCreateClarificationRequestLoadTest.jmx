@@ -79,15 +79,10 @@ question_id INTEGER := 100000;
 
 BEGIN
 
-/*INSERT INTO quizzes(id, title, course_execution_id) VALUES (quiz_id, &apos;quiz_tiitle&apos;, 12);*/
-
 
 for r in 100000..100500 loop
-	INSERT INTO questions(id, course_id) VALUES (question_id, 2);
+	INSERT INTO questions(id, course_id, status) VALUES (question_id, 2, &apos;AVAILABLE&apos;);
 	INSERT INTO quiz_questions(id, quiz_id, question_id, sequence) VALUES (quiz_question, 5370 , question_id, 1);
-	
-	/*INSERT INTO users(id, username, name, role) VALUES (r, &apos;Demo-Student&apos;||r, &apos;Demo-Student&apos;||r, &apos;STUDENT&apos;);
-	INSERT INTO users_course_executions(course_executions_id, users_id) VALUES (11 ,r);*/
 	
 	INSERT INTO quiz_answers (id, completed, user_id, quiz_id, used_in_statistics) VALUES (quiz_a, true, 676, 5370, true);
 	INSERT INTO question_answers (id, quiz_answer_id, quiz_question_id, sequence) VALUES (question_a, quiz_a,  quiz_question, 1);
@@ -100,12 +95,7 @@ for r in 100000..100500 loop
 	
 end loop;
 end;
-$$;
-
-
-
-
-</stringProp>
+$$;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="variableNames"></stringProp>
@@ -213,18 +203,6 @@ $$;
             <stringProp name="LoopController.loops">1</stringProp>
           </LoopController>
           <hashTree>
-            <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-              <stringProp name="filename">/home/pedro/Dropbox/3AnoLic/2Semestre/ES/es20tg_41-project/backend/jmeter/discussion/ClarificationRequestsData.csv</stringProp>
-              <stringProp name="fileEncoding"></stringProp>
-              <stringProp name="variableNames">userId</stringProp>
-              <boolProp name="ignoreFirstLine">false</boolProp>
-              <stringProp name="delimiter">,</stringProp>
-              <boolProp name="quotedData">false</boolProp>
-              <boolProp name="recycle">true</boolProp>
-              <boolProp name="stopThread">false</boolProp>
-              <stringProp name="shareMode">shareMode.all</stringProp>
-            </CSVDataSet>
-            <hashTree/>
             <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request to create course execution" enabled="true">
               <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -383,9 +361,9 @@ DELETE FROM question_answers WHERE id &gt;= 100000;
 DELETE FROM quiz_answers WHERE id &gt;=  100000;
 DELETE FROM quiz_questions WHERE id &gt;= 100000;
 DELETE FROM questions WHERE id &gt;= 100000;
-DELETE FROM quizzes WHERE id = 100000;
+/*DELETE FROM quizzes WHERE id = 100000;
 DELETE FROM users_course_executions where users_id &gt;= 100000;
-DELETE FROM users WHERE username LIKE &apos;Demo-Student%&apos; and username != &apos;Demo-Student&apos;;
+DELETE FROM users WHERE username LIKE &apos;Demo-Student%&apos; and username != &apos;Demo-Student&apos;;*/
 </stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>

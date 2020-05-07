@@ -24,6 +24,9 @@ public class ClarificationRequest {
     @JoinColumn(name = "user_id")
     private User student;
 
+    @Column(name="private")
+    private boolean privacy;
+
     @Column(name="creationDate")
     private LocalDateTime creationDate;
 
@@ -45,6 +48,7 @@ public class ClarificationRequest {
         this.student = student;
         this.title = clarificationRequestDto.getTitle();
         this.text = clarificationRequestDto.getText();
+        this.privacy = clarificationRequestDto.getPrivacy();
     }
 
 
@@ -94,6 +98,14 @@ public class ClarificationRequest {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(boolean privacy) {
+        this.privacy = privacy;
     }
 
     public LocalDateTime getCreationDate() {

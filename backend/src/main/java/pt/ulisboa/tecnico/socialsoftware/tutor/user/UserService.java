@@ -18,7 +18,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRe
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.UsersXmlExport;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.UsersXmlImport;
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
 
 import java.sql.SQLException;
@@ -91,17 +91,6 @@ public class UserService {
        return xmlExporter.export(userRepository.findAll());
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public List<Question> getAnsweredQuestions(int userId){
-        return userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId))
-                .getQuizAnswers()
-                .stream()
-                .map(QuizAnswer::getQuestionAnswers)
-                .flatMap(Collection::stream)
-                .map(QuestionAnswer::getQuizQuestion)
-                .map(QuizQuestion::getQuestion)
-                .collect(Collectors.toList());
-    }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<ClarificationRequest> getClarificationRequests(int userId){
@@ -116,7 +105,6 @@ public class UserService {
                 .orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId))
                 .getClarifications());
     }
-
 
 
     @Retryable(
@@ -152,6 +140,20 @@ public class UserService {
         if (user == null)
             return createUser("Demo Admin", Demo.ADMIN_USERNAME, User.Role.DEMO_ADMIN);
         return user;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<QuestionDto> getAnsweredQuestions(int userId){
+        return userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId))
+                .getQuizAnswers()
+                .stream()
+                .map(QuizAnswer::getQuestionAnswers)
+                .flatMap(Collection::stream)
+                .map(QuestionAnswer::getQuizQuestion)
+                .map(QuizQuestion::getQuestion)
+                .distinct()
+                .map(QuestionDto::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)

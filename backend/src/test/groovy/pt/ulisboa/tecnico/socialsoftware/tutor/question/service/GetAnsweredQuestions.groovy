@@ -1,5 +1,4 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.service
-
+package pt.ulisboa.tecnico.socialsoftware.tutor.question.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -16,15 +15,15 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Comment
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.CommentDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.CommentRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Option
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.QuizService
@@ -39,16 +38,19 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
 import spock.lang.Specification
 
+import java.util.stream.Collectors
+
 @DataJpaTest
-class GetClarificationServiceSpockTest extends Specification{
-
-
+class GetAnsweredQuestions extends Specification{
     static final String QUESTION_TITLE = "question1"
+    static final String QUESTION_TITLE2 = "question2"
+
     static final String QUESTION_CONTENT = "o que é uma classe?"
+    static final String QUESTION_CONTENT2 = "o que é uma classe2?"
 
-
-    static final String CLARIFICATION_REQUEST_TITLE = "Duvida interssante."
-    static final String CLARIFICATION_REQUEST_TEXT = "Não percebi porque é que a opção correta é 1?."
+    
+    static final String CLARIFICATION_TITLE = "Duvida interssante."
+    static final String CLARIFICATION_TEXT = "Não percebi porque é que a opção correta é 1?."
 
 
     static final String NAME_1 = "Joao"
@@ -62,12 +64,6 @@ class GetClarificationServiceSpockTest extends Specification{
 
     static final String COURSE_EXECUTION_ACRONYM = "C1"
     static final String COURSE_EXECUTION_ACADEMIC_TERM = "T1";
-
-    static final String OPTION_CONTENT = "Resposta A"
-
-    static final String QUIZ_TITLE = "Random quiz"
-
-    static final String CLARIFICATION_TEXT = "Clarification Text"
 
 
     @Autowired
@@ -85,8 +81,6 @@ class GetClarificationServiceSpockTest extends Specification{
     @Autowired
     AnswerService answerService
 
-    @Autowired
-    ClarificationRequestRepository clarificationRequestRepository
 
     @Autowired
     QuestionRepository questionRepository
@@ -109,23 +103,16 @@ class GetClarificationServiceSpockTest extends Specification{
     @Autowired
     CourseExecutionRepository courseExecutionRepository
 
-    @Autowired
-    ClarificationRepository discussionRepository
 
-
-    def user1
-
-    def user2
+    User user1
 
     def question1
+    def question2
+
 
     def course
 
     def courseExecution
-
-    def clarificationRequest
-
-    def clarification
 
     def setup(){
 
@@ -137,102 +124,96 @@ class GetClarificationServiceSpockTest extends Specification{
         user1 = userService.createUser(NAME_1, USERNAME_1, ROLE)
         user1.addCourse(courseExecution)
         userRepository.save(user1)
-        user2 = userService.createUser(NAME_2, USERNAME_2, User.Role.TEACHER)
-        userRepository.save(user2)
-
 
 
         def quiz = new Quiz()
-        quiz.setKey(1)
-        quiz.setKey(quizService.getMaxQuizKey()+1)
         quiz.setCourseExecution(courseExecution);
         quiz.setType(Quiz.QuizType.GENERATED.toString())
         quizRepository.save(quiz)
 
+        def quiz2 = new Quiz()
+        quiz2.setCourseExecution(courseExecution);
+        quiz2.setType(Quiz.QuizType.GENERATED.toString())
+        quizRepository.save(quiz2)
+
         question1 = new Question()
-        question1.setKey(1)
         question1.setTitle(QUESTION_TITLE)
         question1.setContent(QUESTION_CONTENT)
         question1.setCourse(course)
         questionRepository.save(question1)
 
-        def option = new Option()
-        option.setCorrect(false)
-        option.setContent(OPTION_CONTENT)
-        option.setQuestion(question1)
-        question1.addOption(option)
+        question2 = new Question()
+        question2.setTitle(QUESTION_TITLE2)
+        question2.setContent(QUESTION_CONTENT2)
+        question2.setCourse(course)
+        questionRepository.save(question2)
 
-        def quizQuestion = new QuizQuestion(quiz,question1, 1)
+        def quizQuestion = new QuizQuestion(quiz, question1, 1)
+        def quizQuestion2 = new QuizQuestion(quiz, question2, 1)
+
         def quizAnswer = new QuizAnswer(user1, quiz)
+        def quizAnswer2 = new QuizAnswer(user1, quiz2)
+
         def questionAnswer = new QuestionAnswer(quizAnswer, quizQuestion, 1)
+        def questionAnswer2 = new QuestionAnswer(quizAnswer2, quizQuestion2, 1)
         quizAnswer.addQuestionAnswer(questionAnswer)
+        quizAnswer2.addQuestionAnswer(questionAnswer2)
         user1.addQuizAnswer(quizAnswer)
 
         answerService.concludeQuiz(user1, quiz.getId())
+        answerService.concludeQuiz(user1, quiz2.getId())
+
         answerService.submitAnswer(user1, quiz.getId(), new StatementAnswerDto(questionAnswer))
+        answerService.submitAnswer(user1, quiz2.getId(), new StatementAnswerDto(questionAnswer2))
+
 
         quizQuestionRepository.save(quizQuestion)
+        quizQuestionRepository.save(quizQuestion2)
+
         quizAnswerRepository.save(quizAnswer)
+        quizAnswerRepository.save(quizAnswer2)
 
-
-        def clarificationRequestDto = new ClarificationRequestDto()
-        clarificationRequestDto.setTitle(CLARIFICATION_REQUEST_TITLE)
-        clarificationRequestDto.setText(CLARIFICATION_REQUEST_TEXT)
-        clarificationRequest = new ClarificationRequest(user1, question1, clarificationRequestDto)
-        clarificationRequestRepository.save(clarificationRequest)
 
 
     }
 
-    def "the clarification exists for a certain clarification request and gets it" (){
-        given: " a clarification"
-        def clarificationDto = new ClarificationDto()
-        clarificationDto.setText(CLARIFICATION_TEXT)
-        def clarification = new Clarification(user2, clarificationRequest, clarificationDto)
-        discussionRepository.save(clarification)
-        clarificationRequest.setClarification(clarification)
+    def "the user exists, and get his answered questions" (){
+        given: "userId"
+        def userId = user1.getId()
 
         when:
-        def result = discussionService.getClarificationByRequest(clarificationRequest.getId())
+        def result = userService.getAnsweredQuestions(userId)
 
-        then:
+        then: "check if result isn't null"
         result != null
-        result.getText() == CLARIFICATION_TEXT
+
+        and:"result has 2 elements"
+        result.size() == 2L
+        List<Integer> idList = new ArrayList<>();
+        for(Question q: result) idList.add(q.getId())
+
+        and:"check if the first question is the correct one"
+        idList.contains(question1.getId())
+
+        and:"check if the second question is the correct one"
+        idList.contains(question2.getId())
 
     }
 
-    def "there is no clarification for the clarification request" (){
-        given: " a clarification"
-        def clarificationDto = new ClarificationDto()
-        clarificationDto.setText(CLARIFICATION_REQUEST_TEXT)
-        def clarification = new Clarification(user2, clarificationRequest, clarificationDto)
-        discussionRepository.save(clarification)
+    def "the user does not exist" () {
+        given: "an invalid userId"
+        def userId = -1
 
         when:
-        discussionService.getClarificationByRequest(clarificationRequest.getId())
+        userService.getAnsweredQuestions(userId)
 
-        then:
+        then:"an exception is thrown"
         def error = thrown(TutorException)
-        error.getErrorMessage() == ErrorMessage.CLARIFICATION_REQUEST_HAS_NO_CLARIFICATION
-    }
-
-    def "the clarification_request does not exist" (){
-        given: " a clarification"
-        def clarificationDto = new ClarificationDto()
-        clarificationDto.setText(CLARIFICATION_REQUEST_TEXT)
-        def clarification = new Clarification(user2, clarificationRequest, clarificationDto)
-        discussionRepository.save(clarification)
-        clarificationRequest.setClarification(clarification)
-
-        when:
-        discussionService.getClarificationByRequest(-1)
-
-        then:
-        def error = thrown(TutorException)
-        error.getErrorMessage() == ErrorMessage.CLARIFICATION_REQUEST_NOT_FOUND
+        error.getErrorMessage() == ErrorMessage.USER_NOT_FOUND
 
 
     }
+
 
     @TestConfiguration
     static class ServiceImplTestContextConfiguration {
@@ -273,6 +254,4 @@ class GetClarificationServiceSpockTest extends Specification{
         }
 
     }
-
-
 }
