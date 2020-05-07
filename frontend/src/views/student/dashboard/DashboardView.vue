@@ -46,6 +46,18 @@
           {{ item.numAcceptedQuestions }}
         </div>
       </template>
+
+      <template v-slot:item.numClarificationRequests="{ item }">
+        <div data-cy="numClarificationRequests">
+          {{ item.numClarificationRequests }}
+        </div>
+      </template>
+
+      <template v-slot:item.numAnsweredClarificationRequests="{ item }">
+        <div data-cy="numAnsweredClarificationRequests">
+          {{ item.numAnsweredClarificationRequests }}
+        </div>
+      </template>
       <!--
       <template
         v-slot:item.numProposedQuestions="{ item }"
@@ -92,6 +104,16 @@ export default class DashboardView extends Vue {
     {
       text: 'Accepted questions',
       value: 'numAcceptedQuestions',
+      align: 'center'
+    },
+    {
+      text: 'Clarification requests',
+      value: 'numClarificationRequests',
+      align: 'center'
+    },
+    {
+      text: 'Answered clarification requests',
+      value: 'numAnsweredClarificationRequests',
       align: 'center'
     }
     // TODO: add fields for each stat
