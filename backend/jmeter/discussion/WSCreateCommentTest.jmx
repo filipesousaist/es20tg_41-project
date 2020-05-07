@@ -48,7 +48,7 @@
       <hashTree>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">INSERT INTO clarification_requests (id, text, title, question_id, user_id) VALUES (1, &apos;Não sei o que se passa&apos;,&apos;ola&apos;, 1984, 676);
+          <stringProp name="query">INSERT INTO clarification_requests (id, text, title, question_id, user_id, private) VALUES (1, &apos;Não sei o que se passa&apos;,&apos;ola&apos;, 1984, 676, &apos;false&apos;);
 INSERT INTO users_clarification_requests (user_id, clarification_requests_id) VALUES (676, 1);
 INSERT INTO clarifications (id, text, clarification_request_id, user_id) VALUES (1, &apos;é isto que se passa&apos;, 1, 677);
 INSERT INTO users_clarifications (user_id, clarifications_id) VALUES (677, 1);</stringProp>
