@@ -186,6 +186,20 @@ Cypress.Commands.add(
   }
 );
 
+Cypress.Commands.add(
+  'checkDashboardDiscussionStats',
+  (studentName, numRequests, numAnswers) => {
+    grandparent(cy.contains(studentName), 4)
+      .children()
+      .find('[data-cy="numClarificationRequests"]')
+      .contains(numRequests.toString());
+    grandparent(cy.contains(studentName), 4)
+      .children()
+      .find('[data-cy="numAnsweredClarificationRequests"]')
+      .contains(numAnswers.toString());
+  }
+);
+
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
   cy.get('[data-cy="courseExecutionNameInput"]').type(name);
