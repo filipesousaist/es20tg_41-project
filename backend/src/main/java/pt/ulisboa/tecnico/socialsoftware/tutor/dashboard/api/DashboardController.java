@@ -22,8 +22,13 @@ public class DashboardController {
 
     @GetMapping("/executions/{executionId}/dashboard")
     @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#executionId, 'EXECUTION.ACCESS')")
-    public List<DashboardStatsDto> getDashboardStats(@PathVariable int executionId){
-        return dashboardService.getDashboardStats(executionId);
+    public List<DashboardStatsDto> getDashboardStats(Principal principal, @PathVariable int executionId){
+        User user = (User) ((Authentication) principal).getPrincipal();
+
+        if (user == null) {
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+        return dashboardService.getDashboardStats(user.getId(), executionId);
     }
 
     @GetMapping("/dashboard")
