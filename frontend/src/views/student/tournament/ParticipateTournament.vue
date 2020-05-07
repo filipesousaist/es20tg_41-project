@@ -1,51 +1,37 @@
 <template>
 	<div class="container">
-		<h2>Available Tournaments in {{ course }}</h2>
+		<h2>Available Tournament Quizzes in {{ course }}</h2>
 		<ul>
 			<li class="list-header">
-				<div class="col">Name</div>
-				<div class="col">Topics</div>
+				<div class="col">Tournament Name</div>
 				<div class="col">Available since</div>
 				<div class="col">Available until</div>
-				<div class="col">Questions</div>
-				<div class="col">Participants</div>
+				<div class="col">Number of questions</div>
 				<div class="col last-col"></div>
 			</li>
 			<li
 				class="list-row"
-				v-for="tournament in tournaments"
-				:key="tournament.id"
+				v-for="quiz in quizzes"
+				:key="quiz.quizAnswerId"
 			>
 				<div class="col">
-					{{ tournament.name }}
+					{{ quiz.title }}
 				</div>
 				<div class="col">
-					<div
-						v-for="topic in tournament.topics"
-						:key="topic.id"
-						style="padding-bottom:2px;padding-top: 2px;"
-					>
-						<v-chip>{{ topic.name }}</v-chip>
-					</div>
+					{{ quiz.availableDate }}
 				</div>
 				<div class="col">
-					{{ tournament.beginningTime }}
+					{{ quiz.conclusionDate }}
 				</div>
 				<div class="col">
-					{{ tournament.endingTime }}
-				</div>
-				<div class="col">
-					{{ tournament.numberOfQuestions }}
-				</div>
-				<div class="col">
-					{{ tournament.studentsUsername.length }}
+					{{ quiz.questions.length }}
 				</div>
 				<div class="col last-col">
 					<v-btn
 						color="primary"
-						@click="answerQuiz(tournament)"
+						@click="solveQuiz(quiz)"
 						v-on="on"
-						data-cy="answer"
+						data-cy="Answer"
 					>
 						Answer
 					</v-btn>
@@ -56,53 +42,39 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import Tournament from '@/models/tournament/Tournament';
-import RemoteServices from '@/services/RemoteServices';
-import StatementManager from '@/models/statement/StatementManager';
+  import { Component, Vue } from 'vue-property-decorator';
+  import RemoteServices from '@/services/RemoteServices';
+  import StatementManager from '@/models/statement/StatementManager';
+  import StatementQuiz from '@/models/statement/StatementQuiz';
+  import StatementQuestion from '@/models/statement/StatementQuestion';
+  import StatementAnswer from '@/models/statement/StatementAnswer';
 
-@Component
+  @Component
+  export default class ParticipateTournament extends Vue {
+    course = this.$store.getters.getCurrentCourse.name;
+    quizzes: StatementQuiz[] = [];
 
-export default class ParticipateTournament extends Vue {
-	course = this.$store.getters.getCurrentCourse.name;
-	username = this.$store.getters.getUser.username;
-	tournaments: Tournament[] = [];
+    async created() {
+      await this.$store.dispatch('loading');
+      try {
+        this.quizzes = (await RemoteServices.getAvailableTournamentQuizzes()).reverse();
+      } catch (error) {
+        await this.$store.dispatch('error', error);
+      }
+      await this.$store.dispatch('clearLoading');
+    }
 
-	async created() {
-		await this.$store.dispatch('loading');
-		try {
-			this.tournaments = (
-				await RemoteServices.getAllOpenTournament()
-			).reverse();
-		} catch (error) {
-			await this.$store.dispatch('error', error);
-		}
-		await this.$store.dispatch('clearLoading');
-	}
-
-	async answerQuiz(tournament: Tournament) {
-		if (tournament.quiz == null) {
-      await this.$store.dispatch(
-        'error',
-        'Error: Tournament does not have a quiz associated'
-      );
-      return;
-		}
-		else {
+    async solveQuiz(quiz: StatementQuiz) {
       let statementManager: StatementManager = StatementManager.getInstance;
-      statementManager.statementQuiz = tournament.quiz;
+      statementManager.statementQuiz = quiz;
       await this.$router.push({ name: 'solve-quiz' });
     }
-		await this.$store.dispatch('loading');
-	}
-}
-
-
+  }
 </script>
 
 <style lang="scss" scoped>
 	.container {
-		max-width: 1250px;
+		max-width: 1000px;
 		margin-left: auto;
 		margin-right: auto;
 		padding-left: 10px;
@@ -112,7 +84,6 @@ export default class ParticipateTournament extends Vue {
 			font-size: 26px;
 			margin: 20px 0;
 			text-align: center;
-
 			small {
 				font-size: 0.5em;
 			}

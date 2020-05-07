@@ -26,8 +26,8 @@ export default class Tournament {
       this.creatorName = jsonObj.creatorName;
       console.log(jsonObj.creatorName);
       this.name = jsonObj.name;
-      if (jsonObj.quiz) {
-        this.quiz = new StatementQuiz(jsonObj.quizDto);
+      if (jsonObj.quizDto) {
+        this.quizDto = new StatementQuiz(jsonObj.quizDto);
       }
       if (jsonObj.topics) {
         this.topics = jsonObj.topics.map((topic: Topic) => new Topic(topic));

@@ -126,7 +126,6 @@ public class TournamentService {
 
         if (tournament.getTournamentQuiz() == null && tournament.getStudentsEnrolled().size() >= 1) {
             createTournamentQuiz(tournament);
-            System.out.println(tournament.getTournamentQuiz());
         }
 
         return new TournamentDto(tournament);
@@ -146,10 +145,12 @@ public class TournamentService {
     private void createTournamentQuiz(Tournament tournament) {
 
         Quiz quiz = new Quiz();
+        quiz.setCreationDate(LocalDateTime.now());
         quiz.setAvailableDate(tournament.getBeginningTime());
         quiz.setConclusionDate(tournament.getEndingTime());
         quiz.setCourseExecution(tournament.getCourseExecution());
         quiz.setType("TOURNAMENT");
+        quiz.setTitle(tournament.getName());
 
         List<Question> possibleQuestions = new ArrayList<>();
         for (Topic topic: tournament.getTitles()) {

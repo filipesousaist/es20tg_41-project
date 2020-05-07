@@ -165,6 +165,7 @@ public class StatementService {
         quizRepository.findQuizzes(executionId).stream()
                 .filter(quiz -> !quiz.isQrCodeOnly())
                 .filter(quiz -> !quiz.getType().equals(Quiz.QuizType.GENERATED))
+                .filter(quiz -> !quiz.getType().equals(Quiz.QuizType.TOURNAMENT))
                 .filter(quiz -> quiz.getAvailableDate() == null || quiz.getAvailableDate().isBefore(now))
                 .filter(quiz -> !studentQuizIds.contains(quiz.getId()))
                 .forEach(quiz ->  {
@@ -176,6 +177,48 @@ public class StatementService {
 
         return user.getQuizAnswers().stream()
                 .filter(quizAnswer -> !quizAnswer.isCompleted())
+                .filter(quizAnswer -> !quizAnswer.getQuiz().getType().equals(Quiz.QuizType.TOURNAMENT))
+                .filter(quizAnswer -> !quizAnswer.getQuiz().isOneWay() || quizAnswer.getCreationDate() == null)
+                .filter(quizAnswer -> quizAnswer.getQuiz().getCourseExecution().getId() == executionId)
+                .filter(quizAnswer -> quizAnswer.getQuiz().getConclusionDate() == null || DateHandler.now().isBefore(quizAnswer.getQuiz().getConclusionDate()))
+                .filter(quizAnswer -> quizAnswer.getQuiz().getAvailableDate().isBefore(now))
+                .map(StatementQuizDto::new)
+                .sorted(Comparator.comparing(StatementQuizDto::getAvailableDate, Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(Collectors.toList());
+    }
+
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<StatementQuizDto> getAvailableTournamentQuizzes(int userId, int executionId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
+
+        LocalDateTime now = DateHandler.now();
+
+        Set<Integer> studentQuizIds =  user.getQuizAnswers().stream()
+                .filter(quizAnswer -> quizAnswer.getQuiz().getCourseExecution().getId() == executionId)
+                .map(QuizAnswer::getQuiz)
+                .map(Quiz::getId)
+                .collect(Collectors.toSet());
+
+        // create QuizAnswer for quizzes
+        quizRepository.findQuizzes(executionId).stream()
+                .filter(quiz -> !quiz.isQrCodeOnly())
+                .filter(quiz -> quiz.getType().equals(Quiz.QuizType.TOURNAMENT))
+                .filter(quiz -> quiz.getAvailableDate() == null || quiz.getAvailableDate().isBefore(now))
+                .filter(quiz -> !studentQuizIds.contains(quiz.getId()))
+                .forEach(quiz ->  {
+                    if (quiz.getConclusionDate() == null || quiz.getConclusionDate().isAfter(now)) {
+                        QuizAnswer quizAnswer = new QuizAnswer(user, quiz);
+                        quizAnswerRepository.save(quizAnswer);
+                    }
+                });
+
+        return user.getQuizAnswers().stream()
+                .filter(quizAnswer -> !quizAnswer.isCompleted())
+                .filter(quizAnswer -> quizAnswer.getQuiz().getType().equals(Quiz.QuizType.TOURNAMENT))
+                .filter(quizAnswer -> quizAnswer.getQuiz().getTournament().getStudentsEnrolled().contains(user))
                 .filter(quizAnswer -> !quizAnswer.getQuiz().isOneWay() || quizAnswer.getCreationDate() == null)
                 .filter(quizAnswer -> quizAnswer.getQuiz().getCourseExecution().getId() == executionId)
                 .filter(quizAnswer -> quizAnswer.getQuiz().getConclusionDate() == null || DateHandler.now().isBefore(quizAnswer.getQuiz().getConclusionDate()))
