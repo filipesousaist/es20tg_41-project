@@ -86,7 +86,7 @@ import StudentQuestion from '@/models/student_question/StudentQuestion';
 import RemoteServices from '@/services/RemoteServices';
 
 @Component
-export default class EditStudentQuestionDialog extends Vue {
+export default class EditProposedQuestionDialog extends Vue {
   @Model('dialog', Boolean) dialog!: boolean;
   @Prop({ type: StudentQuestion, required: true })
   readonly studentQuestion!: StudentQuestion;

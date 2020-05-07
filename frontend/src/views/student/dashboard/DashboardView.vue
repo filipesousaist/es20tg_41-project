@@ -26,7 +26,9 @@
             dark
             @click="openPermissions"
             data-cy="permissionsButton"
-            >Permissions</v-btn
+          >
+            <v-icon class="lock-icon">lock</v-icon>
+            Permissions</v-btn
           >
         </v-card-title>
       </template>
@@ -159,4 +161,8 @@ export default class DashboardView extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style>
+.lock-icon {
+  padding: 0 10px 0 0;
+}
+</style>

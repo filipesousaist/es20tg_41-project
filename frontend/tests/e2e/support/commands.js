@@ -186,6 +186,46 @@ Cypress.Commands.add(
   }
 );
 
+Cypress.Commands.add(
+  'changeDashboardStudentQuestionsPermissions',
+  (
+    changeShowNumProposedQuestions,
+    changeShowNumAcceptedQuestions,
+    save = true
+  ) => {
+    cy.get('[data-cy="permissionsButton"]').click({ force: true });
+
+    if (changeShowNumProposedQuestions)
+      cy.contains('Show number of proposed questions').click();
+    if (changeShowNumAcceptedQuestions)
+      cy.contains('Show number of accepted questions').click();
+
+    if (save) cy.contains('Save').click();
+    else cy.contains('Close').click();
+  }
+);
+
+Cypress.Commands.add(
+  'checkDashboardStudentQuestionsPermissions',
+  (showNumProposedQuestions, showNumAcceptedQuestions) => {
+    cy.get('[data-cy="permissionsButton"]').click({ force: true });
+
+    cy.contains('Show number of proposed questions')
+      .parent()
+      .children()
+      .find('input')
+      .should(showNumProposedQuestions ? 'be.checked' : 'not.checked');
+
+    cy.contains('Show number of accepted questions')
+      .parent()
+      .children()
+      .find('input')
+      .should(showNumAcceptedQuestions ? 'be.checked' : 'not.checked');
+
+    cy.contains('Close').click();
+  }
+);
+
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
   cy.get('[data-cy="courseExecutionNameInput"]').type(name);
@@ -321,7 +361,6 @@ Cypress.Commands.add('createClarification', text => {
 });
 
 function grandparent(element, n) {
-  for (let i = 0; i < n; i++)
-    element = element.parent();
+  for (let i = 0; i < n; i++) element = element.parent();
   return element;
 }
