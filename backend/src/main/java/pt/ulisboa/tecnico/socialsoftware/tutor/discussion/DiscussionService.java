@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.discussion;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionUsageException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuestionAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler;
@@ -330,5 +331,22 @@ public class DiscussionService {
         String text = commentDto.getText();
         if(text == null || text.trim().equals(""))
             throw new TutorException(COMMENT_EMPTY_TEXT);
+    }
+
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<ClarificationRequestDto> getPublicClarificationRequests(Integer questionId, Integer userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
+        return questionRepository.findById(questionId)
+                .orElseThrow(() -> new TutorException(QUESTION_NOT_FOUND, questionId))
+                .getClarificationRequests()
+                .stream()
+                .filter(cr -> !cr.getPrivacy())
+                .filter(cr -> !cr.getStudent().getId().equals(user.getId()))
+                .map(ClarificationRequestDto::new)
+                .collect(Collectors.toList());
+
     }
 }

@@ -24,7 +24,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
 import spock.lang.Specification
 
 @DataJpaTest
-class GetPublicClarificationRequests extends Specification {
+class GetPublicClarificationRequestsServiceSpockTest extends Specification {
     private static String QUESTION_TITLE = "Question title"
     private static String QUESTION_CONTENT = "Question content";
 
@@ -112,6 +112,7 @@ class GetPublicClarificationRequests extends Specification {
         request1.setQuestion(question)
         request1.setStudent(student1)
         clarificationRequestRepository.save(request1)
+        question.addClarificationRequest(request1)
 
         request2 = new ClarificationRequest()
         request2.setTitle(REQUEST_TITLE1)
@@ -120,6 +121,8 @@ class GetPublicClarificationRequests extends Specification {
         request2.setQuestion(question)
         request2.setStudent(student2)
         clarificationRequestRepository.save(request2)
+        question.addClarificationRequest(request2)
+
 
         // only this request should to student1 appear because it was not asked by him and it's public
         request3 = new ClarificationRequest()
@@ -129,6 +132,8 @@ class GetPublicClarificationRequests extends Specification {
         request3.setQuestion(question)
         request3.setStudent(student2)
         clarificationRequestRepository.save(request3)
+        question.addClarificationRequest(request3)
+
 
         clarification1 = new Clarification()
         clarification1.setText(CLARIFICATION_TEXT1)
@@ -187,9 +192,9 @@ class GetPublicClarificationRequests extends Specification {
         error.getErrorMessage() == ErrorMessage.USER_NOT_FOUND
     }
 
-    def "the user does no exist" (){
+    def "the question does not exist" (){
         given:" a user id"
-        int userId = student1.getI()
+        int userId = student1.getId()
 
         and: "an invalid question id"
         int questionId = -1
