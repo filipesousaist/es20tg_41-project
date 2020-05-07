@@ -25,6 +25,7 @@ import StudentQuestion from '@/models/student_question/StudentQuestion';
 import QuestionEvaluation from '@/models/student_question/QuestionEvaluation';
 
 import DashboardStats from '@/models/dashboard/DashboardStats';
+import DashboardPermissions from '@/models/dashboard/DashboardPermissions';
 
 
 const httpClient = axios.create();
@@ -113,6 +114,30 @@ export default class RemoteServices {
         return response.data.map((dashboardStats: DashboardStats) => {
           return new DashboardStats(dashboardStats);
         });
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async getDashboardPermissions(): Promise<DashboardPermissions> {
+    return httpClient
+      .get('/dashboard')
+      .then(response => {
+        return new DashboardPermissions(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async updateDashboardPermissions(
+    dashboardPermissions: DashboardPermissions
+  ): Promise<DashboardPermissions> {
+    return httpClient
+      .put('/dashboard', dashboardPermissions)
+      .then(response => {
+        return new DashboardPermissions(response.data);
       })
       .catch(async error => {
         throw Error(await this.errorMessage(error));
