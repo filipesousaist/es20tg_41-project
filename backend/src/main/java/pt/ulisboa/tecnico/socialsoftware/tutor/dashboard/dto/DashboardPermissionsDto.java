@@ -6,6 +6,10 @@ public class DashboardPermissionsDto {
     private boolean showNumProposedQuestions;
     private boolean showNumAcceptedQuestions;
 
+    public DashboardPermissionsDto() {
+        
+    }
+
     public DashboardPermissionsDto(DashboardStats dashboardStats) {
         this.showNumProposedQuestions = dashboardStats.getShowNumProposedQuestions();
         this.showNumAcceptedQuestions = dashboardStats.getShowNumAcceptedQuestions();
