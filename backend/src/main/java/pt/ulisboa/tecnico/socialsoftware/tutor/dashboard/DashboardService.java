@@ -33,15 +33,20 @@ public class DashboardService {
             value = {SQLException.class},
             backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public List<DashboardStatsDto> getDashboardStats(Integer courseExecutionId){
-        return courseExecutionRepository.findById(courseExecutionId)
+    public List<DashboardStatsDto> getDashboardStats(int userId, Integer courseExecutionId){
+        User user1 = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
+        DashboardStatsDto userDashboardStats = new DashboardStatsDto(user1.getDashboardStats());
+        userDashboardStats.setNumAcceptedQuestions(user1.getNumAcceptedQuestions());
+        userDashboardStats.setNumProposedQuestions(user1.getNumProposedQuestions());
+        List<DashboardStatsDto> stats = courseExecutionRepository.findById(courseExecutionId)
                 .orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId))
                 .getUsers()
                 .stream()
-                .filter(user -> user.getRole().equals(User.Role.STUDENT))
+                .filter(user -> user.getRole().equals(User.Role.STUDENT) && !(user.getId().equals(userId)))
                 .map(User::getDashboardStats)
-                .map(DashboardStatsDto::new)
-                .collect(Collectors.toList());
+                .map(DashboardStatsDto::new).collect(Collectors.toList());
+        stats.add(userDashboardStats);
+        return stats;
     }
 
     @Retryable(
