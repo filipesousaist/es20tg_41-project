@@ -56,19 +56,26 @@
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
+          <stringProp name="password">hwjv8756</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">filipe</stringProp>
+          <stringProp name="username">pedro</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">UPDATE dashboard_stats 
-SET num_proposed_questions=18, num_accepted_questions=10;</stringProp>
+          <stringProp name="query">ALTER TABLE users DISABLE TRIGGER ALL; /* Disable foreign key constraints */
+UPDATE users SET dashboard_stats_id=id; /* Each dashboard_stats will have same id as user */
+ALTER TABLE users ENABLE TRIGGER ALL; /* Enable foreign key constraints */
+
+/* Create all dashboard stats */
+INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, num_clarification_requests, num_answered_clarification_requests) (
+	SELECT id, id, 18, 10, 4, 2 
+	FROM users
+);</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
@@ -223,6 +230,24 @@ SET num_proposed_questions=18, num_accepted_questions=10;</stringProp>
               <boolProp name="ISREGEX">false</boolProp>
             </JSONPathAssertion>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of clarification requests" enabled="true">
+              <stringProp name="JSON_PATH">$[0].numClarificationRequests</stringProp>
+              <stringProp name="EXPECTED_VALUE">4</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of answered clarification requests" enabled="true">
+              <stringProp name="JSON_PATH">$[0].numAnsweredClarificationRequests</stringProp>
+              <stringProp name="EXPECTED_VALUE">2</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
         </hashTree>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -324,20 +349,23 @@ SET num_proposed_questions=18, num_accepted_questions=10;</stringProp>
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
+          <stringProp name="password">hwjv8756</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">filipe</stringProp>
+          <stringProp name="username">pedro</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
           <stringProp name="queryType">Callable Statement</stringProp>
-          <stringProp name="query">UPDATE dashboard_stats
-SET num_proposed_questions=0, num_accepted_questions=0;</stringProp>
+          <stringProp name="query">ALTER TABLE users DISABLE TRIGGER ALL; /* Disable foreign key constraints */
+UPDATE users SET dashboard_stats_id=NULL; /* Delete references to dashboard_stats */
+ALTER TABLE users ENABLE TRIGGER ALL; /* Enable foreign key constraints */
+
+DELETE FROM dashboard_stats;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="variableNames"></stringProp>
