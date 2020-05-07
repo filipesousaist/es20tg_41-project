@@ -108,7 +108,7 @@ class GetPublicClarificationRequestsServiceSpockTest extends Specification {
         request1 = new ClarificationRequest()
         request1.setTitle(REQUEST_TITLE1)
         request1.setText(REQUEST_TEXT1)
-        request1.setPrivacy(false)
+        request1.setPrivacy(true)
         request1.setQuestion(question)
         request1.setStudent(student1)
         clarificationRequestRepository.save(request1)
@@ -166,7 +166,7 @@ class GetPublicClarificationRequestsServiceSpockTest extends Specification {
         int questionId = question.getId()
 
         when:
-        def result = discussionService.getPublicClarificationRequests(questionId, userId)
+        def result = discussionService.getPublicClarificationRequests(questionId)
 
         then:
         result.size() == 1
@@ -177,20 +177,6 @@ class GetPublicClarificationRequestsServiceSpockTest extends Specification {
 
     }
 
-    def "the user does not exist" (){
-        given:" an invalid user id"
-        int userId = -1
-
-        and: "a question id"
-        int questionId = question.getId()
-
-        when:
-        discussionService.getPublicClarificationRequests(questionId, userId)
-
-        then:
-        def error = thrown(TutorException)
-        error.getErrorMessage() == ErrorMessage.USER_NOT_FOUND
-    }
 
     def "the question does not exist" (){
         given:" a user id"
@@ -200,7 +186,7 @@ class GetPublicClarificationRequestsServiceSpockTest extends Specification {
         int questionId = -1
 
         when:
-        discussionService.getPublicClarificationRequests(questionId, userId)
+        discussionService.getPublicClarificationRequests(questionId)
 
         then:
         def error = thrown(TutorException)

@@ -10,6 +10,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationReque
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.CommentDto;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class DiscussionController {
@@ -51,5 +52,11 @@ public class DiscussionController {
     @PreAuthorize("(hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER')) and hasPermission(#clarificationId, 'COMMENT.ACCESS')")
     public CommentDto createComment(@PathVariable int clarificationId, @Valid @RequestBody CommentDto commentDto){
         return this.discussionService.createComment(clarificationId, commentDto);
+    }
+
+    @GetMapping("/questions/{questionId}/clarification_requests")
+    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#questionId, 'QUESTION.ANSWERED')")
+    public List<ClarificationRequestDto> getPublicClarificationRequests(@PathVariable Integer questionId){
+        return this.discussionService.getPublicClarificationRequests(questionId);
     }
 }
