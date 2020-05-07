@@ -14,7 +14,6 @@ public class DashboardDto implements Serializable {
     private int numAcceptedQuestions;
 
     private int numClarificationRequests;
-
     private int numAnsweredClarificationRequests;
 
     // TODO: insert each functionality related stats

@@ -19,7 +19,6 @@ public class DashboardStats {
     private int numAcceptedQuestions;
 
     private int numClarificationRequests;
-
     private int numAnsweredClarificationRequests;
 
     // TODO: insert each functionality's related stats
