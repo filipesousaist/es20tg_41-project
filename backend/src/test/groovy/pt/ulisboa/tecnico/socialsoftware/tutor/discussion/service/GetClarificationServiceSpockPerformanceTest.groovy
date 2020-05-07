@@ -179,7 +179,7 @@ class GetClarificationServiceSpockPerformanceTest extends Specification{
         when:
         for (int j = 1; j <= 1; j++) {
             for (int i = 1; i <= 1; i++) {
-                discussionService.getClarification(i)
+                discussionService.getClarificationByRequest(i)
             }
         }
 

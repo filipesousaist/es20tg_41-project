@@ -25,6 +25,9 @@ public  class Clarification {
     @JoinColumn(name = "clarification_request_id")
     private ClarificationRequest clarificationRequest;
 
+    @Column(name = "summary")
+    private String summary;
+
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
@@ -42,6 +45,7 @@ public  class Clarification {
         this.teacher = teacher;
         this.clarificationRequest = request;
         this.text = clarificationDto.getText();
+        this.summary = clarificationDto.getSummary();
     }
 
     public Integer getId() {
@@ -74,6 +78,14 @@ public  class Clarification {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String clarificationSummary) {
+        this.summary = clarificationSummary;
     }
 
     public LocalDateTime getCreationDate() {

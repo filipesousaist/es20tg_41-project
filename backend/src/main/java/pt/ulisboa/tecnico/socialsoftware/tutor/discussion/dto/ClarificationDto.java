@@ -19,6 +19,8 @@ public class ClarificationDto implements Serializable {
 
     private Integer userId;
 
+    private String summary;
+
     private Integer clairifcationRequestId;
 
     private String creationDate;
@@ -32,6 +34,7 @@ public class ClarificationDto implements Serializable {
         this.username = clarification.getTeacher().getUsername();
         this.text = clarification.getText();
         this.userId = clarification.getTeacher().getId();
+        this.summary = clarification.getSummary();
         this.creationDate = DateHandler.toISOString(clarification.getCreationDate());
         this.commentList = clarification.getComments().stream()
                 .map(CommentDto::new)
@@ -68,6 +71,14 @@ public class ClarificationDto implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getCreationDate() {
