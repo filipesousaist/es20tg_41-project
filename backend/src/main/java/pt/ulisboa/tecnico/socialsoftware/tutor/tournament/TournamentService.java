@@ -124,7 +124,7 @@ public class TournamentService {
         tournament.addStudentEnrolled(user);
         user.addTournamentEnrolled(tournament);
 
-        if (tournament.getTournamentQuiz() == null && tournament.getStudentsEnrolled().size() >= 1) {
+        if (tournament.getTournamentQuiz() == null && tournament.getStudentsEnrolled().size() > 1) {
             createTournamentQuiz(tournament);
         }
 
@@ -156,6 +156,8 @@ public class TournamentService {
         for (Topic topic: tournament.getTitles()) {
             possibleQuestions.addAll(topic.getQuestions());
         }
+
+
 
         Random rand = new Random();
         for (int i = 0; i < tournament.getNumberOfQuestions(); i++) {
