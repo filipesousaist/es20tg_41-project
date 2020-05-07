@@ -55,7 +55,9 @@
 
       <template v-slot:item.numAcceptedQuestions="{ item }">
         <div data-cy="numAcceptedQuestions">
-          {{ item.numAcceptedQuestions === -1 ? '-' : item.numAcceptedQuestions}}
+          {{
+            item.numAcceptedQuestions === -1 ? '-' : item.numAcceptedQuestions
+          }}
         </div>
       </template>
     </v-data-table>
