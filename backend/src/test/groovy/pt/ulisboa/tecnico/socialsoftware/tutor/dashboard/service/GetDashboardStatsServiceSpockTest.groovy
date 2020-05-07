@@ -18,6 +18,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.repository.DashboardRep
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
@@ -33,6 +35,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.QuestionEval
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
 import spock.lang.Specification
 
 @DataJpaTest
@@ -95,9 +98,12 @@ class GetDashboardStatsServiceSpockTest extends Specification {
     def quiz
     def question1
     def question2
-    def quizQuestion
-    def quizAnswer
-    def questionAnswer
+    def quizQuestion1
+    def quizAnswer1
+    def questionAnswer1
+    def quizQuestion2
+    def quizAnswer2
+    def questionAnswer2
 
     def setup() {
         course = new Course("Software Engineering", Course.Type.TECNICO)
@@ -139,29 +145,29 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         questionRepository.save(question2)
 
         // Create 2 quiz questions with questions, 2 quiz answers for student and 2 question answer for the quiz questions
-        quizQuestion = new QuizQuestion(quiz, question1, 1)
-        quizAnswer = new QuizAnswer(student, quiz)
-        questionAnswer = new QuestionAnswer(quizAnswer, quizQuestion, 1)
-        quizAnswer.addQuestionAnswer(questionAnswer)
-        student.addQuizAnswer(quizAnswer)
+        quizQuestion1 = new QuizQuestion(quiz, question1, 1)
+        quizAnswer1 = new QuizAnswer(student, quiz)
+        questionAnswer1 = new QuestionAnswer(quizAnswer1, quizQuestion1, 1)
+        quizAnswer1.addQuestionAnswer(questionAnswer1)
+        student.addQuizAnswer(quizAnswer1)
 
         answerService.concludeQuiz(student, quiz.getId())
-        answerService.submitAnswer(student, quiz.getId(), new StatementAnswerDto(questionAnswer))
+        answerService.submitAnswer(student, quiz.getId(), new StatementAnswerDto(questionAnswer1))
 
-        quizQuestionRepository.save(quizQuestion)
-        quizAnswerRepository.save(quizAnswer)
+        quizQuestionRepository.save(quizQuestion1)
+        quizAnswerRepository.save(quizAnswer1)
 
-        quizQuestion = new QuizQuestion(quiz, question2, 1)
-        quizAnswer = new QuizAnswer(student, quiz)
-        questionAnswer = new QuestionAnswer(quizAnswer, quizQuestion, 1)
-        quizAnswer.addQuestionAnswer(questionAnswer)
-        student.addQuizAnswer(quizAnswer)
+        quizQuestion2 = new QuizQuestion(quiz, question2, 1)
+        quizAnswer2 = new QuizAnswer(student, quiz)
+        questionAnswer2 = new QuestionAnswer(quizAnswer2, quizQuestion2, 1)
+        quizAnswer2.addQuestionAnswer(questionAnswer2)
+        student.addQuizAnswer(quizAnswer2)
 
         answerService.concludeQuiz(student, quiz.getId())
-        answerService.submitAnswer(student, quiz.getId(), new StatementAnswerDto(questionAnswer))
+        answerService.submitAnswer(student, quiz.getId(), new StatementAnswerDto(questionAnswer2))
 
-        quizQuestionRepository.save(quizQuestion)
-        quizAnswerRepository.save(quizAnswer)
+        quizQuestionRepository.save(quizQuestion2)
+        quizAnswerRepository.save(quizAnswer2)
     }
 
     def "get dashboard stats and check if stats are at initial state"() {
@@ -207,8 +213,8 @@ class GetDashboardStatsServiceSpockTest extends Specification {
 
     def "Make and answer a clarification request, and check stats"() {
         given: "2 clarification requests are created"
-        def clarificationRequestId1 = createClarificationRequest(question1).getId()
-        createClarificationRequest(question2)
+        def clarificationRequestId1 = createClarificationRequest(question1.getId()).getId()
+        createClarificationRequest(question2.getId())
         and: "1 is answered and the other is not"
         createClarification(clarificationRequestId1, CLARIFICATION_TEXT)
 
@@ -254,13 +260,13 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         studentQuestionService.createQuestionEvaluation(teacher.getId(), studentQuestionId, questionEvaluationDto)
     }
 
-    def createClarificationRequest(question) {
+    def createClarificationRequest(questionId) {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_REQUEST_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_REQUEST_TEXT)
         clarificationRequestDto.setUserId(student.getId())
 
-        discussionService.submitClarificationRequest(question.getId(), clarificationRequestDto)
+        discussionService.submitClarificationRequest(questionId, clarificationRequestDto)
     }
 
     def createClarification(clarificationRequestId, clarificationText){
@@ -281,13 +287,23 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         }
 
         @Bean
+        UserService userService() {
+            return new UserService()
+        }
+
+        @Bean
         StudentQuestionService studentQuestionService() {
             return new StudentQuestionService()
         }
-        
+
         @Bean
         QuizService quizService() {
             return new QuizService()
+        }
+
+        @Bean
+        QuestionService questionService() {
+            return new QuestionService()
         }
 
         @Bean
@@ -298,6 +314,11 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         @Bean
         DiscussionService discussionService() {
             return new DiscussionService()
+        }
+
+        @Bean
+        AnswersXmlImport answersXmlImport() {
+            return new AnswersXmlImport()
         }
     }
 }

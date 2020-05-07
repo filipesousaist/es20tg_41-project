@@ -13,8 +13,11 @@ public class DashboardDto implements Serializable {
     private int numProposedQuestions;
     private int numAcceptedQuestions;
 
-    // TODO: insert each functionality related stats
+    private int numClarificationRequests;
 
+    private int numAnsweredClarificationRequests;
+
+    // TODO: insert each functionality related stats
     public DashboardDto(DashboardStats dashboardStats) {
         User user = dashboardStats.getUser();
         this.userId = user.getId();
@@ -23,6 +26,8 @@ public class DashboardDto implements Serializable {
 
         this.numProposedQuestions = dashboardStats.getNumProposedQuestions();
         this.numAcceptedQuestions = dashboardStats.getNumAcceptedQuestions();
+        this.numClarificationRequests = dashboardStats.getNumClarificationRequests();
+        this.numAnsweredClarificationRequests = dashboardStats.getNumAnsweredClarificationRequests();
     }
 
     public int getUserId() {
@@ -63,5 +68,21 @@ public class DashboardDto implements Serializable {
 
     public void setNumAcceptedQuestions(int numAcceptedQuestions) {
         this.numAcceptedQuestions = numAcceptedQuestions;
+    }
+
+    public int getNumClarificationRequests() {
+        return numClarificationRequests;
+    }
+
+    public void setNumClarificationRequests(int numClarificationRequests) {
+        this.numClarificationRequests = numClarificationRequests;
+    }
+
+    public int getNumAnsweredClarificationRequests() {
+        return numAnsweredClarificationRequests;
+    }
+
+    public void setNumAnsweredClarificationRequests(int numAnsweredClarificationRequests) {
+        this.numAnsweredClarificationRequests = numAnsweredClarificationRequests;
     }
 }
