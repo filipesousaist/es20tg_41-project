@@ -46,6 +46,7 @@
           </template>
           <span>Show Question</span>
         </v-tooltip>
+        
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
             <v-icon
@@ -77,9 +78,9 @@
       v-on:close-show-question-dialog="onCloseShowQuestionDialog"
     />
     <public-clarification-requests-dialog
-        v-if="!!currentQuestion"
+      v-if="!!currentQuestion"
       v-model="clarificationRequestsDialgog"
-      :question="this.currentQuestion"
+      :question="currentQuestion"
       v-on:close-public-clarification-requests-dialog="onClosePublicClarificationRequestsDialog"
     />
   </v-card>
@@ -94,11 +95,13 @@ import Topic from '@/models/management/Topic';
 import ShowQuestionDialog from '@/views/teacher/questions/ShowQuestionDialog.vue';
 import ShowPublicClarificationRequestsDialog from '@/views/student/ShowPublicClarificationRequestsDialog.vue';
 import Clarification from '@/models/discussion/Clarification';
+import ClarificationRequest from '../../models/discussion/ClarificationRequest';
 
 @Component({
   components: {
     'public-clarification-requests-dialog': ShowPublicClarificationRequestsDialog,
     'show-question-dialog': ShowQuestionDialog
+    
   }
 })
 export default class QuestionsView extends Vue {
@@ -108,6 +111,8 @@ export default class QuestionsView extends Vue {
   clarificationRequestsDialgog : boolean = false;
     questionDialog: boolean = false;
   search: string = '';
+  
+
 
   headers: object = [
     {
@@ -155,15 +160,15 @@ export default class QuestionsView extends Vue {
     this.questionDialog = true;
   }
 
-  showClarificationRequests(question: Question){
-      console.log('xpto');
+  async showClarificationRequests(question: Question){
       this.currentQuestion = question;
       this.clarificationRequestsDialgog = true;
+
   }
 
   onClosePublicClarificationRequestsDialog(){
+      this.currentQuestion = null;
       this.clarificationRequestsDialgog = false;
-      console.log('xpto');
   }
 
 

@@ -776,6 +776,19 @@ export default class RemoteServices {
       });
   }
 
+  static async getPublicClarificationRequests(questionId: number|null):Promise<ClarificationRequest[]>{
+    return httpClient
+      .get('/questions/'+questionId+'/clarification_requests')
+      .then(response => {
+        return response.data.map((clarificationRequest: any) => {
+          return new ClarificationRequest(clarificationRequest);
+        });
+      })
+      .catch(async error => {
+      throw Error(await this.errorMessage('Error:'+error));
+      });
+  }
+
   static async exportAll() {
     return httpClient
       .get('/admin/export', {
