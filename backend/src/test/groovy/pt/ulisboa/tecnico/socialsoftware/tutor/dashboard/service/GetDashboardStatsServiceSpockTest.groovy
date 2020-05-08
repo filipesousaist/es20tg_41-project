@@ -10,6 +10,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.DashboardService
+import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.dto.DashboardStatsDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.repository.DashboardRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
@@ -68,13 +69,13 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         student1.addCourse(courseExecution)
 
         //Create student2 and add him to course
-        student2 = new User(STUDENT_NAME_2, STUDENT_USERNAME_2, 3, User.Role.STUDENT)
+        student2 = new User(STUDENT_NAME_2, STUDENT_USERNAME_2, 2, User.Role.STUDENT)
         userRepository.save(student2)
         courseExecution.addUser(student2)
         student2.addCourse(courseExecution)
 
         // Create teacher and add him to course
-        teacher = new User(TEACHER_NAME, TEACHER_USERNAME, 2, User.Role.TEACHER)
+        teacher = new User(TEACHER_NAME, TEACHER_USERNAME, 3, User.Role.TEACHER)
         userRepository.save(teacher)
         courseExecution.addUser(teacher)
         teacher.addCourse(courseExecution)
@@ -85,9 +86,10 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         def courseExecutionId = courseExecution.getId()
         when:
         def result = dashboardService.getDashboardStats(student1.getId(), courseExecutionId)
+        result.sort {a, b -> a.getUserId() - b.getUserId()}
         then:
         result != null
-        def myDashboardStats = result.get(1)
+        def myDashboardStats = result.get(0)
         myDashboardStats != null
         myDashboardStats.getName() == STUDENT_NAME
         myDashboardStats.getUsername() == STUDENT_USERNAME
@@ -110,10 +112,11 @@ class GetDashboardStatsServiceSpockTest extends Specification {
 
         when:
         def result = dashboardService.getDashboardStats(student1.getId(), courseExecution.getId())
+        result.sort {a, b -> a.getUserId() - b.getUserId()}
 
         then: "student's dashboard stats contain the expected values"
         result != null
-        def myDashboardStats = result.get(1)
+        def myDashboardStats = result.get(0)
         myDashboardStats != null
         myDashboardStats.getNumProposedQuestions() == 4
         myDashboardStats.getNumAcceptedQuestions() == 1 // only student question 1
@@ -141,16 +144,17 @@ class GetDashboardStatsServiceSpockTest extends Specification {
 
         when:
         def result = dashboardService.getDashboardStats(student1.getId(), courseExecution.getId())
+        result.sort {a, b -> a.getUserId() - b.getUserId()}
 
         then: "student's dashboard stats contain the expected values"
         result != null
-        def myDashboardStats1 = result.get(1)
+        def myDashboardStats1 = result.get(0)
         // student1 stats
         myDashboardStats1 != null
         myDashboardStats1.getNumProposedQuestions() == 3
         myDashboardStats1.getNumAcceptedQuestions() == 1
         // student2 stats visible in student1 dashboard
-        def myDashboardStats2 = result.get(0)
+        def myDashboardStats2 = result.get(1)
         myDashboardStats2 != null
         myDashboardStats2.getNumProposedQuestions() == -1
         myDashboardStats2.getNumAcceptedQuestions() == 2
@@ -176,16 +180,17 @@ class GetDashboardStatsServiceSpockTest extends Specification {
 
         when:
         def result = dashboardService.getDashboardStats(student1.getId(), courseExecution.getId())
+        result.sort {a, b -> a.getUserId() - b.getUserId()}
 
         then: "student's dashboard stats contain the expected values"
         result != null
-        def myDashboardStats1 = result.get(1)
+        def myDashboardStats1 = result.get(0)
         // student1 stats
         myDashboardStats1 != null
         myDashboardStats1.getNumProposedQuestions() == 3
         myDashboardStats1.getNumAcceptedQuestions() == 1
         // student2 stats visible in student1 dashboard
-        def myDashboardStats2 = result.get(0)
+        def myDashboardStats2 = result.get(1)
         myDashboardStats2 != null
         myDashboardStats2.getNumProposedQuestions() == 3
         myDashboardStats2.getNumAcceptedQuestions() == 0

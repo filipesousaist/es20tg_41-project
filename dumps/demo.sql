@@ -11533,12 +11533,15 @@ CREATE TABLE public.dashboard_stats (
 );
 
 
+ALTER TABLE ONLY public.dashboard_stats
+    ADD CONSTRAINT dashboard_statss_pkey PRIMARY KEY (id);
+
 ALTER TABLE public.users ADD dashboard_stats_id integer;
 UPDATE public.users SET dashboard_stats_id=id; /* Each dashboard_stats will have same id as user */
 
-/* Create all dashboard stats and make accepted questions private*/
+/* Create all dashboard stats and make accepted questions public */
 INSERT INTO public.dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, show_num_proposed_questions, show_num_accepted_questions) (
-	SELECT id, id, 18, 10, true, true
+	SELECT id, id, 0, 0, true, true
 	FROM public.users
 );
 
@@ -11549,7 +11552,6 @@ UPDATE public.dashboard_stats SET show_num_accepted_questions=false WHERE user_i
 /* Make student 700 stats private*/
 UPDATE public.dashboard_stats SET show_num_proposed_questions=false WHERE user_id=700;
 UPDATE public.dashboard_stats SET show_num_accepted_questions=false WHERE user_id=700;
-
 
 --
 -- PostgreSQL database dump complete

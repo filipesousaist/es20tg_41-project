@@ -67,13 +67,7 @@
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">ALTER TABLE users DISABLE TRIGGER ALL; /* Disable foreign key constraints */
-UPDATE users SET dashboard_stats_id=1 WHERE id=676; /* Each dashboard_stats will have same id as user */
-ALTER TABLE users ENABLE TRIGGER ALL; /* Enable foreign key constraints */
-
-/* Create all dashboard stats */
-INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, show_num_proposed_questions, show_num_accepted_questions) 
-VALUES (1, 676, 0, 0, false, true);</stringProp>
+          <stringProp name="query">UPDATE dashboard_stats SET show_num_accepted_questions=true WHERE id=676;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
@@ -323,11 +317,7 @@ VALUES (1, 676, 0, 0, false, true);</stringProp>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
           <stringProp name="queryType">Callable Statement</stringProp>
-          <stringProp name="query">ALTER TABLE users DISABLE TRIGGER ALL; /* Disable foreign key constraints */
-UPDATE users SET dashboard_stats_id=NULL WHERE id=676; /* Delete references to dashboard_stats */
-ALTER TABLE users ENABLE TRIGGER ALL; /* Enable foreign key constraints */
-
-DELETE FROM dashboard_stats;</stringProp>
+          <stringProp name="query">UPDATE dashboard_stats SET show_num_accepted_questions=false WHERE id=676;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="variableNames"></stringProp>
