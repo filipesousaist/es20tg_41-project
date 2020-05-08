@@ -355,8 +355,8 @@ Cypress.Commands.add('createTournament', (name, numberOfQuestions, day2) => {
   cy.contains('New Tournament').click({ force: true });
   cy.contains('Select beginning').click({ force: true });
   cy.get(':nth-child(1) > #undefined-wrapper > .datetimepicker > .datepicker > .datepicker-buttons-container > .now').click({ force: true });
-  cy.contains('Select ending').click({ force: true });
-  cy.get(':nth-child(2) > #undefined-wrapper > .datetimepicker > .datepicker > .pickers-container > #undefined-picker-container-DatePicker > .calendar > .month-container > :nth-child(1) > .datepicker-days > :nth-child(36) > .datepicker-day-text').click({force:true});
+  cy.get('[data-cy="Select ending"]').click({ force: true });
+  cy.get(':nth-child(2) > #undefined-wrapper > .datetimepicker > .datepicker > .pickers-container > #undefined-picker-container-DatePicker > .calendar > .month-container > :nth-child(1) > .datepicker-days > :nth-child(34) > .datepicker-day-text').click({force:true});
   cy.get('[data-cy=saveButton]').click();
 });
 
@@ -367,11 +367,10 @@ Cypress.Commands.add(
     cy.contains('New Tournament').click({ force: true });
     cy.get('[data-cy="tournamentName"]').type(name);
     cy.get('[data-cy="Number of questions"]').type(numberOfQuestions);
-    cy.contains('Select ending').click({ force: true });
     cy.contains('Select beginning').click({ force: true });
     cy.get(':nth-child(1) > #undefined-wrapper > .datetimepicker > .datepicker > .datepicker-buttons-container > .now').click({ force: true });
-    cy.contains('Select ending').click({ force: true });
-    cy.get(':nth-child(2) > #undefined-wrapper > .datetimepicker > .datepicker > .pickers-container > #undefined-picker-container-DatePicker > .calendar > .month-container > :nth-child(1) > .datepicker-days > :nth-child(36) > .datepicker-day-text').click({force:true});
+    cy.get('[data-cy="Select ending"]').click({ force: true });
+    cy.get(':nth-child(2) > #undefined-wrapper > .datetimepicker > .datepicker > .pickers-container > #undefined-picker-container-DatePicker > .calendar > .month-container > :nth-child(1) > .datepicker-days > :nth-child(34) > .datepicker-day-text').click({force:true});
     cy.get('[data-cy=saveButton]').click();
   }
 );
