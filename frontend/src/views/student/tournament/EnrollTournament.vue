@@ -45,7 +45,6 @@
             <v-btn
               color="primary"
               @click="enrollTournament(tournament)"
-              v-on="on"
               data-cy="enroll"
             >
               Enroll
@@ -55,7 +54,6 @@
             <v-btn
               color="error"
               @click="enrollTournament(tournament)"
-              v-on="on"
               data-cy="withdraw"
             >
               Withdraw
@@ -65,7 +63,6 @@
             <v-btn
               color="error"
               @click="deleteTournament(tournament)"
-              v-on="on"
               data-cy="delete"
             >
               Delete

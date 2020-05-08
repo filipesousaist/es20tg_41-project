@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
@@ -55,7 +56,7 @@ public class TournamentService {
     EntityManager entityManager;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public TournamentDto createNewTournament(Integer userId, Integer courseExId, TournamentDto tournamentDto){
+    public TournamentDto createNewTournament(Integer userId, Integer courseExId, TournamentDto tournamentDto) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
 
@@ -138,6 +139,14 @@ public class TournamentService {
 
         Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
 
+        if (tournament.getTournamentQuiz() != null) {
+            for (QuizAnswer answer : tournament.getTournamentQuiz().getQuizAnswers()) {
+                if (answer.getUser() == user) {
+                    throw new TutorException(QUIZ_HAS_ANSWERS);
+                }
+            }
+        }
+
         tournament.removeStudentEnrolled(user);
         user.removeTournamentEnrolled(tournament);
     }
@@ -153,10 +162,9 @@ public class TournamentService {
         quiz.setTitle(tournament.getName());
 
         List<Question> possibleQuestions = new ArrayList<>();
-        for (Topic topic: tournament.getTitles()) {
+        for (Topic topic : tournament.getTitles()) {
             possibleQuestions.addAll(topic.getQuestions());
         }
-
 
 
         Random rand = new Random();

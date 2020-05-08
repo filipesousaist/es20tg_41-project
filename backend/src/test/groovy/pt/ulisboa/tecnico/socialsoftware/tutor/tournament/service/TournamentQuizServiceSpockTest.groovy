@@ -56,6 +56,7 @@ class TournamentQuizServiceSpockTest extends Specification {
     static final String ACADEMIC_TERM = "1º Semestre"
     static final String TOPIC_NAME1 = "Algorithms"
     static final String TOPIC_NAME2 = "Machine Learning"
+    static final String TOURNAMENT_NAME = "Demo Tournament"
 
 
     @Autowired
@@ -143,6 +144,7 @@ class TournamentQuizServiceSpockTest extends Specification {
         tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
         tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
         tournamentDto.setNumberOfQuestions(NUMBER_OF_QUESTIONS)
+        tournamentDto.setName(TOURNAMENT_NAME)
 
     }
 
