@@ -56,7 +56,7 @@
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">hwjv8756</stringProp>
+          <stringProp name="password">123456</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
@@ -170,7 +170,7 @@ UPDATE dashboard_stats SET num_answered_clarification_requests=2 WHERE id=676;</
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request to get dashboard stats" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
@@ -244,6 +244,24 @@ UPDATE dashboard_stats SET num_answered_clarification_requests=2 WHERE id=676;</
             </JSONPathAssertion>
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of clarification requests" enabled="true">
+              <stringProp name="JSON_PATH">$..[?(@.userId == 700)].numClarificationRequests</stringProp>
+              <stringProp name="EXPECTED_VALUE">-1</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of answered clarification requests" enabled="true">
+              <stringProp name="JSON_PATH">$..[?(@.userId == 700)].numAnsweredClarificationRequests</stringProp>
+              <stringProp name="EXPECTED_VALUE">-1</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of clarification requests (Demo Student)" enabled="true">
               <stringProp name="JSON_PATH">$..[?(@.userId == 676)].numClarificationRequests</stringProp>
               <stringProp name="EXPECTED_VALUE">4</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
@@ -252,7 +270,7 @@ UPDATE dashboard_stats SET num_answered_clarification_requests=2 WHERE id=676;</
               <boolProp name="ISREGEX">false</boolProp>
             </JSONPathAssertion>
             <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of answered clarification requests" enabled="true">
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of answered clarification requests (Demo Student)" enabled="true">
               <stringProp name="JSON_PATH">$..[?(@.userId == 676)].numAnsweredClarificationRequests</stringProp>
               <stringProp name="EXPECTED_VALUE">2</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
@@ -362,7 +380,7 @@ UPDATE dashboard_stats SET num_answered_clarification_requests=2 WHERE id=676;</
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">hwjv8756</stringProp>
+          <stringProp name="password">123456</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
