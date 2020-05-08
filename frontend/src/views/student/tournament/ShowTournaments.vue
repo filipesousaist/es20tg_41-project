@@ -8,8 +8,8 @@
         <div class="col">Beggining Date</div>
         <div class="col">Ending Date</div>
         <div class="col">Questions</div>
-        <div class="col">Result</div>
         <div class="col">Status</div>
+        <div class="col last-col"></div>
 
       </li>
       <li
@@ -35,10 +35,16 @@
           {{ tournament.numberOfQuestions }}
         </div>
         <div class="col">
-          NA
-        </div>
-        <div class="col">
           {{ tournament.isClosed ? 'Closed' : 'Open' }}
+        </div>
+        <div class="col last-col">
+          <v-btn
+                  color="primary"
+                  @click="showResults(tournament)"
+                  data-cy="result"
+          >
+            Show Results
+          </v-btn>
         </div>
       </li>
     </ul>
@@ -65,6 +71,10 @@ export default class ShowTournaments extends Vue {
       await this.$store.dispatch('error', error);
     }
     await this.$store.dispatch('clearLoading');
+  }
+
+  async showResults(tournament: Tournament) {
+
   }
 }
 </script>

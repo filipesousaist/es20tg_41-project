@@ -28,13 +28,13 @@
       <v-toolbar-items class="hidden-sm-and-down" hide-details>
         <v-menu offset-y v-if="isAdmin" open-on-hover>
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" text dark>
+            <v-btn v-on="on" text dark data-cy="administrationMenuButton">
               Administration
               <v-icon>fas fa-file-alt</v-icon>
             </v-btn>
           </template>
           <v-list dense>
-            <v-list-item to="/admin/courses">
+            <v-list-item to="/admin/courses" data-cy="manageCoursesMenuButton">
               <v-list-item-action>
                 <v-icon>fas fa-school</v-icon>
               </v-list-item-action>
@@ -113,6 +113,17 @@
         </v-menu>
 
         <v-btn
+          to="/student/studentAnsweredQuestions/"
+          v-if="isStudent && currentCourse"
+          text
+          dark
+        >
+          Answered Questions
+          <v-icon>fas fa-file-alt</v-icon>
+        </v-btn>
+
+
+        <v-btn
           to="/student/studentQuestions/"
           v-if="isStudent && currentCourse"
           text
@@ -189,6 +200,14 @@
                 <v-list-item-title>Enroll</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+            <v-list-item to="/student/participateTournament">
+              <v-list-item-action>
+                <v-icon>fas fa-marker</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Participate</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
             <v-list-item to="/student/showTournaments">
               <v-list-item-action>
                 <v-icon>fas fa-list-ul</v-icon>
@@ -198,13 +217,34 @@
               </v-list-item-content>
             </v-list-item>
           </v-list>
-
         </v-menu>
 
-        <v-btn to="/student/stats" v-if="isStudent && currentCourse" text dark>
-          Stats
-          <v-icon>fas fa-user</v-icon>
-        </v-btn>
+        <v-menu offset-y v-if="isStudent && currentCourse" open-on-hover>
+          <template v-slot:activator="{ on }">
+            <v-btn v-on="on" text dark>
+              User
+              <v-icon>fas fa-user</v-icon>
+            </v-btn>
+          </template>
+          <v-list dense>
+            <v-list-item to="/student/stats">
+              <v-list-item-action>
+                <v-icon>bar_chart</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Stats</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item to="/student/dashboard">
+              <v-list-item-action>
+                <v-icon>view_list</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Dashboard</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-menu>
 
         <v-btn
           v-if="isLoggedIn && moreThanOneCourse"
@@ -217,7 +257,13 @@
           <v-icon>fa fa-book</v-icon>
         </v-btn>
 
-        <v-btn v-if="isLoggedIn" @click="logout" text dark>
+        <v-btn
+          v-if="isLoggedIn"
+          @click="logout"
+          data-cy="logoutButton"
+          text
+          dark
+        >
           Logout
           <v-icon>fas fa-sign-out-alt</v-icon>
         </v-btn>
@@ -246,9 +292,7 @@
           v-if="isAdmin"
         >
           <template v-slot:activator>
-            <v-list-item-title data-cy="Administration"
-              >Administration</v-list-item-title
-            >
+            <v-list-item-title>Administration</v-list-item-title>
           </template>
           <v-list-item to="/admin/courses">
             <v-list-item-action>
@@ -377,9 +421,16 @@
 
           <v-list-item to="/student/stats">
             <v-list-item-action>
-              <v-icon>fas fa-user</v-icon>
+              <v-icon>bar_chart</v-icon>
             </v-list-item-action>
-            <v-list-item-content>Statssss</v-list-item-content>
+            <v-list-item-content>Stats</v-list-item-content>
+          </v-list-item>
+
+          <v-list-item to="/student/dashboard">
+            <v-list-item-action>
+              <v-icon>view_list</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>Dashboard</v-list-item-content>
           </v-list-item>
 
           <v-list-item to="/student/createTournament">
@@ -402,7 +453,7 @@
             </v-list-item-action>
             <v-list-item-content>Show Tournaments</v-list-item-content>
           </v-list-item>
-      </v-list-group>
+        </v-list-group>
 
         <v-list-item to="/courses" v-if="isLoggedIn && moreThanOneCourse">
           <v-list-item-action>

@@ -16,12 +16,10 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRequestRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.DiscussionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.repository.ClarificationRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Option
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.QuizService
@@ -82,7 +80,7 @@ class GetClarificationServiceSpockPerformanceTest extends Specification{
     ClarificationRequestRepository clarificationRequestRepository
 
     @Autowired
-    DiscussionRepository discussionRepository
+    ClarificationRepository discussionRepository
 
     @Autowired
     QuestionRepository questionRepository
@@ -138,7 +136,7 @@ class GetClarificationServiceSpockPerformanceTest extends Specification{
         quiz.setKey(1)
         quiz.setKey(quizService.getMaxQuizKey() + 1)
         quiz.setCourseExecution(courseExecution);
-        quiz.setType(Quiz.QuizType.GENERATED)
+        quiz.setType(Quiz.QuizType.GENERATED.toString())
         quizRepository.save(quiz)
 
         question1 = new Question()
@@ -148,18 +146,14 @@ class GetClarificationServiceSpockPerformanceTest extends Specification{
         question1.setCourse(course)
         questionRepository.save(question1)
 
-        def option = new Option()
-        option.setCorrect(false)
-        option.setContent(OPTION_CONTENT)
-        option.setQuestion(question1)
-        question1.addOption(option)
 
         def quizQuestion = new QuizQuestion(quiz, question1, 1)
         quizQuestionRepository.save(quizQuestion)
 
-        def clarificationRequestDto = new ClarificationRequestDto()
-        clarificationRequestDto.setTitle(CLARIFICATION_TITLE)
-        clarificationRequestDto.setText(CLARIFICATION_REQUEST_TEXT)
+        def request = new ClarificationRequest()
+        request.setQuestion(question1)
+        clarificationRequestRepository.save(request)
+
 
         def clarificationDto = new ClarificationDto()
         clarificationDto.setText(CLARIFICATION_TEXT)
@@ -176,16 +170,16 @@ class GetClarificationServiceSpockPerformanceTest extends Specification{
             user1.addQuizAnswer(quizAnswer)
             answerService.concludeQuiz(user1, quiz.getId())
             answerService.submitAnswer(user1, quiz.getId(), new StatementAnswerDto(questionAnswer))
-            clarificationRequestDto.setUsername(USERNAME + it)
-            discussionService.submitClarificationRequest(question1.getId(), clarificationRequestDto)
-            clarificationDto.setUsername(teacher1.getUsername())
+            request.setStudent(user1)
+            clarificationRequestRepository.save(request)
+            clarificationDto.setUserId(teacher1.getId())
             discussionService.createClarification(it, clarificationDto)
         })
 
         when:
         for (int j = 1; j <= 1; j++) {
             for (int i = 1; i <= 1; i++) {
-                discussionService.getClarification(i)
+                discussionService.getClarificationByRequest(i)
             }
         }
 

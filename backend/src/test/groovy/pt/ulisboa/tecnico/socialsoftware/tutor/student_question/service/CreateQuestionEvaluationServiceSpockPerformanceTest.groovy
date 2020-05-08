@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
@@ -22,45 +23,43 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
 
-import java.time.LocalDateTime
-
 @DataJpaTest
 class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification {
-    private static final String COURSE_NAME = "Engenharia de Software";
-    private static final String ACRONYM = "ES";
-    private static final String ACADEMIC_TERM = "2 SEM";
-    private static final String QUESTION_TITLE = "Question 1";
-    private static final String QUESTION_CONTENT = "What is the answer to this question?";
-    private static final String OPTION1_CONTENT = "Option 1";
-    private static final String OPTION2_CONTENT = "Option 2";
-    private static final String STUDENT_NAME = "Student Name";
-    private static final String STUDENT_USERNAME = "Student Username";
-    private static final int STUDENT_KEY = 1;
-    private static final String JUSTIFICATION = "Good question";
-    private static final String TEACHER_NAME = "Teacher Name";
-    private static final String TEACHER_USERNAME = "Teacher Username";
-    private static final int TEACHER_KEY = 2;
+    private static final String COURSE_NAME = "Engenharia de Software"
+    private static final String ACRONYM = "ES"
+    private static final String ACADEMIC_TERM = "2 SEM"
+    private static final String QUESTION_TITLE = "Question 1"
+    private static final String QUESTION_CONTENT = "What is the answer to this question?"
+    private static final String OPTION1_CONTENT = "Option 1"
+    private static final String OPTION2_CONTENT = "Option 2"
+    private static final String STUDENT_NAME = "Student Name"
+    private static final String STUDENT_USERNAME = "Student Username"
+    private static final int STUDENT_KEY = 1
+    private static final String JUSTIFICATION = "Good question"
+    private static final String TEACHER_NAME = "Teacher Name"
+    private static final String TEACHER_USERNAME = "Teacher Username"
+    private static final int TEACHER_KEY = 2
 
     @Autowired
-    StudentQuestionService studentQuestionService;
+    StudentQuestionService studentQuestionService
 
     @Autowired
-    CourseRepository courseRepository;
+    CourseRepository courseRepository
 
     @Autowired
-    CourseExecutionRepository courseExecutionRepository;
+    CourseExecutionRepository courseExecutionRepository
 
     @Autowired
-    QuestionRepository questionRepository;
+    QuestionRepository questionRepository
 
     @Autowired
-    UserRepository userRepository;
+    UserRepository userRepository
 
     @Autowired
-    StudentQuestionRepository studentQuestionRepository;
+    StudentQuestionRepository studentQuestionRepository
 
     @Autowired
-    QuestionEvaluationRepository questionEvaluationRepository;
+    QuestionEvaluationRepository questionEvaluationRepository
 
     def studentQuestion
     def studentQuestionID
@@ -81,7 +80,7 @@ class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification 
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
         questionDto.setStatus(Question.Status.AVAILABLE.name())
-        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter))
+        questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()))
 
         // Create 2 options, and add them to question
         def option1Dto = new OptionDto()
@@ -122,11 +121,11 @@ class CreateQuestionEvaluationServiceSpockPerformanceTest extends Specification 
 
         when: "a question evaluation is created"
         1.upto(/*10000*/1, {
-            questionEvaluationDto.setJustification(JUSTIFICATION + it);
-            questionEvaluationDto.setApproved(it % 3 == 0);
+            questionEvaluationDto.setJustification(JUSTIFICATION + it)
+            questionEvaluationDto.setApproved(it % 3 == 0)
             studentQuestionService.createQuestionEvaluation(
-                teacherID, studentQuestionID, questionEvaluationDto);
-        });
+                teacherID, studentQuestionID, questionEvaluationDto)
+        })
 
         then:
         true

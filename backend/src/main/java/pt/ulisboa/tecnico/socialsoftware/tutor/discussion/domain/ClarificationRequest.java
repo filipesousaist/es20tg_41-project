@@ -1,11 +1,13 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.domain.DashboardStats;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "clarification_requests")
@@ -22,6 +24,12 @@ public class ClarificationRequest {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User student;
+
+    @Column(name="private")
+    private boolean privacy;
+
+    @Column(name="creationDate")
+    private LocalDateTime creationDate;
 
 
     @OneToOne(mappedBy = "clarificationRequest")
@@ -41,6 +49,7 @@ public class ClarificationRequest {
         this.student = student;
         this.title = clarificationRequestDto.getTitle();
         this.text = clarificationRequestDto.getText();
+        this.privacy = clarificationRequestDto.getPrivacy();
     }
 
 
@@ -74,6 +83,8 @@ public class ClarificationRequest {
 
     public void setClarification(Clarification clarification) {
         this.clarification = clarification;
+        DashboardStats stats = this.student.getDashboardStats();
+        stats.setNumAnsweredClarificationRequests(stats.getNumAnsweredClarificationRequests() + 1);
     }
 
     public String getTitle() {
@@ -92,5 +103,20 @@ public class ClarificationRequest {
         this.text = text;
     }
 
+    public boolean getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(boolean privacy) {
+        this.privacy = privacy;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
 }
 

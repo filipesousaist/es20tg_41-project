@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
@@ -18,9 +19,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
 
-import java.time.LocalDateTime
-
-
 @DataJpaTest
 class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
     public static final String COURSE_NAME = "Software Architecture"
@@ -29,6 +27,9 @@ class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
     public static final String QUESTION_TITLE = 'question title'
     public static final String QUESTION_CONTENT = 'question content'
     public static final String OPTION_CONTENT = "optionId content"
+    private static final String STUDENT_NAME = "Student Name";
+    private static final String STUDENT_USERNAME = "Student Username";
+    private static final int STUDENT_KEY = 1;
 
     @Autowired
     StudentQuestionRepository studentQuestionRepository
@@ -50,14 +51,14 @@ class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
     def courseExecution
     def user
 
-    def setup(){
+    def setup() {
         course = new Course(COURSE_NAME, Course.Type.TECNICO)
         courseRepository.save(course)
 
         courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)
 
-        user = new User()
+        user = new User(STUDENT_NAME, STUDENT_USERNAME, STUDENT_KEY, User.Role.STUDENT)
         user.setKey(1)
         userRepository.save(user)
 
@@ -72,8 +73,8 @@ class CreateStudentQuestionServiceSpockPerformanceTest extends Specification {
         questionDto.setKey(1)
         questionDto.setTitle(QUESTION_TITLE)
         questionDto.setContent(QUESTION_CONTENT)
-        questionDto.setStatus(Question.Status.PROPOSED.name())
-        questionDto.setCreationDate(LocalDateTime.now().format(Course.formatter));
+        questionDto.setStatus(Question.Status.DISABLED.name())
+        questionDto.setCreationDate(DateHandler.toISOString(DateHandler.now()));
         and: 'a optionDto'
         def optionDto = new OptionDto()
         optionDto.setContent(OPTION_CONTENT)

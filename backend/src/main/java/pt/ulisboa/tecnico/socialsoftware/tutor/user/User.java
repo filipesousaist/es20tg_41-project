@@ -3,9 +3,10 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.user;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
+import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.domain.DashboardStats;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.Clarification;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain.ClarificationRequest;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.DomainEntity;
@@ -82,6 +83,9 @@ public class User implements UserDetails, DomainEntity {
     @ManyToMany(mappedBy = "studentsEnrolled")
     private Set<Tournament> tournamentsEnrolled = new HashSet<>();
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "dashboard_stats_id")
+    private DashboardStats dashboardStats;
 
     public User() {
     }
@@ -91,7 +95,7 @@ public class User implements UserDetails, DomainEntity {
         setUsername(username);
         this.key = key;
         this.role = role;
-        this.creationDate = LocalDateTime.now();
+        this.creationDate = DateHandler.now();
         this.numberOfTeacherQuizzes = 0;
         this.numberOfInClassQuizzes = 0;
         this.numberOfStudentQuizzes = 0;
@@ -101,6 +105,7 @@ public class User implements UserDetails, DomainEntity {
         this.numberOfCorrectTeacherAnswers = 0;
         this.numberOfCorrectInClassAnswers = 0;
         this.numberOfCorrectStudentAnswers = 0;
+        initDashboardStats();
     }
 
     @Override
@@ -110,10 +115,6 @@ public class User implements UserDetails, DomainEntity {
 
     public Integer getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Integer getKey() {
@@ -195,6 +196,7 @@ public class User implements UserDetails, DomainEntity {
 
     public void addClarificationRequest(ClarificationRequest clarificationRequest){
         clarificationRequests.add(clarificationRequest);
+        dashboardStats.setNumClarificationRequests(dashboardStats.getNumClarificationRequests() + 1);
     }
 
     public Set<Clarification> getClarifications() {
@@ -224,7 +226,7 @@ public class User implements UserDetails, DomainEntity {
     }
 
     public Integer getNumberOfStudentQuizzes() {
-        if(this.numberOfStudentQuizzes == null)
+        if (this.numberOfStudentQuizzes == null)
             this.numberOfStudentQuizzes = (int) getQuizAnswers().stream()
                     .filter(QuizAnswer::isCompleted)
                     .filter(quizAnswer -> quizAnswer.getQuiz().getType().equals(Quiz.QuizType.GENERATED))
@@ -355,6 +357,29 @@ public class User implements UserDetails, DomainEntity {
         this.numberOfCorrectStudentAnswers = numberOfCorrectStudentAnswers;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", key=" + key +
+                ", role=" + role +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", enrolledCoursesAcronyms='" + enrolledCoursesAcronyms + '\'' +
+                ", numberOfTeacherQuizzes=" + numberOfTeacherQuizzes +
+                ", numberOfStudentQuizzes=" + numberOfStudentQuizzes +
+                ", numberOfInClassQuizzes=" + numberOfInClassQuizzes +
+                ", numberOfTeacherAnswers=" + numberOfTeacherAnswers +
+                ", numberOfInClassAnswers=" + numberOfInClassAnswers +
+                ", numberOfStudentAnswers=" + numberOfStudentAnswers +
+                ", numberOfCorrectTeacherAnswers=" + numberOfCorrectTeacherAnswers +
+                ", numberOfCorrectInClassAnswers=" + numberOfCorrectInClassAnswers +
+                ", numberOfCorrectStudentAnswers=" + numberOfCorrectStudentAnswers +
+                ", creationDate=" + creationDate +
+                ", lastAccess=" + lastAccess +
+                '}';
+    }
+
     public void increaseNumberOfQuizzes(Quiz.QuizType type) {
         switch (type) {
             case PROPOSED:
@@ -422,7 +447,37 @@ public class User implements UserDetails, DomainEntity {
 
     public void addTournamentCreatedByMe(Tournament tournament) {this.tournamentsCreatedByMe.add(tournament);}
 
+    public int getTotalTournaments() {
 
+        return this.tournamentsEnrolled.size();
+    }
+
+    public int getHighestResult() {
+
+        int bestRank = 26;
+        for (Tournament t: this.tournamentsEnrolled) {
+            int rank = t.getHighestResult(this);
+            if (rank < bestRank) {
+                bestRank = rank;
+            }
+        }
+        return bestRank;
+    }
+
+    public DashboardStats getDashboardStats() {
+        if (dashboardStats == null)
+            initDashboardStats();
+        return dashboardStats;
+    }
+
+    public void setDashboardStats(DashboardStats dashboardStats) {
+        this.dashboardStats = dashboardStats;
+    }
+
+    private void initDashboardStats() {
+        if (role.equals(Role.STUDENT))
+            dashboardStats = new DashboardStats(this);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -490,12 +545,27 @@ public class User implements UserDetails, DomainEntity {
         Random rand = new Random(System.currentTimeMillis());
         while (numberOfAddedQuestions < numberOfQuestions) {
             int next = rand.nextInt(studentAnsweredQuestions.size());
-            if(!result.contains(studentAnsweredQuestions.get(next))) {
+            if (!result.contains(studentAnsweredQuestions.get(next))) {
                 result.add(studentAnsweredQuestions.get(next));
                 numberOfAddedQuestions++;
             }
         }
 
         return result;
+    }
+
+    public int getNumProposedQuestions() {
+        return studentQuestions.size();
+    }
+
+    public int getNumAcceptedQuestions() {
+        return (int) studentQuestions.stream().filter(StudentQuestion::isAccepted).count();
+    }
+
+    public int getNumClarificationRequests() { return clarificationRequests.size(); }
+
+    public int getNumAnsweredClarificationRequests() {
+        return (int) clarificationRequests.stream().filter(
+                clarificationRequest -> clarificationRequest.getClarification() != null).count();
     }
 }

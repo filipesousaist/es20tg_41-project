@@ -68,9 +68,11 @@
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq_1</stringProp>
           <stringProp name="queryType">Callable Statement</stringProp>
-          <stringProp name="query">INSERT INTO quiz_answers (completed, user_id, quiz_id, used_in_statistics) VALUES (true, 676, 5370, true);
-INSERT INTO quiz_questions(sequence, question_id, quiz_id) VALUES (5, 1984, 5370);
-INSERT INTO question_answers (quiz_answer_id, quiz_question_id) VALUES ((select max(id) from quiz_answers), (select max(id) from quiz_questions));
+          <stringProp name="query">INSERT INTO quiz_answers (id, completed, user_id, quiz_id, used_in_statistics) VALUES (100000, true, 676, 5370, true);
+INSERT INTO quiz_questions(id, sequence, question_id, quiz_id) VALUES (100000, 5, 1984, 5370);
+INSERT INTO question_answers (id ,quiz_answer_id, quiz_question_id) VALUES (100000, 100000, 100000);
+
+
 </stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
@@ -183,7 +185,7 @@ INSERT INTO question_answers (quiz_answer_id, quiz_question_id) VALUES ((select 
                   <stringProp name="Argument.value">{&#xd;
 	&quot;title&quot;:&quot;doubt on question 1&quot;,&#xd;
 	&quot;text&quot;:&quot;i dont understant this question&quot;,&#xd;
-	&quot;username&quot;:&quot;Demo-Student&quot;&#xd;
+	&quot;userId&quot;:&quot;676&quot;&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -223,9 +225,9 @@ INSERT INTO question_answers (quiz_answer_id, quiz_question_id) VALUES ((select 
               <boolProp name="ISREGEX">false</boolProp>
             </JSONPathAssertion>
             <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert clarification request username" enabled="true">
-              <stringProp name="JSON_PATH">username</stringProp>
-              <stringProp name="EXPECTED_VALUE">Demo-Student</stringProp>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert clarification request userId" enabled="true">
+              <stringProp name="JSON_PATH">userId</stringProp>
+              <stringProp name="EXPECTED_VALUE">676</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -344,11 +346,12 @@ INSERT INTO question_answers (quiz_answer_id, quiz_question_id) VALUES ((select 
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">DELETE FROM users_clarification_requests WHERE user_id &gt; 737;
+          <stringProp name="query">DELETE FROM users_clarification_requests WHERE user_id = 676;
 DELETE FROM clarification_requests WHERE title LIKE &apos;doubt on question 1&apos;;
-DELETE FROM question_answers WHERE id &gt; 66552;
-DELETE FROM quiz_answers WHERE id &gt; 8843;
-DELETE FROM users WHERE username = &apos;Demo-Student1&apos;;</stringProp>
+DELETE FROM question_answers WHERE id = 100000;
+DELETE FROM quiz_answers WHERE id = 100000;
+DELETE FROM quiz_questions where id = 100000;
+</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>

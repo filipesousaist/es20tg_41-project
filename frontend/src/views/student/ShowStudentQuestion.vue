@@ -31,7 +31,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { convertMarkDown } from '@/services/ConvertMarkdownService';
 import Image from '@/models/management/Image';
-import StudentQuestion from '../../models/management/StudentQuestion';
+import StudentQuestion from '../../models/student_question/StudentQuestion';
 
 @Component
 export default class ShowStudentQuestion extends Vue {

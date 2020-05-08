@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-
 public class StatementQuestionDto implements Serializable {
     private String content;
     private List<StatementOptionDto> options;

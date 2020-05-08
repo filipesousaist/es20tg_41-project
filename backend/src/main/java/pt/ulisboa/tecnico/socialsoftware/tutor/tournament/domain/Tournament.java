@@ -1,18 +1,17 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuestionAnswer;
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
-import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Option;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
-import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
@@ -38,6 +37,9 @@ public class Tournament {
     @JoinColumn(name = "course_executions_id")
     private CourseExecution courseExecution;
 
+    @OneToOne(mappedBy = "tournament")
+    private Quiz tournamentQuiz = null;
+
     private String name;
     private LocalDateTime beginningTime;
     private LocalDateTime endingTime;
@@ -62,7 +64,6 @@ public class Tournament {
 
     private void checkParameters(List<Topic> topics, LocalDateTime initialTime, LocalDateTime endTime, int nQuestions) {
         if (topics == null) {
-            //TODO check
             throw new TutorException(TOPICS_IS_EMPTY);
         }
         if (initialTime.isAfter(endTime)) {
@@ -164,6 +165,14 @@ public class Tournament {
         this.name = name;
     }
 
+    public Quiz getTournamentQuiz() {
+        return tournamentQuiz;
+    }
+
+    public void setTournamentQuiz(Quiz tournamentQuiz) {
+        this.tournamentQuiz = tournamentQuiz;
+    }
+
     public void remove(int studentId) {
 
         if (this.createdByUser.getId() != studentId)
@@ -184,7 +193,54 @@ public class Tournament {
         }
         this.titles = null;
 
+        this.tournamentQuiz = null;
+
         this.courseExecution.getTournaments().remove(this);
         this.courseExecution = null;
+    }
+
+    public Integer getHighestResult(User user) {
+
+        if (tournamentQuiz == null) {
+            return 26;
+        }
+
+        int rank = 1;
+
+        HashMap<User, Integer> studentsRank = new HashMap<>();
+
+        for (User u: this.studentsEnrolled) {
+            int value = (int) u.getQuizAnswers().stream()
+                    .map(QuizAnswer::getQuestionAnswers)
+                    .flatMap(Collection::stream)
+                    .map(QuestionAnswer::getOption)
+                    .filter(Objects::nonNull)
+                    .filter(Option::getCorrect).count();
+            studentsRank.put(u, value);
+        }
+
+        studentsRank.entrySet().stream()
+                .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()));
+
+
+        int correct = studentsRank.get(studentsRank.keySet().toArray()[0]);
+        Iterator it = studentsRank.entrySet().iterator();
+
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            int value = (int) pair.getValue();
+
+            if (correct > value) {
+                correct = value;
+                rank++;
+            }
+
+            User user2 = (User) pair.getKey();
+
+            if (user2.getId().equals(user.getId())) {
+                break;
+            }
+        }
+        return rank;
     }
 }

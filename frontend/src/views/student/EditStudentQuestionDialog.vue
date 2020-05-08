@@ -10,7 +10,11 @@
     <v-card max-height="30%">
       <v-card-title>
         <span class="headline">
-          New Student Question
+          {{
+            editStudentQuestion && editStudentQuestion.id === null
+              ? 'New Question'
+              : 'Edit Question'
+          }}
         </span>
       </v-card-title>
 
@@ -82,7 +86,7 @@
 </template>
 <script lang="ts">
 import { Component, Model, Prop, Vue } from 'vue-property-decorator';
-import StudentQuestion from '@/models/management/StudentQuestion';
+import StudentQuestion from '@/models/student_question/StudentQuestion';
 import RemoteServices from '@/services/RemoteServices';
 
 @Component
@@ -108,9 +112,14 @@ export default class EditStudentQuestionDialog extends Vue {
 
     if (this.editStudentQuestion) {
       try {
-        const result = await RemoteServices.createStudentQuestion(
-          this.editStudentQuestion
-        );
+        const result =
+          this.editStudentQuestion.id != null
+            ? await RemoteServices.updateStudentQuestion(
+                this.editStudentQuestion
+              )
+            : await RemoteServices.createStudentQuestion(
+                this.editStudentQuestion
+              );
         this.$emit('save-student-question', result);
       } catch (error) {
         await this.$store.dispatch('error', error);

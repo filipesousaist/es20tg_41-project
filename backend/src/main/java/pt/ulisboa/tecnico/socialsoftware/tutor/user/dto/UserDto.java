@@ -1,9 +1,9 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.user.dto;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
 
 public class UserDto implements Serializable {
     private int id;
@@ -17,9 +17,7 @@ public class UserDto implements Serializable {
         this.username = user.getUsername();
         this.name = user.getName();
         this.role = user.getRole();
-
-        if (user.getCreationDate() != null)
-            this.creationDate = user.getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.creationDate = DateHandler.toISOString(user.getCreationDate());
     }
 
     public int getId() {

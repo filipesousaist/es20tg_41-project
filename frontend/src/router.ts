@@ -13,19 +13,20 @@ import QuizzesView from '@/views/teacher/quizzes/QuizzesView.vue';
 import StudentsView from '@/views/teacher/students/StudentsView.vue';
 import StudentView from '@/views/student/StudentView.vue';
 import StudentQuestionsView from './views/student/StudentQuestionsView.vue';
+import AnsweredQuestionsView from './views/student/AnsweredQuestionsView.vue';
 import AvailableQuizzesView from '@/views/student/AvailableQuizzesView.vue';
 import SolvedQuizzesView from '@/views/student/SolvedQuizzesView.vue';
 import QuizView from '@/views/student/quiz/QuizView.vue';
 import ResultsView from '@/views/student/quiz/ResultsView.vue';
 import StatsView from '@/views/student/StatsView.vue';
+import DashboardView from '@/views/student/dashboard/DashboardView.vue';
 import ScanView from '@/views/student/ScanView.vue';
 
 import CreateTournament from './views/student/tournament/CreateTournament.vue';
 import EnrollTournament from './views/student/tournament/EnrollTournament.vue';
 import ShowTournaments from './views/student/tournament/ShowTournaments.vue';
+import ParticipateTournament from './views/student/tournament/ParticipateTournament.vue';
 
-import ClarificationRequestView from './views/teacher/requests/ClarificationRequestsView.vue';
-import ClarificationRequestsView from './views/student/clarificationRequest/ClarificationRequestsView.vue';
 import AdminManagementView from './views/admin/AdminManagementView.vue';
 import NotFoundView from './views/NotFoundView.vue';
 import ImpExpView from '@/views/teacher/impexp/ImpExpView.vue';
@@ -149,6 +150,15 @@ let router = new Router({
           }
         },
         {
+          path: 'studentAnsweredQuestions',
+          name: 'get-studentAnsweredQuestions',
+          component: AnsweredQuestionsView,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Answered Questions',
+            requiredAuth: 'Student'
+          }
+        },
+        {
           path: 'available',
           name: 'available-quizzes',
           component: AvailableQuizzesView,
@@ -203,6 +213,15 @@ let router = new Router({
           }
         },
         {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: DashboardView,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Dashboard',
+            requiredAuth: 'Student'
+          }
+        },
+        {
           path: 'scan',
           name: 'scan',
           component: ScanView,
@@ -226,6 +245,15 @@ let router = new Router({
           component: EnrollTournament,
           meta: {
             title: process.env.VUE_APP_NAME + ' - Enroll Tournament',
+            requiredAuth: 'Student'
+          }
+        },
+        {
+          path: 'participateTournament',
+          name: 'participateTournament',
+          component: ParticipateTournament,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Participate Tournament',
             requiredAuth: 'Student'
           }
         },

@@ -63,15 +63,21 @@ export const questionWithFigure = new Question({
       id: 48,
       title: 'Graphite',
       text: 'What is happening',
-      username: 'Student1',
-      clarification: null
+      userId: 676,
+      username: 'Demo-Student',
+      clarification: null,
+      privacy: true,
+      creationDate: ''
     },
     {
       id: 4,
       title: 'Module viewtype',
       text: 'I don\'t understand',
-      username: 'Student2',
-      clarification: null
+      userId: 676,
+      username: 'Demo-Student',
+      clarification: null,
+      privacy: true,
+      creationDate: ''
     }
   ]
 });
@@ -136,15 +142,21 @@ export const questionWithoutFigure = new Question({
       id: 48,
       title: 'Graphite',
       text: 'What is happening',
-      username: 'Student1',
-      clarification: null
+      userId: 676,
+      username: 'Demo-Student',
+      clarification: null,
+      privacy: true,
+      creationDate: ''
     },
     {
       id: 4,
       title: 'Module viewtype',
       text: 'I don\'t understand',
-      username: 'Student2',
-      clarification: null
+      userId: 676,
+      username: 'Demo-Student',
+      clarification: null,
+      privacy: true,
+      creationDate: ''
     }
   ]
 });

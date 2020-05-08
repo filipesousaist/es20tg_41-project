@@ -56,19 +56,19 @@
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">joao</stringProp>
+          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">joao</stringProp>
+          <stringProp name="username">filipe</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">INSERT INTO questions(id, content, title, status, creation_date, course_id) VALUES (&apos;1&apos;, &apos;QUESTION CONTENT&apos;,&apos;QUESTION TITLE&apos;,&apos;PROPOSED&apos;,&apos;2019-10-22 20:19:30.843479&apos;,&apos;2&apos;);
-INSERT INTO student_questions(id, question_id, user_id) VALUES (&apos;1&apos;, &apos;1&apos;,&apos;676&apos;);
+          <stringProp name="query">INSERT INTO questions(id, content, title, status, creation_date, course_id) VALUES (&apos;1&apos;, &apos;QUESTION CONTENT&apos;,&apos;QUESTION TITLE&apos;,&apos;DISABLED&apos;,&apos;2019-10-22 20:19:30.843479&apos;,&apos;2&apos;);
+INSERT INTO student_questions(id, status, question_id, user_id) VALUES (&apos;1&apos;, &apos;PROPOSED&apos;, &apos;1&apos;,&apos;676&apos;);
 </stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
@@ -188,18 +188,27 @@ INSERT INTO student_questions(id, question_id, user_id) VALUES (&apos;1&apos;, &
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert studentQuestion status" enabled="true">
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert question status" enabled="true">
               <stringProp name="JSON_PATH">$[0].questionDto.status</stringProp>
-              <stringProp name="EXPECTED_VALUE">PROPOSED</stringProp>
+              <stringProp name="EXPECTED_VALUE">DISABLED</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
               <boolProp name="ISREGEX">false</boolProp>
             </JSONPathAssertion>
             <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert studentQuestion content" enabled="true">
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert question content" enabled="true">
               <stringProp name="JSON_PATH">$[0].questionDto.content</stringProp>
               <stringProp name="EXPECTED_VALUE">QUESTION CONTENT</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert studentQuestion status" enabled="true">
+              <stringProp name="JSON_PATH">$[0].status</stringProp>
+              <stringProp name="EXPECTED_VALUE">PROPOSED</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -307,20 +316,19 @@ INSERT INTO student_questions(id, question_id, user_id) VALUES (&apos;1&apos;, &
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">joao</stringProp>
+          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">joao</stringProp>
+          <stringProp name="username">filipe</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
           <stringProp name="queryType">Callable Statement</stringProp>
-          <stringProp name="query">
-DELETE FROM student_questions WHERE user_id = 676;
+          <stringProp name="query">DELETE FROM student_questions WHERE user_id = 676;
 DELETE FROM questions WHERE id = 1;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>

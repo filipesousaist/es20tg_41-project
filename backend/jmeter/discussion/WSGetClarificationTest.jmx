@@ -56,7 +56,7 @@
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">hwjv8756</stringProp>
+          <stringProp name="password">123456</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
@@ -67,9 +67,9 @@
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">SampleReq</stringProp>
-          <stringProp name="query">INSERT INTO clarification_requests VALUES (1, &apos;Não sei o que se passa&apos;, &apos;ola&apos;, 1339, 676);
+          <stringProp name="query">INSERT INTO clarification_requests (id, text, title, question_id, user_id, private) VALUES (1, &apos;Não sei o que se passa&apos;, &apos;ola&apos;, 1339, 676, &apos;false&apos;);
 INSERT INTO users_clarification_requests VALUES (676, 1);
-INSERT INTO clarifications VALUES (1, &apos;Passa-se isto&apos;, 1, 677);</stringProp>
+INSERT INTO clarifications (id, text, clarification_request_id, user_id) VALUES (1, &apos;Passa-se isto&apos;, 1, 677);</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
@@ -198,8 +198,8 @@ INSERT INTO clarifications VALUES (1, &apos;Passa-se isto&apos;, 1, 677);</strin
             </JSONPathAssertion>
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert Teacher" enabled="true">
-              <stringProp name="JSON_PATH">$.username</stringProp>
-              <stringProp name="EXPECTED_VALUE">Demo-Teacher</stringProp>
+              <stringProp name="JSON_PATH">$.userId</stringProp>
+              <stringProp name="EXPECTED_VALUE">677</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -307,7 +307,7 @@ INSERT INTO clarifications VALUES (1, &apos;Passa-se isto&apos;, 1, 677);</strin
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">hwjv8756</stringProp>
+          <stringProp name="password">123456</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
