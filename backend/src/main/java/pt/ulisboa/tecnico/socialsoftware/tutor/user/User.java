@@ -447,12 +447,12 @@ public class User implements UserDetails, DomainEntity {
 
     public void addTournamentCreatedByMe(Tournament tournament) {this.tournamentsCreatedByMe.add(tournament);}
 
-    public Integer getTotalTournaments() {
+    public int getTotalTournaments() {
 
         return this.tournamentsEnrolled.size();
     }
 
-    public Integer getHighestResult() {
+    public int getHighestResult() {
 
         int bestRank = 26;
         for (Tournament t: this.tournamentsEnrolled) {

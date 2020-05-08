@@ -11548,8 +11548,8 @@ ALTER TABLE public.users ADD dashboard_stats_id integer;
 UPDATE public.users SET dashboard_stats_id=id; /* Each dashboard_stats will have same id as user */
 
 /* Create all dashboard stats and make accepted questions public */
-INSERT INTO public.dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, num_clarification_requests, num_answered_clarification_requests, show_num_proposed_questions, show_num_accepted_questions, show_num_clarification_requests, show_num_answered_clarification_requests) (
-	SELECT id, id, 0, 0, 0, 0, true, true, true, true
+INSERT INTO public.dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, num_clarification_requests, num_answered_clarification_requests, highest_result, total_tournaments, show_num_proposed_questions, show_num_accepted_questions, show_num_clarification_requests, show_num_answered_clarification_requests) (
+	SELECT id, id, 0, 0, 0, 0, 26, 0 true, true, true, true
 	FROM public.users
 );
 
