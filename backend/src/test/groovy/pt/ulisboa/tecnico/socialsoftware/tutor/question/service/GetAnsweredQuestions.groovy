@@ -25,6 +25,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.QuizService
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz
@@ -190,7 +191,7 @@ class GetAnsweredQuestions extends Specification{
         and:"result has 2 elements"
         result.size() == 2L
         List<Integer> idList = new ArrayList<>();
-        for(Question q: result) idList.add(q.getId())
+        for(QuestionDto q: result) idList.add(q.getId())
 
         and:"check if the first question is the correct one"
         idList.contains(question1.getId())
