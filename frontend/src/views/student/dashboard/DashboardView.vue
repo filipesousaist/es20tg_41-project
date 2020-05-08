@@ -61,6 +61,7 @@
 					}}
 				</div>
 			</template>
+
 			<template v-slot:item.totalTournaments="{ item }">
 				<div data-cy="totalTournaments">
 					{{
@@ -68,6 +69,7 @@
 					}}
 				</div>
 			</template>
+
 			<template v-slot:item.highestResult="{ item }">
 				<div data-cy="highestResult">
 					{{
@@ -75,17 +77,18 @@
 					item.highestResult === -1 ? '-' : item.highestResult === 26 ? 'NA' : item.highestResult
 					}}
 				</div>
-				<template v-slot:item.numClarificationRequests="{ item }">
-					<div data-cy="numClarificationRequests">
-						{{ item.numClarificationRequests === -1 ? '-' : item.numClarificationRequests}}
-					</div>
-				</template>
+			</template>
 
-				<template v-slot:item.numAnsweredClarificationRequests="{ item }">
-					<div data-cy="numAnsweredClarificationRequests">
-						{{ item.numAnsweredClarificationRequests === -1 ? '-' : item.numAnsweredClarificationRequests}}
-					</div>
-				</template>
+			<template v-slot:item.numClarificationRequests="{ item }">
+				<div data-cy="numClarificationRequests">
+					{{ item.numClarificationRequests === -1 ? '-' : item.numClarificationRequests}}
+				</div>
+			</template>
+
+			<template v-slot:item.numAnsweredClarificationRequests="{ item }">
+				<div data-cy="numAnsweredClarificationRequests">
+					{{ item.numAnsweredClarificationRequests === -1 ? '-' : item.numAnsweredClarificationRequests}}
+				</div>
 			</template>
 		</v-data-table>
 
