@@ -21,6 +21,16 @@
         v-model="editDashboardPermissions.showNumAcceptedQuestions"
         label="Show number of accepted questions"
       />
+      <v-switch
+        class="ma-4"
+        v-model="editDashboardPermissions.showTotalTournaments"
+        label="Show number of tournaments participated"
+      />
+      <v-switch
+        class="ma-4"
+        v-model="editDashboardPermissions.showHighestResult"
+        label="Show highest result tournament"
+      />
 
       <v-switch
         class="ma-4"

@@ -11530,8 +11530,12 @@ CREATE TABLE public.dashboard_stats (
 	num_accepted_questions integer,
 	num_clarification_requests integer, 
 	num_answered_clarification_requests integer, 
+    highest_result integer,
+    total_tournaments integer,
 	show_num_proposed_questions boolean DEFAULT true,
 	show_num_accepted_questions boolean DEFAULT true,
+	show_total_tournaments boolean DEFAULT true,
+	show_highest_result boolean DEFAULT true,
 	show_num_clarification_requests boolean DEFAULT true,
 	show_num_answered_clarification_requests boolean DEFAULT true
 );
@@ -11544,8 +11548,8 @@ ALTER TABLE public.users ADD dashboard_stats_id integer;
 UPDATE public.users SET dashboard_stats_id=id; /* Each dashboard_stats will have same id as user */
 
 /* Create all dashboard stats and make accepted questions public */
-INSERT INTO public.dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, num_clarification_requests, num_answered_clarification_requests, show_num_proposed_questions, show_num_accepted_questions, show_num_clarification_requests, show_num_answered_clarification_requests) (
-	SELECT id, id, 0, 0, 0, 0, true, true, true, true
+INSERT INTO public.dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, num_clarification_requests, num_answered_clarification_requests, highest_result, total_tournaments, show_num_proposed_questions, show_num_accepted_questions, show_num_clarification_requests, show_num_answered_clarification_requests) (
+	SELECT id, id, 0, 0, 0, 0, 26, 0, true, true, true, true
 	FROM public.users
 );
 
@@ -11561,6 +11565,58 @@ UPDATE public.dashboard_stats SET show_num_proposed_questions=false WHERE user_i
 UPDATE public.dashboard_stats SET show_num_accepted_questions=false WHERE user_id=700;
 UPDATE public.dashboard_stats SET show_num_clarification_requests=false WHERE user_id=700;
 UPDATE public.dashboard_stats SET show_num_answered_clarification_requests=false WHERE user_id=700;
+
+UPDATE public.dashboard_stats SET show_highest_result=false WHERE user_id=700;
+UPDATE public.dashboard_stats SET show_total_tournaments=false WHERE user_id=700;
+
+
+CREATE TABLE public.tournaments ( 
+    id integer NOT NULL,
+    beginning_time text,
+    ending_time text,
+    is_closed boolean DEFAULT false,
+    name text,
+    number_of_questions integer,
+    course_executions_id integer,
+    user_id integer
+);
+
+CREATE TABLE public.topics_tournaments (
+    titles_id integer ,
+    tournaments_id integer 
+    );
+
+
+CREATE TABLE public.tournaments_students_enrolled (
+    tournaments_enrolled_id integer,
+    students_enrolled_id integer
+);
+
+
+CREATE SEQUENCE public.tournaments_id_seq
+AS integer
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+
+ALTER SEQUENCE public.tournaments_id_seq OWNED BY public.tournaments.id;
+
+ALTER TABLE ONLY public.tournaments ALTER COLUMN id SET DEFAULT nextval('public.tournaments_id_seq'::regclass);
+
+
+ALTER TABLE ONLY public.tournaments
+    ADD CONSTRAINT tournaments_pkey PRIMARY KEY (id);
+
+UPDATE public.users SET username = 'username' WHERE id = 640;
+
+INSERT INTO public.users_course_executions VALUES (640, 11);
+INSERT INTO public.tournaments VALUES (100,'2020-03-26 12:30:00', '2022-03-26 13:00:00',  False, 'Demo Tournament Quiz Test', 1, 11, 640);
+INSERT INTO public.topics_tournaments VALUES (82, (SELECT id FROM public.tournaments WHERE name = 'Demo Tournament Quiz Test'));
+
+INSERT INTO public.tournaments_students_enrolled VALUES ((SELECT id FROM public.tournaments WHERE name = 'Demo Tournament Quiz Test'), 640);
+
 
 --
 -- PostgreSQL database dump complete

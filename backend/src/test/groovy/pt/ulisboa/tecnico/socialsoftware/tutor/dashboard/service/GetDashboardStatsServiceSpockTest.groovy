@@ -10,11 +10,11 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.repository.QuizAnswerRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
+import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.DashboardService
-import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.dto.DashboardStatsDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.repository.DashboardRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.DiscussionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationDto
@@ -22,8 +22,11 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationReque
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.AnswersXmlImport
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.QuizService
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz
@@ -34,10 +37,19 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.statement.dto.StatementAnswerDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.StudentQuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.QuestionEvaluationDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.TournamentService
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto.TournamentDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.repository.TournamentRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
 import spock.lang.Specification
+
+import java.time.LocalDateTime
+import java.time.Month
+
+import static pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler.toISOString
+import static pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler.toISOString
 
 @DataJpaTest
 class GetDashboardStatsServiceSpockTest extends Specification {
@@ -48,6 +60,16 @@ class GetDashboardStatsServiceSpockTest extends Specification {
     public static final String TEACHER_NAME = "Teacher1"
     public static final String TEACHER_USERNAME = "ist789789789"
 
+    static final String TOPIC_NAME = "Algorithms"
+
+    static final int HOUR1 = 8
+    static final int MINUTE1 = 0
+    static final int MINUTE2 = 30
+    static final int DAY = 2
+    static final Month MONTH = Month.MARCH
+    static final int YEAR = 2020
+    static final String TOURNAMENT_NAME = "Demo Tournament"
+    static final int NUMBEROFQUESTIONS = 1
     static final String QUESTION_TITLE = "question1"
     static final String QUESTION_CONTENT = "o que é uma classe?"
 
@@ -57,6 +79,9 @@ class GetDashboardStatsServiceSpockTest extends Specification {
 
     @Autowired
     DashboardService dashboardService
+
+    @Autowired
+    TournamentService tournamentService
 
     @Autowired
     StudentQuestionService studentQuestionService
@@ -94,16 +119,26 @@ class GetDashboardStatsServiceSpockTest extends Specification {
     @Autowired
     DashboardRepository dashboardRepository
 
+    @Autowired
+    TopicRepository topicRepository
+
+    @Autowired
+    TournamentRepository tournamentRepository
+
     def course
     def courseExecution
     def student1
     def student2
     def teacher
+    def topicDto
+    def topicList
     def quiz
     def question1
     def question2
     def quizQuestion1
     def quizQuestion2
+    def tournamentDto
+    def courseEx
 
     def setup() {
         course = new Course("Software Engineering", Course.Type.TECNICO)
@@ -111,6 +146,8 @@ class GetDashboardStatsServiceSpockTest extends Specification {
 
         courseExecution = new CourseExecution(course, "SE", "SE12345", Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)
+
+        courseEx = new CourseDto(courseExecution)
 
         // Create student1 and add him to course
         student1 = new User(STUDENT_NAME, STUDENT_USERNAME, 1, User.Role.STUDENT)
@@ -130,6 +167,22 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         courseExecution.addUser(teacher)
         teacher.addCourse(courseExecution)
 
+        topicDto = new TopicDto()
+        topicDto.setName(TOPIC_NAME)
+        def topic = new Topic(course, topicDto)
+
+        def question = new Question()
+        question.setKey(1)
+        question.setTitle("Question Title")
+        question.setContent("Question Content")
+        question.setCourse(course)
+
+        question.getTopics().add(topic)
+        topicRepository.save(topic)
+        questionRepository.save(question)
+
+        topicList = new ArrayList<TopicDto>()
+        topicList.add(topicDto)
         // Create quiz and add it to course execution
         quiz = new Quiz()
         quiz.setKey(quizService.getMaxQuizKey()+1)
@@ -149,6 +202,20 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         question2.setContent(QUESTION_CONTENT)
         question2.setCourse(course)
         questionRepository.save(question2)
+
+        topicDto = new TopicDto()
+        topicDto.setName(TOPIC_NAME)
+
+        topic.getQuestions().add(question)
+        topicRepository.save(topic)
+        questionRepository.save(question)
+
+        tournamentDto = new TournamentDto()
+        tournamentDto.setTopics(topicList)
+        tournamentDto.setBeginningTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1)))
+        tournamentDto.setEndingTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE2)))
+        tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
+        tournamentDto.setName(TOURNAMENT_NAME)
 
         // Create 2 quiz questions with questions, 2 quiz answers for 2 students and 2 question answer for the quiz questions
         quizQuestion1 = new QuizQuestion(quiz, question1, 1)
@@ -204,9 +271,10 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         myDashboardStats.getUsername() == STUDENT_USERNAME
         myDashboardStats.getNumProposedQuestions() == 0
         myDashboardStats.getNumAcceptedQuestions() == 0
+        myDashboardStats.getHighestResult() == 26
+        myDashboardStats.getTotalTournaments() == 0
         myDashboardStats.getNumClarificationRequests() == 0
         myDashboardStats.getNumAnsweredClarificationRequests() == 0
-        // TODO: test other stats
     }
 
     def "propose and accept questions, and check stats"() {
@@ -290,6 +358,23 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         myDashboardStats2.getNumProposedQuestions() == -1
         myDashboardStats2.getNumAcceptedQuestions() == 2
 
+    }
+
+    def "participate in a tournament and check stats"() {
+        given:
+        tournamentDto = tournamentService.createNewTournament(student1.getId(), courseEx.getCourseExecutionId(), tournamentDto)
+        tournamentService.enrollTournament(student1.getId(), tournamentDto.getId())
+        tournamentService.enrollTournament(student2.getId(), tournamentDto.getId())
+        when:
+        def result = dashboardService.getDashboardStats(student1.getId(), courseExecution.getId())
+        result.sort {a, b -> a.getUserId() - b.getUserId()}
+        then:
+        result != null
+        def myDashboardStats = result.get(0)
+        myDashboardStats.getName() == STUDENT_NAME
+        myDashboardStats.getUsername() == STUDENT_USERNAME
+        myDashboardStats.getTotalTournaments() == 1
+        myDashboardStats.getHighestResult() == 1
     }
 
     def "List student1 and course students discussion stats"() {
@@ -451,6 +536,11 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         @Bean
         AnswersXmlImport answersXmlImport() {
             return new AnswersXmlImport()
+        }
+
+        @Bean
+        TournamentService tournamentService(){
+            return new TournamentService()
         }
     }
 }

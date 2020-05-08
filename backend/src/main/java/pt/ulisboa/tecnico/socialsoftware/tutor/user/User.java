@@ -447,6 +447,23 @@ public class User implements UserDetails, DomainEntity {
 
     public void addTournamentCreatedByMe(Tournament tournament) {this.tournamentsCreatedByMe.add(tournament);}
 
+    public int getTotalTournaments() {
+
+        return this.tournamentsEnrolled.size();
+    }
+
+    public int getHighestResult() {
+
+        int bestRank = 26;
+        for (Tournament t: this.tournamentsEnrolled) {
+            int rank = t.getHighestResult(this);
+            if (rank < bestRank) {
+                bestRank = rank;
+            }
+        }
+        return bestRank;
+    }
+
     public DashboardStats getDashboardStats() {
         if (dashboardStats == null)
             initDashboardStats();

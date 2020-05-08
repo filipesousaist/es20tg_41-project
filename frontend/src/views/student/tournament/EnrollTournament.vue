@@ -45,7 +45,6 @@
             <v-btn
               color="primary"
               @click="enrollTournament(tournament)"
-              v-on="on"
               data-cy="enroll"
             >
               Enroll
@@ -55,7 +54,6 @@
             <v-btn
               color="error"
               @click="enrollTournament(tournament)"
-              v-on="on"
               data-cy="withdraw"
             >
               Withdraw
@@ -65,7 +63,6 @@
             <v-btn
               color="error"
               @click="deleteTournament(tournament)"
-              v-on="on"
               data-cy="delete"
             >
               Delete
@@ -105,7 +102,7 @@ export default class EnrollTournament extends Vue {
     try {
       if (tournament.studentsUsername.includes(this.username)) {
         await RemoteServices.unenrollTournament(tournament.id);
-        tournament.studentsUsername.splice(this.username);
+        tournament.studentsUsername.splice(tournament.studentsUsername.indexOf(this.username), 1);
       } else {
         await RemoteServices.enrollTournament(tournament.id);
         tournament.studentsUsername.push(this.username);

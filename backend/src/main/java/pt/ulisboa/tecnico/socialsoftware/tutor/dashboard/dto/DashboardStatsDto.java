@@ -13,6 +13,9 @@ public class DashboardStatsDto implements Serializable {
     private int numProposedQuestions;
     private int numAcceptedQuestions;
 
+    private int totalTournaments;
+    private int highestResult;
+
     private int numClarificationRequests;
     private int numAnsweredClarificationRequests;
 
@@ -35,8 +38,17 @@ public class DashboardStatsDto implements Serializable {
             this.numProposedQuestions = -1;
         }
 
-        /*this.numClarificationRequests = dashboardStats.getNumClarificationRequests();
-        this.numAnsweredClarificationRequests = dashboardStats.getNumAnsweredClarificationRequests();*/
+        if (dashboardStats.getShowHighestResult()) {
+            this.highestResult = user.getHighestResult();
+        }else{
+            this.highestResult = -1;
+        }
+
+        if (dashboardStats.getShowTotalTournaments()) {
+            this.totalTournaments = user.getTotalTournaments();
+        }else{
+            this.totalTournaments = -1;
+        }
 
         this.numClarificationRequests = dashboardStats.getShowNumClarificationRequests() ?
                 dashboardStats.getNumClarificationRequests() : -1;
@@ -84,6 +96,22 @@ public class DashboardStatsDto implements Serializable {
 
     public void setNumAcceptedQuestions(int numAcceptedQuestions) {
         this.numAcceptedQuestions = numAcceptedQuestions;
+    }
+
+    public int getTotalTournaments() {
+        return totalTournaments;
+    }
+
+    public void setTotalTournaments(int totalTournaments) {
+        this.totalTournaments = totalTournaments;
+    }
+
+    public int getHighestResult() {
+        return highestResult;
+    }
+
+    public void setHighestResult(int highestResult) {
+        this.highestResult = highestResult;
     }
 
     public int getNumClarificationRequests() {

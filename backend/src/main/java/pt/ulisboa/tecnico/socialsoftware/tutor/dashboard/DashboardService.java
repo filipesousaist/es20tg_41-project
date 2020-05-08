@@ -35,6 +35,13 @@ public class DashboardService {
             backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<DashboardStatsDto> getDashboardStats(int userId, Integer courseExecutionId){
+        User user1 = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
+        DashboardStatsDto userDashboardStats = new DashboardStatsDto(user1.getDashboardStats());
+        userDashboardStats.setHighestResult(user1.getHighestResult());
+        userDashboardStats.setTotalTournaments(user1.getTotalTournaments());
+        userDashboardStats.setNumAcceptedQuestions(user1.getNumAcceptedQuestions());
+        userDashboardStats.setNumProposedQuestions(user1.getNumProposedQuestions());
+
         List<DashboardStatsDto> stats = courseExecutionRepository.findById(courseExecutionId)
                 .orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId))
                 .getUsers()
@@ -53,6 +60,8 @@ public class DashboardService {
                 DashboardStats dashboardStats = user.getDashboardStats();
                 stats.setNumProposedQuestions(dashboardStats.getNumProposedQuestions());
                 stats.setNumAcceptedQuestions(dashboardStats.getNumAcceptedQuestions());
+                stats.setTotalTournaments(user.getTotalTournaments());
+                stats.setHighestResult(user.getHighestResult());
                 stats.setNumClarificationRequests(dashboardStats.getNumClarificationRequests());
                 stats.setNumAnsweredClarificationRequests(dashboardStats.getNumAnsweredClarificationRequests());
             }

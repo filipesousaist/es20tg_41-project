@@ -4,14 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
+import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseService
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.TopicService
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto.TournamentDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.repository.TournamentRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.TournamentService
@@ -25,10 +31,13 @@ import java.time.LocalDateTime
 import java.time.Month
 import java.time.format.DateTimeFormatter
 
+import static pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler.toISOString
+import static pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler.toISOString
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.EMPTY_TOPIC
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.END_BEFORE_BEGINS
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.INVALID_COURSE_EXECUTION
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.INVALID_QUESTIONS_NUMBER
+import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.NOT_ENOUGH_QUESTIONS_TOURNAMENT
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.NO_SUCH_TOPIC
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.USER_IS_NOT_A_STUDENT
 
@@ -50,7 +59,7 @@ class CreateTournamentServiceSpockTest extends Specification {
     static final Month MONTH = Month.MARCH
     static final int YEAR = 2020
 
-    static final int NUMBEROFQUESTIONS = 8
+    static final int NUMBEROFQUESTIONS = 1
 
     static final String COURSE_NAME1 = "Software Architecture"
     static final String COURSE_NAME2 = "Artificial Intelligence"
@@ -79,10 +88,14 @@ class CreateTournamentServiceSpockTest extends Specification {
     TournamentRepository tournamentRepository
     @Autowired
     CourseRepository courseRepository
+    @Autowired
+    CourseExecutionRepository courseExecutionRepository
+    @Autowired
+    QuestionRepository questionRepository
+    @Autowired
+    TopicRepository topicRepository
 
     def student
-    def courseDto1
-    def courseDto2
     def courseEx1
     def courseEx2
     def topicDto1
@@ -95,11 +108,19 @@ class CreateTournamentServiceSpockTest extends Specification {
         student = userService.createUser(NAME, USERNAME, ROLE)
         userRepository.save(student)
 
-        courseDto1 = new CourseDto(COURSE_NAME1, ACRONYM1, ACADEMIC_TERM1)
-        courseEx1 = courseService.createTecnicoCourseExecution(courseDto1)
+        def course = new Course(COURSE_NAME1, Course.Type.TECNICO)
+        courseRepository.save(course)
+        def courseExecution = new CourseExecution(course, ACRONYM1, ACADEMIC_TERM1, Course.Type.TECNICO)
+        courseExecutionRepository.save(courseExecution)
+        courseEx1 = new CourseDto(courseExecution)
+        courseExecution.addUser(student)
 
-        courseDto2 = new CourseDto(COURSE_NAME2, ACRONYM2, ACADEMIC_TERM2)
-        courseEx2 = courseService.createTecnicoCourseExecution(courseDto2)
+        def course2 = new Course(COURSE_NAME2, Course.Type.TECNICO)
+        courseRepository.save(course2)
+        def courseExecution2 = new CourseExecution(course, ACRONYM2, ACADEMIC_TERM2, Course.Type.TECNICO)
+        courseExecutionRepository.save(courseExecution2)
+        courseEx2 = new CourseDto(courseExecution2)
+        courseExecution2.addUser(student)
 
         topicDto1 = new TopicDto()
         topicDto2 = new TopicDto()
@@ -108,9 +129,31 @@ class CreateTournamentServiceSpockTest extends Specification {
         topicDto2.setName(TOPIC_NAME2)
         topicDto3.setName(TOPIC_NAME3)
 
-        topicDto1 = topicService.createTopic(courseEx1.getCourseId(), topicDto1)
-        topicDto2 = topicService.createTopic(courseEx1.getCourseId(), topicDto2)
-        topicDto3 = topicService.createTopic(courseEx2.getCourseId(), topicDto3)
+        def topic1 = new Topic(course, topicDto1)
+        def topic2 = new Topic(course, topicDto2)
+        def topic3 = new Topic(course2, topicDto3)
+        def question1 = new Question()
+        question1.setKey(1)
+        question1.setTitle("Question Title")
+        question1.setContent("Question Content")
+        question1.setCourse(course)
+        def question2 = new Question()
+        question2.setKey(2)
+        question2.setTitle("Question Title")
+        question2.setContent("Question Content")
+        question2.setCourse(course2)
+        question1.getTopics().add(topic1)
+        question1.getTopics().add(topic2)
+        question2.getTopics().add(topic3)
+        topic1.getQuestions().add(question1)
+        topic2.getQuestions().add(question1)
+        topic3.getQuestions().add(question2)
+        topicRepository.save(topic1)
+        topicRepository.save(topic2)
+        topicRepository.save(topic3)
+        questionRepository.save(question1)
+        questionRepository.save(question2)
+
         topicList1 = new ArrayList<TopicDto>()
         topicList2 = new ArrayList<TopicDto>()
         topicList1.add(topicDto1)
@@ -125,8 +168,8 @@ class CreateTournamentServiceSpockTest extends Specification {
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
         tournamentDto.setTopics(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto.setBeginningTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1)))
+        tournamentDto.setEndingTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2)))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
 
         when:
@@ -138,8 +181,8 @@ class CreateTournamentServiceSpockTest extends Specification {
         for (int i = 0 ; i != topicList1.size() ; i++) {
             result.getTopics().get(i) == topicList1.get(i)
         }
-        result.getBeginningTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
-        result.getEndingTime().equals(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        result.getBeginningTime() == toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1))
+        result.getEndingTime() == toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2))
         result.getNumberOfQuestions() == NUMBEROFQUESTIONS
         and: 'is in the database'
         tournamentRepository.findAll().size() == 1
@@ -173,8 +216,8 @@ class CreateTournamentServiceSpockTest extends Specification {
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
         tournamentDto.setTopics(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto.setBeginningTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1)))
+        tournamentDto.setEndingTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2)))
         tournamentDto.setNumberOfQuestions(numberOfQuestions)
 
         when:
@@ -190,6 +233,7 @@ class CreateTournamentServiceSpockTest extends Specification {
         0                 || INVALID_QUESTIONS_NUMBER
         -1                || INVALID_QUESTIONS_NUMBER
         -9                || INVALID_QUESTIONS_NUMBER
+        3                 || NOT_ENOUGH_QUESTIONS_TOURNAMENT
     }
 
     def "A non existent course execution"() {
@@ -198,8 +242,8 @@ class CreateTournamentServiceSpockTest extends Specification {
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
         tournamentDto.setTopics(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto.setBeginningTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1)))
+        tournamentDto.setEndingTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2)))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
 
         when:
@@ -216,8 +260,8 @@ class CreateTournamentServiceSpockTest extends Specification {
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
         tournamentDto.setTopics(topicList2)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto.setBeginningTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1)))
+        tournamentDto.setEndingTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2)))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
 
         when:
@@ -234,8 +278,8 @@ class CreateTournamentServiceSpockTest extends Specification {
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
         tournamentDto.setTopics(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto.setEndingTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1)))
+        tournamentDto.setBeginningTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2)))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
 
         when:
@@ -252,8 +296,8 @@ class CreateTournamentServiceSpockTest extends Specification {
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
         tournamentDto.setTopics(new ArrayList<TopicDto>())
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto.setBeginningTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1)))
+        tournamentDto.setEndingTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2)))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
 
         when:
@@ -271,8 +315,8 @@ class CreateTournamentServiceSpockTest extends Specification {
         and: "a tournament dto"
         def tournamentDto = new TournamentDto()
         tournamentDto.setTopics(topicList1)
-        tournamentDto.setBeginningTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
-        tournamentDto.setEndingTime(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")))
+        tournamentDto.setBeginningTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR1, MINUTE1)))
+        tournamentDto.setEndingTime(toISOString(LocalDateTime.of(YEAR, MONTH, DAY, HOUR2, MINUTE2)))
         tournamentDto.setNumberOfQuestions(NUMBEROFQUESTIONS)
 
         when:

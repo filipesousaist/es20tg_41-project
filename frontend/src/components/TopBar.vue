@@ -200,6 +200,14 @@
                 <v-list-item-title>Enroll</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+            <v-list-item to="/student/participateTournament">
+              <v-list-item-action>
+                <v-icon>fas fa-marker</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>Participate</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
             <v-list-item to="/student/showTournaments">
               <v-list-item-action>
                 <v-icon>fas fa-list-ul</v-icon>

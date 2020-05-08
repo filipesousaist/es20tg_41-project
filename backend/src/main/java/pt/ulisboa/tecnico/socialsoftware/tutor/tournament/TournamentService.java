@@ -4,12 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.repository.QuizQuestionRepository;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.repository.QuizRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto.TournamentDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.repository.TournamentRepository;
@@ -19,12 +25,10 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler.toLocalDateTime;
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
 
@@ -40,31 +44,40 @@ public class TournamentService {
     private TopicRepository topicRepository;
 
     @Autowired
+    private QuizRepository quizRepository;
+
+    @Autowired
+    private QuizQuestionRepository quizQuestionRepository;
+
+    @Autowired
     private CourseExecutionRepository courseExecutionRepository;
 
     @PersistenceContext
     EntityManager entityManager;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public TournamentDto createNewTournament(Integer userId, Integer courseExId, TournamentDto tournamentDto){
+    public TournamentDto createNewTournament(Integer userId, Integer courseExId, TournamentDto tournamentDto) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
 
         if (!user.getRole().equals(User.Role.STUDENT)) {
             throw new TutorException(USER_IS_NOT_A_STUDENT);
         }
-
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        LocalDateTime begin = LocalDateTime.parse(tournamentDto.getBeginningTime(), inputFormatter);
-        LocalDateTime end = LocalDateTime.parse(tournamentDto.getEndingTime(), inputFormatter);
+        LocalDateTime begin = toLocalDateTime(tournamentDto.getBeginningTime());
+        LocalDateTime end = toLocalDateTime(tournamentDto.getEndingTime());
         int numberOfQuestions = tournamentDto.getNumberOfQuestions();
 
         CourseExecution courseEx = courseExecutionRepository.findById(courseExId).orElseThrow(() -> new TutorException(INVALID_COURSE_EXECUTION));
         List<Topic> topics = getTopics(tournamentDto, courseEx);
+
+        int i = topics.stream().mapToInt(topic -> topic.getQuestions().size()).sum();
+        if (i < numberOfQuestions) {
+            throw new TutorException(NOT_ENOUGH_QUESTIONS_TOURNAMENT);
+        }
+
         String name = tournamentDto.getName();
 
         if (tournamentRepository.findTournamentByName(name).orElse(null) != null) {
-
             throw new TutorException(INVALID_TOURNAMENT_NAME);
         }
 
@@ -111,6 +124,11 @@ public class TournamentService {
 
         tournament.addStudentEnrolled(user);
         user.addTournamentEnrolled(tournament);
+
+        if (tournament.getTournamentQuiz() == null && tournament.getStudentsEnrolled().size() > 1) {
+            createTournamentQuiz(tournament);
+        }
+
         return new TournamentDto(tournament);
     }
 
@@ -121,8 +139,47 @@ public class TournamentService {
 
         Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
 
+        if (tournament.getTournamentQuiz() != null) {
+            for (QuizAnswer answer : tournament.getTournamentQuiz().getQuizAnswers()) {
+                if (answer.getUser() == user) {
+                    throw new TutorException(QUIZ_HAS_ANSWERS);
+                }
+            }
+        }
+
         tournament.removeStudentEnrolled(user);
         user.removeTournamentEnrolled(tournament);
+    }
+
+    private void createTournamentQuiz(Tournament tournament) {
+
+        Quiz quiz = new Quiz();
+        quiz.setCreationDate(LocalDateTime.now());
+        quiz.setAvailableDate(tournament.getBeginningTime());
+        quiz.setConclusionDate(tournament.getEndingTime());
+        quiz.setCourseExecution(tournament.getCourseExecution());
+        quiz.setType("TOURNAMENT");
+        quiz.setTitle(tournament.getName());
+
+        List<Question> possibleQuestions = new ArrayList<>();
+        for (Topic topic : tournament.getTitles()) {
+            possibleQuestions.addAll(topic.getQuestions());
+        }
+
+
+        Random rand = new Random();
+        for (int i = 0; i < tournament.getNumberOfQuestions(); i++) {
+            int randomIndex = rand.nextInt(possibleQuestions.size());
+
+            QuizQuestion quizQuestion = new QuizQuestion(quiz, possibleQuestions.get(randomIndex), quiz.getQuizQuestions().size());
+            quizQuestionRepository.save(quizQuestion);
+
+            quiz.addQuizQuestion(quizQuestion);
+            possibleQuestions.remove(randomIndex);
+        }
+        quiz.setTournament(tournament);
+        tournament.setTournamentQuiz(quiz);
+        quizRepository.save(quiz);
     }
 
     private User getUser(Integer studentId, Integer tournamentId) {
@@ -146,6 +203,17 @@ public class TournamentService {
     public void removeTournament(Integer studentID, Integer tournamentId) {
 
         Tournament tournament = tournamentRepository.findTournamentById(tournamentId).orElseThrow(() -> new TutorException(TOURNAMENT_NOT_FOUND));
+
+        if (tournament.getTournamentQuiz() != null) {
+            tournament.getTournamentQuiz().remove();
+
+            Set<QuizQuestion> quizQuestions = new HashSet<>(tournament.getTournamentQuiz().getQuizQuestions());
+
+            quizQuestions.forEach(QuizQuestion::remove);
+            quizQuestions.forEach(quizQuestion -> quizQuestionRepository.delete(quizQuestion));
+
+            quizRepository.delete(tournament.getTournamentQuiz());
+        }
 
         tournament.remove(studentID);
 
