@@ -24,7 +24,6 @@ export default class Tournament {
       this.numberOfQuestions = jsonObj.numberOfQuestions;
       this.isClosed = jsonObj.isClosed;
       this.creatorName = jsonObj.creatorName;
-      console.log(jsonObj.creatorName);
       this.name = jsonObj.name;
       if (jsonObj.quizDto) {
         this.quizDto = new StatementQuiz(jsonObj.quizDto);

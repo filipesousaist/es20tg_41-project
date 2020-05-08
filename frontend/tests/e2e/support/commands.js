@@ -196,6 +196,14 @@ Cypress.Commands.add('withdrawTournament', name => {
     .click();
 });
 
+Cypress.Commands.add('deleteTournament', name => {
+  cy.contains('Enroll').click({ force: true });
+  cy.contains(name)
+    .parent()
+    .find('[data-cy="delete"]')
+    .click();
+});
+
 Cypress.Commands.add('createTournament', (name, numberOfQuestions, day2) => {
   cy.contains('Create').click({ force: true });
   cy.contains('New Tournament').click({ force: true });

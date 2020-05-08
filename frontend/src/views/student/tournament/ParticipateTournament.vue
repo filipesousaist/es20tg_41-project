@@ -30,7 +30,6 @@
 					<v-btn
 						color="primary"
 						@click="solveQuiz(quiz)"
-						v-on="on"
 						data-cy="Answer"
 					>
 						Answer
