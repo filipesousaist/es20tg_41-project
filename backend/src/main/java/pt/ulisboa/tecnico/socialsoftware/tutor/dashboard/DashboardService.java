@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
+import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.domain.DashboardStats;
 import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.dto.DashboardPermissionsDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.dto.DashboardStatsDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
@@ -40,15 +41,27 @@ public class DashboardService {
         userDashboardStats.setTotalTournaments(user1.getTotalTournaments());
         userDashboardStats.setNumAcceptedQuestions(user1.getNumAcceptedQuestions());
         userDashboardStats.setNumProposedQuestions(user1.getNumProposedQuestions());
+
         List<DashboardStatsDto> stats = courseExecutionRepository.findById(courseExecutionId)
                 .orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId))
                 .getUsers()
                 .stream()
-                .filter(user -> user.getRole().equals(User.Role.STUDENT) && !(user.getId().equals(userId)))
+                .filter(user -> user.getRole().equals(User.Role.STUDENT))
                 .map(User::getDashboardStats)
                 .map(DashboardStatsDto::new).collect(Collectors.toList());
-        stats.add(userDashboardStats);
-        return stats;
+        return setUserStatsEvenIfPrivate(stats, userRepository.findById(userId).orElseThrow(
+                () -> new TutorException(USER_NOT_FOUND, userId)));
+    }
+
+    private List<DashboardStatsDto> setUserStatsEvenIfPrivate(List<DashboardStatsDto> dashboardStatsDtos, User user) {
+        int userId = user.getId();
+        return dashboardStatsDtos.stream().peek(stats -> {
+            if (stats.getUserId() == userId) {
+                DashboardStats dashboardStats = user.getDashboardStats();
+                stats.setNumProposedQuestions(dashboardStats.getNumProposedQuestions());
+                stats.setNumAcceptedQuestions(dashboardStats.getNumAcceptedQuestions());
+            }
+        }).collect(Collectors.toList());
     }
 
     @Retryable(
