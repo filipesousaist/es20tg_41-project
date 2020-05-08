@@ -33,6 +33,19 @@
               small
               class="mr-2"
               v-on="on"
+              @click="showProposedQuestionDialog(item)"
+              data-cy="showProposedQuestionButton"
+              >visibility</v-icon
+            >
+          </template>
+          <span>Show Question</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon
+              small
+              class="mr-2"
+              v-on="on"
               @click="evaluateQuestion(item)"
               data-cy="evaluateButton"
             >
@@ -78,12 +91,20 @@
       v-on:submit-approval="onSubmitEvaluation(true)"
       v-on:submit-refusal="onSubmitEvaluation(false)"
     />
-    <edit-student-question-dialog
+    <edit-proposed-question-dialog
       v-if="currentStudentQuestion"
-      v-model="editStudentQuestionDialog"
+      v-model="editProposedQuestionDialog"
       :studentQuestion="currentStudentQuestion"
       v-on:save-student-question="onSaveStudentQuestion"
       v-on:close-dialog="onCloseDialog"
+    />
+    <show-proposed-question-dialog
+      v-if="currentStudentQuestion"
+      :dialog="proposedQuestionDialog"
+      :studentQuestion="currentStudentQuestion"
+      v-on:close-show-proposed-question-dialog="
+        onCloseShowProposedQuestionDialog
+      "
     />
   </v-card>
 </template>
@@ -93,19 +114,22 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import StudentQuestion from '@/models/student_question/StudentQuestion';
 import RemoteServices from '@/services/RemoteServices';
 import EvaluateQuestionDialog from '@/views/teacher/proposed-questions/EvaluateQuestionDialog.vue';
-import EditStudentQuestionDialog from '@/views/teacher/proposed-questions/EditStudentQuestionDialog.vue';
+import EditProposedQuestionDialog from '@/views/teacher/proposed-questions/EditProposedQuestionDialog.vue';
+import ShowProposedQuestionDialog from './ShowProposedQuestionDialog.vue';
 
 @Component({
   components: {
     'evaluate-question-dialog': EvaluateQuestionDialog,
-    'edit-student-question-dialog': EditStudentQuestionDialog
+    'edit-proposed-question-dialog': EditProposedQuestionDialog,
+    'show-proposed-question-dialog': ShowProposedQuestionDialog
   }
 })
 export default class ProposedQuestionsView extends Vue {
   studentQuestions: StudentQuestion[] = [];
   search: string = '';
   evaluateQuestionDialog: boolean = false;
-  editStudentQuestionDialog: boolean = false;
+  editProposedQuestionDialog: boolean = false;
+  proposedQuestionDialog: boolean = false;
   currentStudentQuestion: StudentQuestion | null = null;
   headers: object = [
     { text: 'Title', value: 'questionDto.title', align: 'center' },
@@ -192,7 +216,7 @@ export default class ProposedQuestionsView extends Vue {
 
   editQuestion(studentQuestion: StudentQuestion) {
     this.currentStudentQuestion = studentQuestion;
-    this.editStudentQuestionDialog = true;
+    this.editProposedQuestionDialog = true;
   }
 
   async onSaveStudentQuestion(studentQuestion: StudentQuestion) {
@@ -200,12 +224,22 @@ export default class ProposedQuestionsView extends Vue {
       q => q.id !== studentQuestion.id
     );
     this.studentQuestions.unshift(studentQuestion);
-    this.editStudentQuestionDialog = false;
+    this.editProposedQuestionDialog = false;
     this.currentStudentQuestion = null;
   }
 
   onCloseDialog() {
-    this.editStudentQuestionDialog = false;
+    this.editProposedQuestionDialog = false;
+    this.currentStudentQuestion = null;
+  }
+
+  showProposedQuestionDialog(studentQuestion: StudentQuestion) {
+    this.currentStudentQuestion = studentQuestion;
+    this.proposedQuestionDialog = true;
+  }
+
+  onCloseShowProposedQuestionDialog() {
+    this.proposedQuestionDialog = false;
     this.currentStudentQuestion = null;
   }
 

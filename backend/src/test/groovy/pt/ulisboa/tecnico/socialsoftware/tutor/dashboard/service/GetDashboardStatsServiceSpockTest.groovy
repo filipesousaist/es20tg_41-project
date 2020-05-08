@@ -42,6 +42,8 @@ import spock.lang.Specification
 class GetDashboardStatsServiceSpockTest extends Specification {
     public static final String STUDENT_NAME = "Student1"
     public static final String STUDENT_USERNAME = "ist123123123"
+    public static final String STUDENT_NAME_2 = "Student2"
+    public static final String STUDENT_USERNAME_2 = "ist12"
     public static final String TEACHER_NAME = "Teacher1"
     public static final String TEACHER_USERNAME = "ist789789789"
 
@@ -93,7 +95,8 @@ class GetDashboardStatsServiceSpockTest extends Specification {
 
     def course
     def courseExecution
-    def student
+    def student1
+    def student2
     def teacher
     def quiz
     def question1
@@ -112,11 +115,17 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         courseExecution = new CourseExecution(course, "SE", "SE12345", Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)
 
-        // Create student and add him to course
-        student = new User(STUDENT_NAME, STUDENT_USERNAME, 1, User.Role.STUDENT)
-        userRepository.save(student)
-        courseExecution.addUser(student)
-        student.addCourse(courseExecution)
+        // Create student1 and add him to course
+        student1 = new User(STUDENT_NAME, STUDENT_USERNAME, 1, User.Role.STUDENT)
+        userRepository.save(student1)
+        courseExecution.addUser(student1)
+        student1.addCourse(courseExecution)
+
+        //Create student2 and add him to course
+        student2 = new User(STUDENT_NAME_2, STUDENT_USERNAME_2, 3, User.Role.STUDENT)
+        userRepository.save(student2)
+        courseExecution.addUser(student2)
+        student2.addCourse(courseExecution)
 
         // Create teacher and add him to course
         teacher = new User(TEACHER_NAME, TEACHER_USERNAME, 2, User.Role.TEACHER)
@@ -144,29 +153,43 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         question2.setCourse(course)
         questionRepository.save(question2)
 
-        // Create 2 quiz questions with questions, 2 quiz answers for student and 2 question answer for the quiz questions
+        // Create 2 quiz questions with questions, 2 quiz answers for 2 students and 2 question answer for the quiz questions
         quizQuestion1 = new QuizQuestion(quiz, question1, 1)
-        quizAnswer1 = new QuizAnswer(student, quiz)
+        quizAnswer1 = new QuizAnswer(student1, quiz)
+        quizAnswer2 = new QuizAnswer(student2, quiz)
         questionAnswer1 = new QuestionAnswer(quizAnswer1, quizQuestion1, 1)
+        questionAnswer2 = new QuestionAnswer(quizAnswer2, quizQuestion1, 1)
         quizAnswer1.addQuestionAnswer(questionAnswer1)
-        student.addQuizAnswer(quizAnswer1)
+        quizAnswer2.addQuestionAnswer(questionAnswer2)
+        student1.addQuizAnswer(quizAnswer1)
+        student2.addQuizAnswer(quizAnswer2)
 
-        answerService.concludeQuiz(student, quiz.getId())
-        answerService.submitAnswer(student, quiz.getId(), new StatementAnswerDto(questionAnswer1))
+        answerService.concludeQuiz(student1, quiz.getId())
+        answerService.submitAnswer(student1, quiz.getId(), new StatementAnswerDto(questionAnswer1))
+        answerService.concludeQuiz(student2, quiz.getId())
+        answerService.submitAnswer(student2, quiz.getId(), new StatementAnswerDto(questionAnswer2))
 
         quizQuestionRepository.save(quizQuestion1)
         quizAnswerRepository.save(quizAnswer1)
+        quizAnswerRepository.save(quizAnswer2)
 
         quizQuestion2 = new QuizQuestion(quiz, question2, 1)
-        quizAnswer2 = new QuizAnswer(student, quiz)
+        quizAnswer1 = new QuizAnswer(student1, quiz)
+        quizAnswer2 = new QuizAnswer(student2, quiz)
+        questionAnswer1 = new QuestionAnswer(quizAnswer1, quizQuestion2, 1)
         questionAnswer2 = new QuestionAnswer(quizAnswer2, quizQuestion2, 1)
+        quizAnswer1.addQuestionAnswer(questionAnswer1)
         quizAnswer2.addQuestionAnswer(questionAnswer2)
-        student.addQuizAnswer(quizAnswer2)
+        student1.addQuizAnswer(quizAnswer1)
+        student2.addQuizAnswer(quizAnswer2)
 
-        answerService.concludeQuiz(student, quiz.getId())
-        answerService.submitAnswer(student, quiz.getId(), new StatementAnswerDto(questionAnswer2))
+        answerService.concludeQuiz(student1, quiz.getId())
+        answerService.submitAnswer(student1, quiz.getId(), new StatementAnswerDto(questionAnswer1))
+        answerService.concludeQuiz(student2, quiz.getId())
+        answerService.submitAnswer(student2, quiz.getId(), new StatementAnswerDto(questionAnswer2))
 
         quizQuestionRepository.save(quizQuestion2)
+        quizAnswerRepository.save(quizAnswer1)
         quizAnswerRepository.save(quizAnswer2)
     }
 
@@ -174,10 +197,10 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         given:
         def courseExecutionId = courseExecution.getId()
         when:
-        def result = dashboardService.getDashboardStats(courseExecutionId)
+        def result = dashboardService.getDashboardStats(student1.getId(), courseExecutionId)
         then:
         result != null
-        def myDashboardStats = result.get(0)
+        def myDashboardStats = result.get(1)
         myDashboardStats != null
         myDashboardStats.getName() == STUDENT_NAME
         myDashboardStats.getUsername() == STUDENT_USERNAME
@@ -190,10 +213,10 @@ class GetDashboardStatsServiceSpockTest extends Specification {
 
     def "propose and accept questions, and check stats"() {
         given: "4 student questions are created"
-        def studentQuestionId1 = createStudentQuestion(1).getId()
-        def studentQuestionId2 = createStudentQuestion(2).getId()
-        def studentQuestionId3 = createStudentQuestion(3).getId()
-        createStudentQuestion(4)
+        def studentQuestionId1 = createStudentQuestion(1, student1).getId()
+        def studentQuestionId2 = createStudentQuestion(2, student1).getId()
+        def studentQuestionId3 = createStudentQuestion(3, student1).getId()
+        createStudentQuestion(4, student1)
         and: "some are accepted and others rejected"
         createQuestionEvaluation(studentQuestionId1, true)
         createQuestionEvaluation(studentQuestionId2, false)
@@ -201,25 +224,26 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         createQuestionEvaluation(studentQuestionId3, false) // then reject the same one
 
         when:
-        def result = dashboardService.getDashboardStats(courseExecution.getId())
+        def result = dashboardService.getDashboardStats(student1.getId(), courseExecution.getId())
 
         then: "student's dashboard stats contain the expected values"
         result != null
-        def myDashboardStats = result.get(0)
+        def myDashboardStats = result.get(1)
         myDashboardStats != null
         myDashboardStats.getNumProposedQuestions() == 4
         myDashboardStats.getNumAcceptedQuestions() == 1 // only student question 1
     }
 
+
     def "Make and answer a clarification request, and check stats"() {
         given: "2 clarification requests are created"
-        def clarificationRequestId1 = createClarificationRequest(question1.getId()).getId()
-        createClarificationRequest(question2.getId())
+        def clarificationRequestId1 = createClarificationRequest(question1.getId(), student1).getId()
+        createClarificationRequest(question2.getId(), student1)
         and: "1 is answered and the other is not"
         createClarification(clarificationRequestId1, CLARIFICATION_TEXT)
 
         when:
-        def result = dashboardService.getDashboardStats(courseExecution.getId())
+        def result = dashboardService.getDashboardStats(student1.getId(), courseExecution.getId())
 
         then: "student's dashboard stats contain the expected values"
         result != null
@@ -229,9 +253,82 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         myDashboardStats.getNumAnsweredClarificationRequests() == 1 // only 1 request answered
     }
 
+    def "List student1 and course students stats"() {
+        given: "3 student question for student1"
+        def studentQuestionId1 = createStudentQuestion(1, student1).getId()
+        def studentQuestionId2 = createStudentQuestion(2, student1).getId()
+        def studentQuestionId3 = createStudentQuestion(3, student1).getId()
+        and: "some are accepted and others rejected"
+        createQuestionEvaluation(studentQuestionId1, true)
+        createQuestionEvaluation(studentQuestionId2, false)
+        createQuestionEvaluation(studentQuestionId3, false)
+        and: "3 student question for student2"
+        def studentQuestionId4 = createStudentQuestion(4, student2).getId()
+        def studentQuestionId5 = createStudentQuestion(5, student2).getId()
+        def studentQuestionId6 = createStudentQuestion(6, student2).getId()
+        and: "some are accepted and others rejected"
+        createQuestionEvaluation(studentQuestionId4, true)
+        createQuestionEvaluation(studentQuestionId5, false)
+        createQuestionEvaluation(studentQuestionId6, true)
+        and: "make student2 stats about proposed questions private"
+        student2.getDashboardStats().setShowNumProposedQuestions(false)
+
+        when:
+        def result = dashboardService.getDashboardStats(student1.getId(), courseExecution.getId())
+
+        then: "student's dashboard stats contain the expected values"
+        result != null
+        def myDashboardStats1 = result.get(1)
+        // student1 stats
+        myDashboardStats1 != null
+        myDashboardStats1.getNumProposedQuestions() == 3
+        myDashboardStats1.getNumAcceptedQuestions() == 1
+        // student2 stats visible in student1 dashboard
+        def myDashboardStats2 = result.get(0)
+        myDashboardStats2 != null
+        myDashboardStats2.getNumProposedQuestions() == -1
+        myDashboardStats2.getNumAcceptedQuestions() == 2
+
+    }
+
+    def "make all stats from student1 private and list them only for him"() {
+        given: "3 student question for student1"
+        def studentQuestionId1 = createStudentQuestion(1, student1).getId()
+        def studentQuestionId2 = createStudentQuestion(2, student1).getId()
+        def studentQuestionId3 = createStudentQuestion(3, student1).getId()
+        and: "some are accepted and others rejected"
+        createQuestionEvaluation(studentQuestionId1, true)
+        createQuestionEvaluation(studentQuestionId2, false)
+        createQuestionEvaluation(studentQuestionId3, false)
+        and: "make all stats private"
+        student1.getDashboardStats().setShowNumProposedQuestions(false)
+        student1.getDashboardStats().setShowNumAcceptedQuestions(false)
+        and: "3 student question for student2"
+        createStudentQuestion(4, student2).getId()
+        createStudentQuestion(5, student2).getId()
+        createStudentQuestion(6, student2).getId()
+
+        when:
+        def result = dashboardService.getDashboardStats(student1.getId(), courseExecution.getId())
+
+        then: "student's dashboard stats contain the expected values"
+        result != null
+        def myDashboardStats1 = result.get(1)
+        // student1 stats
+        myDashboardStats1 != null
+        myDashboardStats1.getNumProposedQuestions() == 3
+        myDashboardStats1.getNumAcceptedQuestions() == 1
+        // student2 stats visible in student1 dashboard
+        def myDashboardStats2 = result.get(0)
+        myDashboardStats2 != null
+        myDashboardStats2.getNumProposedQuestions() == 3
+        myDashboardStats2.getNumAcceptedQuestions() == 0
+
+    }
+
     // Auxiliary methods:
 
-    def createStudentQuestion(key) {
+    def createStudentQuestion(key, student) {
         def studentQuestionDto = new StudentQuestionDto()
 
         def questionDto = new QuestionDto()
@@ -260,7 +357,7 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         studentQuestionService.createQuestionEvaluation(teacher.getId(), studentQuestionId, questionEvaluationDto)
     }
 
-    def createClarificationRequest(questionId) {
+    def createClarificationRequest(questionId, student) {
         def clarificationRequestDto = new ClarificationRequestDto()
         clarificationRequestDto.setTitle(CLARIFICATION_REQUEST_TITLE)
         clarificationRequestDto.setText(CLARIFICATION_REQUEST_TEXT)

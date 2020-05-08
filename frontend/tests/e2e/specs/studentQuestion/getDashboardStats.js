@@ -14,8 +14,8 @@ describe('Create Question Evaluation Walkthrough', () => {
     cy.checkDashboardStudentQuestionsStats('Demo Student', 4, 1);
   });
 
-  it('Test search bar', () => {
+  it('Test search bar and check if Student stats are private', () => {
     cy.get('[data-cy="searchBar"]').type('Student 700');
-    cy.checkDashboardStudentQuestionsStats('Student 700', 0, 0);
+    cy.checkDashboardStudentQuestionsStats('Student 700', '-', '-');
   });
 });

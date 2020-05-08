@@ -93,18 +93,16 @@ public class StudentQuestion {
     public void setStatus(Status status) {
         boolean fromAccepted = this.status.equals(Status.ACCEPTED);
         boolean toAccepted = status.equals(Status.ACCEPTED);
-        // From accepted to different status
-        if (fromAccepted && !toAccepted) {
+
+        if (fromAccepted && !toAccepted) { // From accepted to different status
             DashboardStats stats = user.getDashboardStats();
             stats.setNumAcceptedQuestions(stats.getNumAcceptedQuestions() - 1);
         }
-        else if (!fromAccepted && toAccepted) {
+        else if (!fromAccepted && toAccepted) { // From different status to accepted
             DashboardStats stats = user.getDashboardStats();
             stats.setNumAcceptedQuestions(stats.getNumAcceptedQuestions() + 1);
         }
 
-
-        // From different status to accepted
         this.status = status;
     }
 

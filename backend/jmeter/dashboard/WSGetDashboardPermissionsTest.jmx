@@ -56,26 +56,24 @@
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">hwjv8756</stringProp>
+          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">pedro</stringProp>
+          <stringProp name="username">filipe</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
           <stringProp name="query">ALTER TABLE users DISABLE TRIGGER ALL; /* Disable foreign key constraints */
-UPDATE users SET dashboard_stats_id=id; /* Each dashboard_stats will have same id as user */
+UPDATE users SET dashboard_stats_id=1 WHERE id=676; /* Each dashboard_stats will have same id as user */
 ALTER TABLE users ENABLE TRIGGER ALL; /* Enable foreign key constraints */
 
 /* Create all dashboard stats */
-INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, show_num_proposed_questions, show_num_accepted_questions) (
-	SELECT id, id, 18, 10, true, true
-	FROM users
-);</stringProp>
+INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, show_num_proposed_questions, show_num_accepted_questions) 
+VALUES (1, 676, 0, 0, false, true);</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
@@ -183,7 +181,7 @@ INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_qu
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/executions/11/dashboard</stringProp>
+            <stringProp name="HTTPSampler.path">/dashboard</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -194,54 +192,18 @@ INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_qu
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert student name" enabled="true">
-              <stringProp name="JSON_PATH">$[0].name</stringProp>
-              <stringProp name="EXPECTED_VALUE"></stringProp>
-              <boolProp name="JSONVALIDATION">false</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">false</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert student username" enabled="true">
-              <stringProp name="JSON_PATH">$[0].username</stringProp>
-              <stringProp name="EXPECTED_VALUE"></stringProp>
-              <boolProp name="JSONVALIDATION">false</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">false</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of proposed questions" enabled="true">
-              <stringProp name="JSON_PATH">$[0].numProposedQuestions</stringProp>
-              <stringProp name="EXPECTED_VALUE">18</stringProp>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert show number of proposed questions" enabled="true">
+              <stringProp name="JSON_PATH">$.showNumProposedQuestions</stringProp>
+              <stringProp name="EXPECTED_VALUE">false</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
               <boolProp name="ISREGEX">false</boolProp>
             </JSONPathAssertion>
             <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of accepted questions" enabled="true">
-              <stringProp name="JSON_PATH">$[0].numAcceptedQuestions</stringProp>
-              <stringProp name="EXPECTED_VALUE">10</stringProp>
-              <boolProp name="JSONVALIDATION">true</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">false</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of clarification requests" enabled="true">
-              <stringProp name="JSON_PATH">$[0].numClarificationRequests</stringProp>
-              <stringProp name="EXPECTED_VALUE">4</stringProp>
-              <boolProp name="JSONVALIDATION">true</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">false</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of answered clarification requests" enabled="true">
-              <stringProp name="JSON_PATH">$[0].numAnsweredClarificationRequests</stringProp>
-              <stringProp name="EXPECTED_VALUE">2</stringProp>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert show number of accepted questions" enabled="true">
+              <stringProp name="JSON_PATH">$.showNumAcceptedQuestions</stringProp>
+              <stringProp name="EXPECTED_VALUE">true</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -349,20 +311,20 @@ INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_qu
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">hwjv8756</stringProp>
+          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">pedro</stringProp>
+          <stringProp name="username">filipe</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
           <stringProp name="queryType">Callable Statement</stringProp>
           <stringProp name="query">ALTER TABLE users DISABLE TRIGGER ALL; /* Disable foreign key constraints */
-UPDATE users SET dashboard_stats_id=NULL; /* Delete references to dashboard_stats */
+UPDATE users SET dashboard_stats_id=NULL WHERE id=676; /* Delete references to dashboard_stats */
 ALTER TABLE users ENABLE TRIGGER ALL; /* Enable foreign key constraints */
 
 DELETE FROM dashboard_stats;</stringProp>

@@ -105,6 +105,7 @@ public class User implements UserDetails, DomainEntity {
         this.numberOfCorrectTeacherAnswers = 0;
         this.numberOfCorrectInClassAnswers = 0;
         this.numberOfCorrectStudentAnswers = 0;
+        initDashboardStats();
     }
 
     @Override
@@ -446,15 +447,18 @@ public class User implements UserDetails, DomainEntity {
     public void addTournamentCreatedByMe(Tournament tournament) {this.tournamentsCreatedByMe.add(tournament);}
 
     public DashboardStats getDashboardStats() {
-        System.out.println("null dashboardStats: " + (dashboardStats == null));
-        System.out.println("null role: " + (role == null));
-        if (dashboardStats == null && role.equals(Role.STUDENT))
-            dashboardStats = new DashboardStats(this);
+        if (dashboardStats == null)
+            initDashboardStats();
         return dashboardStats;
     }
 
     public void setDashboardStats(DashboardStats dashboardStats) {
         this.dashboardStats = dashboardStats;
+    }
+
+    private void initDashboardStats() {
+        if (role.equals(Role.STUDENT))
+            dashboardStats = new DashboardStats(this);
     }
 
     @Override

@@ -20,6 +20,16 @@
             class="mx-2"
             data-cy="searchBar"
           />
+          <v-spacer />
+          <v-btn
+            color="primary"
+            dark
+            @click="openPermissions"
+            data-cy="permissionsButton"
+          >
+            <v-icon class="lock-icon">lock</v-icon>
+            Permissions</v-btn
+          >
         </v-card-title>
       </template>
 
@@ -37,13 +47,17 @@
 
       <template v-slot:item.numProposedQuestions="{ item }">
         <div data-cy="numProposedQuestions">
-          {{ item.numProposedQuestions }}
+          {{
+            item.numProposedQuestions === -1 ? '-' : item.numProposedQuestions
+          }}
         </div>
       </template>
 
       <template v-slot:item.numAcceptedQuestions="{ item }">
         <div data-cy="numAcceptedQuestions">
-          {{ item.numAcceptedQuestions }}
+          {{
+            item.numAcceptedQuestions === -1 ? '-' : item.numAcceptedQuestions
+          }}
         </div>
       </template>
 
@@ -58,37 +72,36 @@
           {{ item.numAnsweredClarificationRequests }}
         </div>
       </template>
-      <!--
-      <template
-        v-slot:item.numProposedQuestions="{ item }"
-        data-cy="numProposedQuestions"
-      >
-        <span>{{ item.numProposedQuestions }}</span>
-      </template>
-
-      <template
-        v-slot:item.numAcceptedQuestions="{ item }"
-        data-cy="numAcceptedQuestions"
-      >
-        <span>{{ item.numAcceptedQuestions }}</span>
-      </template>
-      -->
     </v-data-table>
+
+    <permissions-dialog
+      v-if="permissionsDialog"
+      :dashboard-permissions="myPermissions"
+      :dialog="permissionsDialog"
+      v-on:update-permissions="updatePermissions"
+      v-on:close-permissions-dialog="closePermissionsDialog"
+    />
   </v-card>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import DashboardStats from '@/models/dashboard/DashboardStats';
+import DashboardPermissions from '@/models/dashboard/DashboardPermissions';
+import DashboardPermissionsDialog from '@/views/student/dashboard/DashboardPermissionsDialog.vue';
 
 @Component({
-  components: {}
+  components: {
+    'permissions-dialog': DashboardPermissionsDialog
+  }
 })
 export default class DashboardView extends Vue {
   dashboardStatsList: DashboardStats[] = [];
   search: string = '';
   myId: number | null = null;
+  permissionsDialog: boolean = false;
+  myPermissions: DashboardPermissions | null = null;
   headers: object = [
     { text: 'Username', value: 'username', align: 'center' },
     {
@@ -142,13 +155,40 @@ export default class DashboardView extends Vue {
       }
   }
 
+  async openPermissions() {
+    try {
+      this.myPermissions = await RemoteServices.getDashboardPermissions();
+      this.permissionsDialog = true;
+    } catch (error) {
+      await this.$store.dispatch('error', error);
+    }
+  }
+
+  async updatePermissions(dashboardPermissions: DashboardPermissions) {
+    this.permissionsDialog = false;
+    try {
+      this.myPermissions = await RemoteServices.updateDashboardPermissions(
+        dashboardPermissions
+      );
+    } catch (error) {
+      await this.$store.dispatch('error', error);
+    }
+  }
+
+  closePermissionsDialog() {
+    this.permissionsDialog = false;
+  }
+
   getColor(studentId: number) {
-    return this.$store.getters.getUser.id == studentId ? 'green' : 'blue';
+    let user = this.$store.getters.getUser;
+    if (user) return user.id == studentId ? 'green' : 'blue';
+    return 'blue';
   }
 }
 </script>
 
-<style scoped>
-.no-style {
+<style>
+.lock-icon {
+  padding: 0 10px 0 0;
 }
 </style>

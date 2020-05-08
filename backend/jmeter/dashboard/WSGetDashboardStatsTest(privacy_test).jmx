@@ -56,13 +56,13 @@
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">hwjv8756</stringProp>
+          <stringProp name="password">arg</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">pedro</stringProp>
+          <stringProp name="username">arg</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
@@ -71,11 +71,14 @@
 UPDATE users SET dashboard_stats_id=id; /* Each dashboard_stats will have same id as user */
 ALTER TABLE users ENABLE TRIGGER ALL; /* Enable foreign key constraints */
 
-/* Create all dashboard stats */
+/* Create all dashboard stats and make accepted questions private*/
 INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, show_num_proposed_questions, show_num_accepted_questions) (
-	SELECT id, id, 18, 10, true, true
+	SELECT id, id, 18, 10, true, false
 	FROM users
-);</stringProp>
+);
+
+/* Make demo_student stats private*/
+UPDATE dashboard_stats SET show_num_proposed_questions=false WHERE user_id=675;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
@@ -223,25 +226,25 @@ INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_qu
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of accepted questions" enabled="true">
               <stringProp name="JSON_PATH">$[0].numAcceptedQuestions</stringProp>
-              <stringProp name="EXPECTED_VALUE">10</stringProp>
+              <stringProp name="EXPECTED_VALUE">-1</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
               <boolProp name="ISREGEX">false</boolProp>
             </JSONPathAssertion>
             <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of clarification requests" enabled="true">
-              <stringProp name="JSON_PATH">$[0].numClarificationRequests</stringProp>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of accepted questions of demo student" enabled="true">
+              <stringProp name="JSON_PATH">$[59].numAcceptedQuestions</stringProp>
+              <stringProp name="EXPECTED_VALUE">1</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of proposed questions of demo student" enabled="true">
+              <stringProp name="JSON_PATH">$[59].numProposedQuestions</stringProp>
               <stringProp name="EXPECTED_VALUE">4</stringProp>
-              <boolProp name="JSONVALIDATION">true</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">false</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of answered clarification requests" enabled="true">
-              <stringProp name="JSON_PATH">$[0].numAnsweredClarificationRequests</stringProp>
-              <stringProp name="EXPECTED_VALUE">2</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -349,13 +352,13 @@ INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_qu
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">hwjv8756</stringProp>
+          <stringProp name="password">arg</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">pedro</stringProp>
+          <stringProp name="username">arg</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
