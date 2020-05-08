@@ -187,19 +187,6 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add(
-  'checkDashboardDiscussionStats',
-  (studentName, numRequests, numAnswers) => {
-    grandparent(cy.contains(studentName), 4)
-      .children()
-      .find('[data-cy="numClarificationRequests"]')
-      .contains(numRequests.toString());
-    grandparent(cy.contains(studentName), 4)
-      .children()
-      .find('[data-cy="numAnsweredClarificationRequests"]')
-      .contains(numAnswers.toString());
-  }
-);
-Cypress.Commands.add(
   'changeDashboardStudentQuestionsPermissions',
   (
     changeShowNumProposedQuestions,
@@ -238,6 +225,56 @@ Cypress.Commands.add(
     cy.contains('Close').click();
   }
 );
+
+
+Cypress.Commands.add(
+  'changeDashboardDiscussionPermissions',
+  (
+    changeShowNumClarificationRequests,
+    changeShowNumAnsweredClarificationRequests,
+    save = true
+  ) => {
+    cy.get('[data-cy="permissionsButton"]').click({ force: true });
+
+    if (changeShowNumClarificationRequests)
+      cy.contains('Show number of clarification requests').click();
+    if (changeShowNumAnsweredClarificationRequests)
+      cy.contains('Show number of answered clarification requests').click();
+
+    if (save) cy.contains('Save').click();
+    else cy.contains('Close').click();
+  }
+);
+
+
+
+Cypress.Commands.add(
+  'checkDashboardDiscussionPermissions',
+  (showNumClarificationRequests, showNumAnsweredClarificationRequests) => {
+    cy.get('[data-cy="permissionsButton"]').click({ force: true });
+
+    cy.contains('Show number of clarification requests')
+      .parent()
+      .children()
+      .find('input')
+      .should(showNumClarificationRequests ? 'be.checked' : 'not.checked');
+
+    cy.contains('Show number of answered clarification requests')
+      .parent()
+      .children()
+      .find('input')
+      .should(showNumAnsweredClarificationRequests ? 'be.checked' : 'not.checked');
+
+    cy.contains('Close').click(); 
+  }
+);
+
+
+
+
+
+
+
 
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
