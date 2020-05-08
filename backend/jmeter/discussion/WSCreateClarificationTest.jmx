@@ -56,18 +56,18 @@
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
+          <stringProp name="password">123456</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">filipe</stringProp>
+          <stringProp name="username">pedro</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">INSERT INTO clarification_requests VALUES (1, &apos;Não sei o que se passa&apos;,&apos;ola&apos;, 1339, 676);</stringProp>
+          <stringProp name="query">INSERT INTO clarification_requests(id, text, title, question_id, user_id, private) VALUES (1, &apos;Não sei o que se passa&apos;,&apos;ola&apos;, 1339, 676, &apos;false&apos;);</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
@@ -178,8 +178,9 @@
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
+	&quot;commentList&quot;: [],&#xd;
 	&quot;text&quot;: &quot;Passa-se isto&quot;,&#xd;
-	&quot;username&quot;: &quot;Demo-Teacher&quot;&#xd;
+	&quot;userId&quot;:&quot;677&quot;&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -320,13 +321,13 @@
           <stringProp name="driver">org.postgresql.Driver</stringProp>
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
-          <stringProp name="password">+*GS*tj,uT9{^MFu</stringProp>
+          <stringProp name="password">123456</stringProp>
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
-          <stringProp name="username">filipe</stringProp>
+          <stringProp name="username">pedro</stringProp>
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">

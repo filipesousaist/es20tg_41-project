@@ -105,6 +105,7 @@ public class User implements UserDetails, DomainEntity {
         this.numberOfCorrectTeacherAnswers = 0;
         this.numberOfCorrectInClassAnswers = 0;
         this.numberOfCorrectStudentAnswers = 0;
+        initDashboardStats();
     }
 
     @Override
@@ -463,13 +464,18 @@ public class User implements UserDetails, DomainEntity {
     }
 
     public DashboardStats getDashboardStats() {
-        if (dashboardStats == null && role.equals(Role.STUDENT))
-            this.dashboardStats = new DashboardStats(this);
+        if (dashboardStats == null)
+            initDashboardStats();
         return dashboardStats;
     }
 
     public void setDashboardStats(DashboardStats dashboardStats) {
         this.dashboardStats = dashboardStats;
+    }
+
+    private void initDashboardStats() {
+        if (role.equals(Role.STUDENT))
+            dashboardStats = new DashboardStats(this);
     }
 
     @Override
@@ -545,5 +551,13 @@ public class User implements UserDetails, DomainEntity {
         }
 
         return result;
+    }
+
+    public int getNumProposedQuestions() {
+        return studentQuestions.size();
+    }
+
+    public int getNumAcceptedQuestions() {
+        return (int) studentQuestions.stream().filter(StudentQuestion::isAccepted).count();
     }
 }

@@ -113,6 +113,17 @@
         </v-menu>
 
         <v-btn
+          to="/student/studentAnsweredQuestions/"
+          v-if="isStudent && currentCourse"
+          text
+          dark
+        >
+          Answered Questions
+          <v-icon>fas fa-file-alt</v-icon>
+        </v-btn>
+
+
+        <v-btn
           to="/student/studentQuestions/"
           v-if="isStudent && currentCourse"
           text

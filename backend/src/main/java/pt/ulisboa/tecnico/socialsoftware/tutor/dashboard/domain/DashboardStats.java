@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.domain;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.dto.DashboardPermissionsDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 
 import javax.persistence.*;
@@ -18,8 +19,13 @@ public class DashboardStats {
     /*Tournaments Stats*/
     private Integer totalTournaments;
     private Integer highestResult;
+    private int numProposedQuestions;
+    private int numAcceptedQuestions;
 
-    // TODO: insert each functionality's related stats
+    private boolean showNumProposedQuestions = true;
+    private boolean showNumAcceptedQuestions = true;
+    private boolean showTotalTournaments = true;
+    private boolean showHighestResult = true;
 
     public DashboardStats() {
 
@@ -30,6 +36,8 @@ public class DashboardStats {
         this.user = user;
         this.totalTournaments = user.getTotalTournaments();
         this.highestResult = user.getHighestResult();
+        this.numProposedQuestions = user.getNumProposedQuestions();
+        this.numAcceptedQuestions = user.getNumAcceptedQuestions();
     }
 
     public Integer getId() {
@@ -62,5 +70,60 @@ public class DashboardStats {
 
     public void setHighestResult(Integer highestResult) {
         this.highestResult = highestResult;
+    }
+
+    public int getNumAcceptedQuestions() {
+        return numAcceptedQuestions;
+    }
+
+    public void setNumAcceptedQuestions(int numAcceptedQuestions) {
+        this.numAcceptedQuestions = numAcceptedQuestions;
+    }
+
+    public int getNumProposedQuestions() {
+        return numProposedQuestions;
+    }
+
+    public void setNumProposedQuestions(int numProposedQuestions) {
+        this.numProposedQuestions = numProposedQuestions;
+    }
+
+    public boolean getShowNumProposedQuestions() {
+        return showNumProposedQuestions;
+    }
+
+    public void setShowNumProposedQuestions(boolean showNumProposedQuestions) {
+        this.showNumProposedQuestions = showNumProposedQuestions;
+    }
+
+    public boolean getShowNumAcceptedQuestions() {
+        return showNumAcceptedQuestions;
+    }
+
+    public void setShowNumAcceptedQuestions(boolean showNumAcceptedQuestions) {
+        this.showNumAcceptedQuestions = showNumAcceptedQuestions;
+    }
+
+    public boolean getShowTotalTournaments() {
+        return showTotalTournaments;
+    }
+
+    public void setShowTotalTournaments(boolean showTotalTournaments) {
+        this.showTotalTournaments = showTotalTournaments;
+    }
+
+    public boolean getShowHighestResult() {
+        return showHighestResult;
+    }
+
+    public void setShowHighestResult(boolean showHighestResult) {
+        this.showHighestResult = showHighestResult;
+    }
+
+    public void updatePermissions(DashboardPermissionsDto dashboardPermissionsDto) {
+        this.showNumProposedQuestions = dashboardPermissionsDto.getShowNumProposedQuestions();
+        this.showNumAcceptedQuestions = dashboardPermissionsDto.getShowNumAcceptedQuestions();
+        this.showHighestResult = dashboardPermissionsDto.getHighestResult();
+        this.showTotalTournaments = dashboardPermissionsDto.getTotalTournaments();
     }
 }

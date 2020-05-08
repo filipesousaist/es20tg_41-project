@@ -24,6 +24,7 @@ import StudentQuestion from '@/models/student_question/StudentQuestion';
 import QuestionEvaluation from '@/models/student_question/QuestionEvaluation';
 
 import DashboardStats from '@/models/dashboard/DashboardStats';
+import DashboardPermissions from '@/models/dashboard/DashboardPermissions';
 
 const httpClient = axios.create();
 httpClient.defaults.timeout = 10000;
@@ -111,6 +112,30 @@ export default class RemoteServices {
         return response.data.map((dashboardStats: DashboardStats) => {
           return new DashboardStats(dashboardStats);
         });
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async getDashboardPermissions(): Promise<DashboardPermissions> {
+    return httpClient
+      .get('/dashboard')
+      .then(response => {
+        return new DashboardPermissions(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async updateDashboardPermissions(
+    dashboardPermissions: DashboardPermissions
+  ): Promise<DashboardPermissions> {
+    return httpClient
+      .put('/dashboard', dashboardPermissions)
+      .then(response => {
+        return new DashboardPermissions(response.data);
       })
       .catch(async error => {
         throw Error(await this.errorMessage(error));
@@ -207,6 +232,19 @@ export default class RemoteServices {
   static async getQuestions(): Promise<Question[]> {
     return httpClient
       .get(`/courses/${Store.getters.getCurrentCourse.courseId}/questions`)
+      .then(response => {
+        return response.data.map((question: any) => {
+          return new Question(question);
+        });
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async getAnsweredQuestions(): Promise<Question[]> {
+    return httpClient
+      .get(`/executions/${Store.getters.getCurrentCourse.courseExecutionId}/questions/answered`)
       .then(response => {
         return response.data.map((question: any) => {
           return new Question(question);
@@ -707,6 +745,40 @@ export default class RemoteServices {
       .post(
         '/clarificationRequests/' + clarificationRequestId + '/clarifications',
         clarification
+      )
+      .then(response => {
+        return new Clarification(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async updateClarificationRequestPrivacy(
+    request: ClarificationRequest,
+    clarificationRequestId: number | undefined
+  ): Promise<ClarificationRequest> {
+    return httpClient
+      .put(
+        '/clarificationRequests/' + clarificationRequestId + '/privacy',
+        request
+      )
+      .then(response => {
+        return new ClarificationRequest(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async createClarificationSummary(
+    clarification: Clarification,
+    clarificationId: number | undefined
+  ): Promise<Clarification> {
+    return httpClient
+      .put(
+         '/clarification/' + clarificationId,
+         clarification
       )
       .then(response => {
         return new Clarification(response.data);

@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.student_question.domain;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
+import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.domain.DashboardStats;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto;
@@ -44,11 +45,17 @@ public class StudentQuestion {
     public StudentQuestion(Course course, User user, StudentQuestionDto studentQuestionDto){
         checkQuestion(studentQuestionDto);
 
-        this.user = user;
+        addUser(user);
 
         this.question = new Question(course, studentQuestionDto.getQuestionDto());
 
         user.addStudentQuestion(this);
+    }
+
+    private void addUser(User user) {
+        this.user = user;
+        DashboardStats stats = user.getDashboardStats();
+        stats.setNumProposedQuestions(stats.getNumProposedQuestions() + 1);
     }
 
 
@@ -84,6 +91,18 @@ public class StudentQuestion {
     }
 
     public void setStatus(Status status) {
+        boolean fromAccepted = this.status.equals(Status.ACCEPTED);
+        boolean toAccepted = status.equals(Status.ACCEPTED);
+
+        if (fromAccepted && !toAccepted) { // From accepted to different status
+            DashboardStats stats = user.getDashboardStats();
+            stats.setNumAcceptedQuestions(stats.getNumAcceptedQuestions() - 1);
+        }
+        else if (!fromAccepted && toAccepted) { // From different status to accepted
+            DashboardStats stats = user.getDashboardStats();
+            stats.setNumAcceptedQuestions(stats.getNumAcceptedQuestions() + 1);
+        }
+
         this.status = status;
     }
 
@@ -108,9 +127,13 @@ public class StudentQuestion {
     public void updateByStudent(StudentQuestionDto studentQuestionDto) {
         if (status == Status.REJECTED) {
             this.question.update(studentQuestionDto.getQuestionDto());
-            status = Status.PROPOSED;
+            setStatus(Status.PROPOSED);
         }
         else
             throw new TutorException(STUDENT_QUESTION_IS_NOT_REJECTED);
+    }
+
+    public boolean isAccepted() {
+        return status.equals(Status.ACCEPTED);
     }
 }

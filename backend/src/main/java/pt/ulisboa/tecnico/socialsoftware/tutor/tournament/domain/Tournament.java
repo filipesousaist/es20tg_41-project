@@ -223,7 +223,7 @@ public class Tournament {
                 .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()));
 
 
-        int correct = studentsRank.get(0);
+        int correct = studentsRank.get(studentsRank.keySet().toArray()[0]);
         Iterator it = studentsRank.entrySet().iterator();
 
         while (it.hasNext()) {

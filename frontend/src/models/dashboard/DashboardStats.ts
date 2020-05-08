@@ -6,6 +6,9 @@ export default class DashboardStats {
   /*Tournament properties*/
   totalTournaments!: number;
   highestResult!: number;
+  numProposedQuestions: number;
+  numAcceptedQuestions: number;
+
   // TODO: add properties for each stat
 
   constructor(jsonObj: DashboardStats) {
@@ -14,5 +17,7 @@ export default class DashboardStats {
     this.name = jsonObj.name;
     this.totalTournaments = jsonObj.totalTournaments;
     this.highestResult = jsonObj.highestResult;
+    this.numProposedQuestions = jsonObj.numProposedQuestions;
+    this.numAcceptedQuestions = jsonObj.numAcceptedQuestions;
   }
 }

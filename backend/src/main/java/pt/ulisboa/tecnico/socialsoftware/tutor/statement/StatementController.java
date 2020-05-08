@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.dto.CorrectAnswerDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.statement.dto.SolvedQuizDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.statement.dto.StatementAnswerDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.statement.dto.StatementCreationDto;
@@ -120,5 +121,17 @@ public class StatementController {
         }
 
         return statementService.concludeQuiz(user.getId(), quizId);
+    }
+
+    @GetMapping("/executions/{executionId}/questions/answered")
+    @PreAuthorize("hasRole('ROLE_STUDENT') and hasPermission(#executionId, 'EXECUTION.ACCESS')")
+    public List<QuestionDto> getUserAnsweredQuestions(Principal principal, @PathVariable Integer executionId){
+        User user = (User) ((Authentication) principal).getPrincipal();
+
+        if (user == null) {
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+
+        return this.statementService.getAnsweredQuestions(user.getId(), executionId);
     }
 }

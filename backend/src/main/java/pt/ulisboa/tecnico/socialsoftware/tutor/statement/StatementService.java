@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.AnswerService;
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuestionAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.dto.CorrectAnswerDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.repository.QuizAnswerRepository;
@@ -16,10 +17,12 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Assessment;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.AssessmentRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.QuizService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.repository.QuizRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.statement.dto.SolvedQuizDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.statement.dto.StatementAnswerDto;
@@ -31,6 +34,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -310,6 +314,22 @@ public class StatementService {
         } else if (quiz.isOneWay()) {
             throw new TutorException(QUIZ_ALREADY_STARTED);
         }
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<QuestionDto> getAnsweredQuestions(int userId, int courseExectutionId){
+        return userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId))
+                .getQuizAnswers()
+                .stream()
+                .filter(quizAns -> quizAns.getQuiz().getCourseExecution().getId() == courseExectutionId)
+                .map(QuizAnswer::getQuestionAnswers)
+                .flatMap(Collection::stream)
+                .map(QuestionAnswer::getQuizQuestion)
+                .map(QuizQuestion::getQuestion)
+                .sorted(Comparator.comparing(Question::getId).reversed())
+                .distinct()
+                .map(QuestionDto::new)
+                .collect(Collectors.toList());
     }
 
     public List<Question> filterByAssessment(List<Question> availableQuestions, StatementCreationDto quizDetails) {

@@ -7,6 +7,7 @@ export default class ClarificationRequest{
   userId: number | null = null;
   username: string = '';
   clarification: Clarification | null = null;
+  privacy: boolean | null = null;
   creationDate: string = '';
 
   constructor(jsonObj?: ClarificationRequest){
@@ -17,6 +18,7 @@ export default class ClarificationRequest{
       this.userId = jsonObj.userId;
       this.username = jsonObj.username;
       this.clarification = jsonObj.clarification;
+      this.privacy = jsonObj.privacy;
       this.creationDate = jsonObj.creationDate;
     }
   }

@@ -13,6 +13,7 @@ import QuizzesView from '@/views/teacher/quizzes/QuizzesView.vue';
 import StudentsView from '@/views/teacher/students/StudentsView.vue';
 import StudentView from '@/views/student/StudentView.vue';
 import StudentQuestionsView from './views/student/StudentQuestionsView.vue';
+import AnsweredQuestionsView from './views/student/AnsweredQuestionsView.vue';
 import AvailableQuizzesView from '@/views/student/AvailableQuizzesView.vue';
 import SolvedQuizzesView from '@/views/student/SolvedQuizzesView.vue';
 import QuizView from '@/views/student/quiz/QuizView.vue';
@@ -145,6 +146,15 @@ let router = new Router({
           component: StudentQuestionsView,
           meta: {
             title: process.env.VUE_APP_NAME + ' - Student Questions',
+            requiredAuth: 'Student'
+          }
+        },
+        {
+          path: 'studentAnsweredQuestions',
+          name: 'get-studentAnsweredQuestions',
+          component: AnsweredQuestionsView,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Answered Questions',
             requiredAuth: 'Student'
           }
         },

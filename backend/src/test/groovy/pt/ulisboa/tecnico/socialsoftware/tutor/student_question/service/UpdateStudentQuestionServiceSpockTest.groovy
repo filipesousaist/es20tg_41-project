@@ -37,9 +37,9 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
     private static final String STUDENT_NAME = "Student Name"
     private static final String STUDENT_USERNAME = "Student Username"
     private static final int STUDENT_KEY = 1
-    private static final String TEACHER_NAME = "Teacher Name";
-    private static final String TEACHER_USERNAME = "Teacher Username";
-    private static final int TEACHER_KEY = 2;
+    private static final String TEACHER_NAME = "Teacher Name"
+    private static final String TEACHER_USERNAME = "Teacher Username"
+    private static final int TEACHER_KEY = 2
 
     @Autowired
     StudentQuestionService studentQuestionService
@@ -114,9 +114,9 @@ class UpdateStudentQuestionServiceSpockTest extends Specification{
 
         // Create student question
         studentQuestion = new StudentQuestion()
+        studentQuestion.setUser(student)
         studentQuestion.setStatus(StudentQuestion.Status.ACCEPTED)
         studentQuestion.setQuestion(question)
-        studentQuestion.setUser(student)
         studentQuestionRepository.save(studentQuestion)
     }
 
