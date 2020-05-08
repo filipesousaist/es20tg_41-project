@@ -337,14 +337,12 @@ public class DiscussionService {
             value = { SQLException.class },
             backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public List<ClarificationRequestDto> getPublicClarificationRequests(Integer questionId, Integer userId){
-        User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
+    public List<ClarificationRequestDto> getPublicClarificationRequests(Integer questionId){
         return questionRepository.findById(questionId)
                 .orElseThrow(() -> new TutorException(QUESTION_NOT_FOUND, questionId))
                 .getClarificationRequests()
                 .stream()
                 .filter(cr -> !cr.getPrivacy())
-                .filter(cr -> !cr.getStudent().getId().equals(user.getId()))
                 .map(ClarificationRequestDto::new)
                 .collect(Collectors.toList());
 

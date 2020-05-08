@@ -196,6 +196,7 @@ public class User implements UserDetails, DomainEntity {
 
     public void addClarificationRequest(ClarificationRequest clarificationRequest){
         clarificationRequests.add(clarificationRequest);
+        dashboardStats.setNumClarificationRequests(dashboardStats.getNumClarificationRequests() + 1);
     }
 
     public Set<Clarification> getClarifications() {
@@ -542,5 +543,12 @@ public class User implements UserDetails, DomainEntity {
 
     public int getNumAcceptedQuestions() {
         return (int) studentQuestions.stream().filter(StudentQuestion::isAccepted).count();
+    }
+
+    public int getNumClarificationRequests() { return clarificationRequests.size(); }
+
+    public int getNumAnsweredClarificationRequests() {
+        return (int) clarificationRequests.stream().filter(
+                clarificationRequest -> clarificationRequest.getClarification() != null).count();
     }
 }

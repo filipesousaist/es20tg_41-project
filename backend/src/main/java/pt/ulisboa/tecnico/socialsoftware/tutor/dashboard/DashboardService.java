@@ -53,6 +53,8 @@ public class DashboardService {
                 DashboardStats dashboardStats = user.getDashboardStats();
                 stats.setNumProposedQuestions(dashboardStats.getNumProposedQuestions());
                 stats.setNumAcceptedQuestions(dashboardStats.getNumAcceptedQuestions());
+                stats.setNumClarificationRequests(dashboardStats.getNumClarificationRequests());
+                stats.setNumAnsweredClarificationRequests(dashboardStats.getNumAnsweredClarificationRequests());
             }
         }).collect(Collectors.toList());
     }

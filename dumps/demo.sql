@@ -11527,9 +11527,13 @@ CREATE TABLE public.dashboard_stats (
 	id integer NOT NULL, 
 	user_id integer, 
 	num_proposed_questions integer, 
-	num_accepted_questions integer, 
+	num_accepted_questions integer,
+	num_clarification_requests integer, 
+	num_answered_clarification_requests integer, 
 	show_num_proposed_questions boolean DEFAULT true,
-	show_num_accepted_questions boolean DEFAULT true
+	show_num_accepted_questions boolean DEFAULT true,
+	show_num_clarification_requests boolean DEFAULT true,
+	show_num_answered_clarification_requests boolean DEFAULT true
 );
 
 
@@ -11540,18 +11544,23 @@ ALTER TABLE public.users ADD dashboard_stats_id integer;
 UPDATE public.users SET dashboard_stats_id=id; /* Each dashboard_stats will have same id as user */
 
 /* Create all dashboard stats and make accepted questions public */
-INSERT INTO public.dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, show_num_proposed_questions, show_num_accepted_questions) (
-	SELECT id, id, 0, 0, true, true
+INSERT INTO public.dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, num_clarification_requests, num_answered_clarification_requests, show_num_proposed_questions, show_num_accepted_questions, show_num_clarification_requests, show_num_answered_clarification_requests) (
+	SELECT id, id, 0, 0, 0, 0, true, true, true, true
 	FROM public.users
 );
 
 /* Make demo_student stats private*/
 UPDATE public.dashboard_stats SET show_num_proposed_questions=false WHERE user_id=676;
 UPDATE public.dashboard_stats SET show_num_accepted_questions=false WHERE user_id=676;
+UPDATE public.dashboard_stats SET show_num_clarification_requests=false WHERE user_id=676;
+UPDATE public.dashboard_stats SET show_num_answered_clarification_requests=false WHERE user_id=676;
+
 
 /* Make student 700 stats private*/
 UPDATE public.dashboard_stats SET show_num_proposed_questions=false WHERE user_id=700;
 UPDATE public.dashboard_stats SET show_num_accepted_questions=false WHERE user_id=700;
+UPDATE public.dashboard_stats SET show_num_clarification_requests=false WHERE user_id=700;
+UPDATE public.dashboard_stats SET show_num_answered_clarification_requests=false WHERE user_id=700;
 
 --
 -- PostgreSQL database dump complete
