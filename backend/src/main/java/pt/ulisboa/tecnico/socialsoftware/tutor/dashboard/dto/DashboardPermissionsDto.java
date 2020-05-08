@@ -7,8 +7,8 @@ public class DashboardPermissionsDto {
     private boolean showNumAcceptedQuestions;
 
     /*Tournaments Stats*/
-    private boolean totalTournaments;
-    private boolean highestResult;
+    private boolean showTotalTournaments;
+    private boolean showHighestResult;
 
     public DashboardPermissionsDto() {
         
@@ -17,8 +17,8 @@ public class DashboardPermissionsDto {
     public DashboardPermissionsDto(DashboardStats dashboardStats) {
         this.showNumProposedQuestions = dashboardStats.getShowNumProposedQuestions();
         this.showNumAcceptedQuestions = dashboardStats.getShowNumAcceptedQuestions();
-        this.totalTournaments = dashboardStats.getShowTotalTournaments();
-        this.highestResult = dashboardStats.getShowHighestResult();
+        this.showTotalTournaments = dashboardStats.getShowTotalTournaments();
+        this.showHighestResult = dashboardStats.getShowHighestResult();
     }
 
     public boolean getShowNumProposedQuestions() {
@@ -37,19 +37,19 @@ public class DashboardPermissionsDto {
         this.showNumAcceptedQuestions = showNumAcceptedQuestions;
     }
 
-    public boolean getTotalTournaments() {
-        return totalTournaments;
+    public boolean getShowTotalTournaments() {
+        return showTotalTournaments;
     }
 
-    public void setTotalTournaments(boolean totalTournaments) {
-        this.totalTournaments = totalTournaments;
+    public void setShowTotalTournaments(boolean showTotalTournaments) {
+        this.showTotalTournaments = showTotalTournaments;
     }
 
-    public boolean getHighestResult() {
-        return highestResult;
+    public boolean getShowHighestResult() {
+        return showHighestResult;
     }
 
-    public void setHighestResult(boolean highestResult) {
-        this.highestResult = highestResult;
+    public void setShowHighestResult(boolean showHighestResult) {
+        this.showHighestResult = showHighestResult;
     }
 }

@@ -34,6 +34,7 @@ export default class Tournament {
 
       if (jsonObj.studentsUsername) {
         let student;
+        console.log(jsonObj.studentsUsername)
         while((student = jsonObj.studentsUsername.pop())) {
           this.studentsUsername.push(student);
         }

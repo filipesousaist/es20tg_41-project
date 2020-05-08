@@ -102,7 +102,7 @@ export default class EnrollTournament extends Vue {
     try {
       if (tournament.studentsUsername.includes(this.username)) {
         await RemoteServices.unenrollTournament(tournament.id);
-        tournament.studentsUsername.splice(this.username);
+        tournament.studentsUsername.splice(tournament.studentsUsername.indexOf(this.username), 1);
       } else {
         await RemoteServices.enrollTournament(tournament.id);
         tournament.studentsUsername.push(this.username);

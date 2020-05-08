@@ -123,7 +123,7 @@ public class DashboardStats {
     public void updatePermissions(DashboardPermissionsDto dashboardPermissionsDto) {
         this.showNumProposedQuestions = dashboardPermissionsDto.getShowNumProposedQuestions();
         this.showNumAcceptedQuestions = dashboardPermissionsDto.getShowNumAcceptedQuestions();
-        this.showHighestResult = dashboardPermissionsDto.getHighestResult();
-        this.showTotalTournaments = dashboardPermissionsDto.getTotalTournaments();
+        this.showHighestResult = dashboardPermissionsDto.getShowHighestResult();
+        this.showTotalTournaments = dashboardPermissionsDto.getShowTotalTournaments();
     }
 }

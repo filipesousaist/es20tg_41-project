@@ -24,8 +24,6 @@ public class DashboardStatsDto implements Serializable {
         this.userId = user.getId();
         this.username = user.getUsername();
         this.name = user.getName();
-        this.highestResult = user.getHighestResult();
-        this.totalTournaments = user.getTotalTournaments();
 
         if(dashboardStats.getShowNumAcceptedQuestions()){
             this.numAcceptedQuestions = dashboardStats.getNumAcceptedQuestions();
@@ -37,6 +35,18 @@ public class DashboardStatsDto implements Serializable {
             this.numProposedQuestions = dashboardStats.getNumProposedQuestions();
         }else{
             this.numProposedQuestions = -1;
+        }
+
+        if (dashboardStats.getShowHighestResult()) {
+            this.highestResult = user.getHighestResult();
+        }else{
+            this.highestResult = -1;
+        }
+
+        if (dashboardStats.getShowTotalTournaments()) {
+            this.totalTournaments = user.getTotalTournaments();
+        }else{
+            this.totalTournaments = -1;
         }
 
     }

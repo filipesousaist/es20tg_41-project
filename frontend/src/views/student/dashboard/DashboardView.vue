@@ -62,13 +62,16 @@
       </template>
       <template v-slot:item.totalTournaments="{ item }">
         <div data-cy="totalTournaments">
-          <span>{{ item.totalTournaments }}</span>
+          {{
+          item.totalTournaments === -1 ? '-' : item.totalTournaments
+          }}
         </div>
       </template>
       <template v-slot:item.highestResult="{ item }">
         <div data-cy="highestResult">
           {{
-          item.highestResult === 26 ? 'NA' : item.highestResult
+
+          item.highestResult === -1 ? '-' : item.highestResult === 26 ? 'NA' : item.highestResult
           }}
         </div>
       </template>

@@ -13,14 +13,25 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.DashboardService
 import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.dto.DashboardStatsDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.repository.DashboardRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.OptionDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.StudentQuestionService
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.QuestionEvaluationDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.student_question.dto.StudentQuestionDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.dto.TournamentDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
+
+import java.time.LocalDateTime
+import java.time.Month
+
+import static pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler.toISOString
+import static pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler.toISOString
 
 @DataJpaTest
 class GetDashboardStatsServiceSpockTest extends Specification {
@@ -30,6 +41,17 @@ class GetDashboardStatsServiceSpockTest extends Specification {
     public static final String STUDENT_USERNAME_2 = "ist12"
     public static final String TEACHER_NAME = "Teacher1"
     public static final String TEACHER_USERNAME = "ist789789789"
+
+    static final String TOPIC_NAME = "Algorithms"
+
+    static final int HOUR1 = 8
+    static final int MINUTE1 = 0
+    static final int MINUTE2 = 30
+    static final int DAY = 2
+    static final Month MONTH = Month.MARCH
+    static final int YEAR = 2020
+
+    static final int NUMBEROFQUESTIONS = 1
 
     @Autowired
     DashboardService dashboardService
@@ -49,11 +71,19 @@ class GetDashboardStatsServiceSpockTest extends Specification {
     @Autowired
     DashboardRepository dashboardRepository
 
+    @Autowired
+    QuestionRepository questionRepository
+
+    @Autowired
+    TopicRepository topicRepository
+
     def course
     def courseExecution
     def student1
     def student2
     def teacher
+    def topicDto
+    def topicList
 
     def setup() {
         course = new Course("Software Engineering", Course.Type.TECNICO)
@@ -79,6 +109,23 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         userRepository.save(teacher)
         courseExecution.addUser(teacher)
         teacher.addCourse(courseExecution)
+
+        topicDto = new TopicDto()
+        topicDto.setName(TOPIC_NAME)
+        def topic = new Topic(course, topicDto)
+
+        def question = new Question()
+        question.setKey(1)
+        question.setTitle("Question Title")
+        question.setContent("Question Content")
+        question.setCourse(course)
+
+        question.getTopics().add(topic)
+        topicRepository.save(topic)
+        questionRepository.save(question)
+
+        topicList = new ArrayList<TopicDto>()
+        topicList.add(topicDto)
     }
 
     def "get dashboard stats and check if stats are at initial state"() {
@@ -95,6 +142,8 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         myDashboardStats.getUsername() == STUDENT_USERNAME
         myDashboardStats.getNumProposedQuestions() == 0
         myDashboardStats.getNumAcceptedQuestions() == 0
+        myDashboardStats.getHighestResult() == 0
+        myDashboardStats.getTotalTournaments() == 0
         // TODO: test other stats
     }
 
