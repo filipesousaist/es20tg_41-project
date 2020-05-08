@@ -97,7 +97,7 @@
 	&quot;showNumProposedQuestions&quot;: false,&#xd;
 	&quot;showNumAcceptedQuestions&quot;: true,&#xd;
 	&quot;showTotalTournaments&quot;: true,&#xd;
-	&quot;showHighestResult&quot;: false&#xd;
+	&quot;showHighestResult&quot;: false,&#xd;
 	&quot;showNumClarificationRequests&quot;: false,&#xd;
 	&quot;showNumAnsweredClarificationRequests&quot;: true&#xd;
 }&#xd;
