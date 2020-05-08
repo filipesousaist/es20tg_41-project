@@ -17,8 +17,8 @@ public class DashboardStats {
     private User user;
 
     /*Tournaments Stats*/
-    private Integer totalTournaments;
-    private Integer highestResult;
+    private int totalTournaments;
+    private int highestResult;
     private int numProposedQuestions;
     private int numAcceptedQuestions;
 
