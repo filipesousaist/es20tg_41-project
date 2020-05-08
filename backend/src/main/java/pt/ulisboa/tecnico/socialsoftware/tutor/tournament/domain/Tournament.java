@@ -202,7 +202,7 @@ public class Tournament {
     public Integer getHighestResult(User user) {
 
         if (tournamentQuiz == null) {
-            throw new TutorException(QUIZ_NOT_FOUND);
+            return 26;
         }
 
         int rank = 1;

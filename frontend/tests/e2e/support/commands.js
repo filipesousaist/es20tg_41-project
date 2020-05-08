@@ -173,6 +173,20 @@ Cypress.Commands.add('failClickEditButton', studentQuestionTitle => {
 });
 
 Cypress.Commands.add(
+  'checkDashboardStudentTournamentStats',
+  (studentName, part, result) => {
+    grandparent(cy.contains(studentName), 4)
+      .children()
+      .find('[data-cy="totalTournaments"]')
+      .contains(part.toString());
+    grandparent(cy.contains(studentName), 4)
+      .children()
+      .find('[data-cy="highestResult"]')
+      .contains(result.toString());
+  }
+);
+
+Cypress.Commands.add(
   'checkDashboardStudentQuestionsStats',
   (studentName, numProposed, numAccepted) => {
     grandparent(cy.contains(studentName), 4)
@@ -259,6 +273,14 @@ Cypress.Commands.add('deleteTournament', name => {
     .click();
 });
 
+Cypress.Commands.add('participateTournament', name => {
+  cy.contains('Participate').click({ force: true });
+  cy.contains(name)
+    .parent()
+    .find('[data-cy="Answer"]')
+    .click();
+});
+
 Cypress.Commands.add('createTournament', (name, numberOfQuestions, day2) => {
   cy.contains('Create').click({ force: true });
   cy.contains('New Tournament').click({ force: true });
@@ -268,24 +290,11 @@ Cypress.Commands.add('createTournament', (name, numberOfQuestions, day2) => {
   cy.contains('Adventure Builder').click();
   cy.contains('Amazon Silk').click();
   cy.contains('New Tournament').click({ force: true });
-  cy.contains('Select ending').click({ force: true });
-  cy.contains(day2).click();
-  cy.get('[style="left: 25%; top: 6.69873%;"] > span').click();
-  cy.get(
-    '.fade-transition-enter-active > .v-time-picker-clock > .v-time-picker-clock__inner > [style="left: 6.69873%; top: 25%;"] > span'
-  ).click();
-  cy.contains('OK').click();
   cy.contains('Select beginning').click({ force: true });
-  cy.get(
-    '.v-dialog__content--active > .v-dialog > .v-sheet > .v-card__text > .v-tabs > .v-window > .v-window__container > .v-window-item > .v-picker > .v-picker__body > :nth-child(1) > .v-date-picker-table > table > tbody > :nth-child(3) > :nth-child(6) > .v-btn'
-  ).click();
-  cy.get(
-    '.v-window-item--active > .v-picker > .v-picker__body > .v-time-picker-clock__container > .v-time-picker-clock > .v-time-picker-clock__inner > [style="left: 6.69873%; top: 25%;"] > span'
-  ).click();
-  cy.get(
-    '.v-dialog__content--active > .v-dialog > .v-sheet > .v-card__actions > .green--text > .v-btn__content'
-  ).click();
-  cy.get('[data-cy=saveButton] > .v-btn__content').click();
+  cy.get(':nth-child(1) > #undefined-wrapper > .datetimepicker > .datepicker > .datepicker-buttons-container > .now').click({ force: true });
+  cy.contains('Select ending').click({ force: true });
+  cy.get(':nth-child(2) > #undefined-wrapper > .datetimepicker > .datepicker > .pickers-container > #undefined-picker-container-DatePicker > .calendar > .month-container > :nth-child(1) > .datepicker-days > :nth-child(36) > .datepicker-day-text').click({force:true});
+  cy.get('[data-cy=saveButton]').click();
 });
 
 Cypress.Commands.add(
@@ -296,23 +305,27 @@ Cypress.Commands.add(
     cy.get('[data-cy="tournamentName"]').type(name);
     cy.get('[data-cy="Number of questions"]').type(numberOfQuestions);
     cy.contains('Select ending').click({ force: true });
-    cy.contains(day2).click();
-    cy.get('[style="left: 25%; top: 6.69873%;"] > span').click();
-    cy.get(
-      '.fade-transition-enter-active > .v-time-picker-clock > .v-time-picker-clock__inner > [style="left: 6.69873%; top: 25%;"] > span'
-    ).click();
-    cy.contains('OK').click();
     cy.contains('Select beginning').click({ force: true });
-    cy.get(
-      '.v-dialog__content--active > .v-dialog > .v-sheet > .v-card__text > .v-tabs > .v-window > .v-window__container > .v-window-item > .v-picker > .v-picker__body > :nth-child(1) > .v-date-picker-table > table > tbody > :nth-child(3) > :nth-child(6) > .v-btn'
-    ).click();
-    cy.get(
-      '.v-window-item--active > .v-picker > .v-picker__body > .v-time-picker-clock__container > .v-time-picker-clock > .v-time-picker-clock__inner > [style="left: 6.69873%; top: 25%;"] > span'
-    ).click();
-    cy.get(
-      '.v-dialog__content--active > .v-dialog > .v-sheet > .v-card__actions > .green--text > .v-btn__content'
-    ).click();
-    cy.get('[data-cy=saveButton] > .v-btn__content').click();
+    cy.get(':nth-child(1) > #undefined-wrapper > .datetimepicker > .datepicker > .datepicker-buttons-container > .now').click({ force: true });
+    cy.contains('Select ending').click({ force: true });
+    cy.get(':nth-child(2) > #undefined-wrapper > .datetimepicker > .datepicker > .pickers-container > #undefined-picker-container-DatePicker > .calendar > .month-container > :nth-child(1) > .datepicker-days > :nth-child(36) > .datepicker-day-text').click({force:true});
+    cy.get('[data-cy=saveButton]').click();
+  }
+);
+
+Cypress.Commands.add(
+  'createTournamentWrongDates',
+  (name, numberOfQuestions, day2) => {
+    cy.contains('Create').click({ force: true });
+    cy.contains('New Tournament').click({ force: true });
+    cy.get('[data-cy="tournamentName"]').type(name);
+    cy.get('[data-cy="Number of questions"]').type(numberOfQuestions);
+    cy.contains('Select ending').click({ force: true });
+    cy.contains('Select beginning').click({ force: true });
+    cy.get(':nth-child(1) > #undefined-wrapper > .datetimepicker > .datepicker > .datepicker-buttons-container > .now').click({ force: true });
+    cy.contains('Select ending').click({ force: true });
+    cy.get(':nth-child(2) > #undefined-wrapper > .datetimepicker > .datepicker > .pickers-container > #undefined-picker-container-DatePicker > .calendar > .month-container > :nth-child(1) > .datepicker-days > :nth-child(12) > .datepicker-day-text').click({force:true});
+    cy.get('[data-cy=saveButton]').click();
   }
 );
 

@@ -74,7 +74,7 @@ export default class ShowTournaments extends Vue {
   }
 
   async showResults(tournament: Tournament) {
-    
+
   }
 }
 </script>

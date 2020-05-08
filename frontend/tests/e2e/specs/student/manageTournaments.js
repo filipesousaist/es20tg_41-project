@@ -30,7 +30,7 @@ describe('Tournaments walkthrough', () => {
   });
 
   it('tournament with invalid dates', () => {
-    cy.createTournament('Demo Tournament', '4', '16');
+    cy.createTournamentWrongDates('Demo Tournament', '4', '16');
     cy.closeErrorMessage();
   });
 
@@ -52,4 +52,14 @@ describe('Tournaments walkthrough', () => {
     cy.withdrawTournament('Demo Tournament');
     cy.deleteTournament('Demo Tournament');
   });
+
+  it('participates on a tournament', () => {
+    cy.createTournament('Demo Tournament 10', '5', '18');
+    cy.enrollTournament('Demo Tournament');
+    cy.participateTournament('Demo Tournament');
+    cy.answerQuiz();
+  });
+
+  it('checks tournament stats', () => {
+    cy.checkDashboardStudentTournamentStats('Demo Student', 1, 1);  });
 });
