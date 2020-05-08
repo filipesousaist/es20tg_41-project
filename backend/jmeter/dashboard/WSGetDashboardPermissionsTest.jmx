@@ -57,14 +57,12 @@
           <stringProp name="initQuery"></stringProp>
           <boolProp name="keepAlive">true</boolProp>
           <stringProp name="password">tagus</stringProp>
-
           <stringProp name="poolMax">0</stringProp>
           <boolProp name="preinit">false</boolProp>
           <stringProp name="timeout">10000</stringProp>
           <stringProp name="transactionIsolation">DEFAULT</stringProp>
           <stringProp name="trimInterval">60000</stringProp>
           <stringProp name="username">rafael</stringProp>
-
         </JDBCDataSource>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
@@ -74,7 +72,6 @@
             UPDATE dashboard_stats SET show_total_tournaments=true WHERE id=676;
 
             UPDATE dashboard_stats SET show_num_clarification_requests=true WHERE id=676;</stringProp>
-
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
@@ -213,13 +210,13 @@
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert show number of total tournaments" enabled="true">
               <stringProp name="JSON_PATH">$.showTotalTournaments</stringProp>
-                <stringProp name="EXPECTED_VALUE">true</stringProp>
-                <boolProp name="JSONVALIDATION">true</boolProp>
-                <boolProp name="EXPECT_NULL">false</boolProp>
-                <boolProp name="INVERT">false</boolProp>
-                <boolProp name="ISREGEX">false</boolProp>
-              </JSONPathAssertion>
-              <hashTree/>
+              <stringProp name="EXPECTED_VALUE">true</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert show number of clarification requests" enabled="true">
               <stringProp name="JSON_PATH">$.showNumClarificationRequests</stringProp>
               <stringProp name="EXPECTED_VALUE">true</stringProp>
@@ -230,15 +227,14 @@
             </JSONPathAssertion>
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert show number of highest result" enabled="true">
-              <stringProp name="JSON_PATH">$.showHighestResult</stringProp>
-            <stringProp name="JSON_PATH">$.showNumAnsweredClarificationRequests</stringProp>
-            <stringProp name="EXPECTED_VALUE">false</stringProp>
-            <boolProp name="JSONVALIDATION">true</boolProp>
-            <boolProp name="EXPECT_NULL">false</boolProp>
-            <boolProp name="INVERT">false</boolProp>
-            <boolProp name="ISREGEX">false</boolProp>
-          </JSONPathAssertion>
-          <hashTree/>
+              <stringProp name="JSON_PATH">$.showNumAnsweredClarificationRequests</stringProp>
+              <stringProp name="EXPECTED_VALUE">false</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert show number of answered clarification requests" enabled="true">
               <stringProp name="JSON_PATH">$.showNumAnsweredClarificationRequests</stringProp>
               <stringProp name="EXPECTED_VALUE">false</stringProp>
