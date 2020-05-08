@@ -11532,13 +11532,10 @@ CREATE TABLE public.dashboard_stats (
 	num_answered_clarification_requests integer, 
 	show_num_proposed_questions boolean DEFAULT true,
 	show_num_accepted_questions boolean DEFAULT true,
-<<<<<<< HEAD
 	show_total_tournaments boolean DEFAULT true,
-	show_highest_result boolean DEFAULT true
-=======
+	show_highest_result boolean DEFAULT true,
 	show_num_clarification_requests boolean DEFAULT true,
 	show_num_answered_clarification_requests boolean DEFAULT true
->>>>>>> develop
 );
 
 
