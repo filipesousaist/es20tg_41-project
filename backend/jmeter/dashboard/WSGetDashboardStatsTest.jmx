@@ -67,15 +67,8 @@
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">ALTER TABLE users DISABLE TRIGGER ALL; /* Disable foreign key constraints */
-UPDATE users SET dashboard_stats_id=id; /* Each dashboard_stats will have same id as user */
-ALTER TABLE users ENABLE TRIGGER ALL; /* Enable foreign key constraints */
-
-/* Create all dashboard stats */
-INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_questions, show_num_proposed_questions, show_num_accepted_questions) (
-	SELECT id, id, 18, 10, true, true
-	FROM users
-);</stringProp>
+          <stringProp name="query">UPDATE dashboard_stats SET num_proposed_questions=18 WHERE id=676;
+UPDATE dashboard_stats SET num_accepted_questions=10 WHERE id=676;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
@@ -213,8 +206,8 @@ INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_qu
             </JSONPathAssertion>
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of proposed questions" enabled="true">
-              <stringProp name="JSON_PATH">$[0].numProposedQuestions</stringProp>
-              <stringProp name="EXPECTED_VALUE">18</stringProp>
+              <stringProp name="JSON_PATH">$..[?(@.userId == 700)].numProposedQuestions</stringProp>
+              <stringProp name="EXPECTED_VALUE">-1</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -222,7 +215,25 @@ INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_qu
             </JSONPathAssertion>
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of accepted questions" enabled="true">
-              <stringProp name="JSON_PATH">$[0].numAcceptedQuestions</stringProp>
+              <stringProp name="JSON_PATH">$..[?(@.userId == 700)].numAcceptedQuestions</stringProp>
+              <stringProp name="EXPECTED_VALUE">-1</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of proposed questions (Demo Student)" enabled="true">
+              <stringProp name="JSON_PATH">$..[?(@.userId == 676)].numProposedQuestions</stringProp>
+              <stringProp name="EXPECTED_VALUE">18</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of accepted questions (Demo Student)" enabled="true">
+              <stringProp name="JSON_PATH">$..[?(@.userId == 676)].numAcceptedQuestions</stringProp>
               <stringProp name="EXPECTED_VALUE">10</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
@@ -343,11 +354,8 @@ INSERT INTO dashboard_stats(id, user_id, num_proposed_questions, num_accepted_qu
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
           <stringProp name="queryType">Callable Statement</stringProp>
-          <stringProp name="query">ALTER TABLE users DISABLE TRIGGER ALL; /* Disable foreign key constraints */
-UPDATE users SET dashboard_stats_id=NULL; /* Delete references to dashboard_stats */
-ALTER TABLE users ENABLE TRIGGER ALL; /* Enable foreign key constraints */
-
-DELETE FROM dashboard_stats;</stringProp>
+          <stringProp name="query">UPDATE dashboard_stats SET num_proposed_questions=0 WHERE id=676;
+UPDATE dashboard_stats SET num_accepted_questions=0 WHERE id=676;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="variableNames"></stringProp>
