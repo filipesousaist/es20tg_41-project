@@ -59,8 +59,8 @@ class ChangeDashboardPermissionsServiceSpockTest extends Specification {
         then:
         !dashboardPermissionsDto.getShowNumProposedQuestions()
         dashboardPermissionsDto.getShowNumAcceptedQuestions()
-        !dashboardPermissionsDto.getShowClarificationRequests()
-        dashboardPermissionsDto.getShowNumAnsweredClarificationRequest()
+        !dashboardPermissionsDto.getShowNumClarificationRequests()
+        dashboardPermissionsDto.getShowNumAnsweredClarificationRequests()
     }
 
     @TestConfiguration

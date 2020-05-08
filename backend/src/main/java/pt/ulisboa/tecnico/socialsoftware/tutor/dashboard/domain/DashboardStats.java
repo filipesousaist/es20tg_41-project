@@ -25,6 +25,9 @@ public class DashboardStats {
     private boolean showNumProposedQuestions = true;
     private boolean showNumAcceptedQuestions = true;
 
+    private boolean showNumClarificationRequests = true;
+    private boolean showNumAnsweredClarificationRequests = true;
+
     // TODO: insert each functionality's related stats
     public DashboardStats() {
 
@@ -102,8 +105,26 @@ public class DashboardStats {
         this.showNumAcceptedQuestions = showNumAcceptedQuestions;
     }
 
+    public boolean getShowNumClarificationRequests() {
+        return showNumClarificationRequests;
+    }
+
+    public void setShowNumClarificationRequests(boolean showNumClarificationRequests) {
+        this.showNumClarificationRequests = showNumClarificationRequests;
+    }
+
+    public boolean getShowNumAnsweredClarificationRequests() {
+        return showNumAnsweredClarificationRequests;
+    }
+
+    public void setShowNumAnsweredClarificationRequests(boolean showNumAnsweredClarificationRequests) {
+        this.showNumAnsweredClarificationRequests = showNumAnsweredClarificationRequests;
+    }
+
     public void updatePermissions(DashboardPermissionsDto dashboardPermissionsDto) {
         this.showNumProposedQuestions = dashboardPermissionsDto.getShowNumProposedQuestions();
         this.showNumAcceptedQuestions = dashboardPermissionsDto.getShowNumAcceptedQuestions();
+        this.showNumClarificationRequests = dashboardPermissionsDto.getShowNumClarificationRequests();
+        this.showNumAnsweredClarificationRequests = dashboardPermissionsDto.getShowNumAnsweredClarificationRequests();
     }
 }

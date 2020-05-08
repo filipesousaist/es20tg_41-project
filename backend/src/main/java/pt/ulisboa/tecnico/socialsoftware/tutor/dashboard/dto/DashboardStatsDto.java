@@ -35,8 +35,14 @@ public class DashboardStatsDto implements Serializable {
             this.numProposedQuestions = -1;
         }
 
-        this.numClarificationRequests = dashboardStats.getNumClarificationRequests();
-        this.numAnsweredClarificationRequests = dashboardStats.getNumAnsweredClarificationRequests();
+        /*this.numClarificationRequests = dashboardStats.getNumClarificationRequests();
+        this.numAnsweredClarificationRequests = dashboardStats.getNumAnsweredClarificationRequests();*/
+
+        this.numClarificationRequests = dashboardStats.getShowNumClarificationRequests() ?
+                dashboardStats.getNumClarificationRequests() : -1;
+
+        this.numAnsweredClarificationRequests = dashboardStats.getShowNumAnsweredClarificationRequests() ?
+                dashboardStats.getNumAnsweredClarificationRequests() : -1;
 
     }
 

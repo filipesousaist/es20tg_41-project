@@ -304,7 +304,8 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         and: "both are answered"
         createClarification(clarificationRequestId2, CLARIFICATION_TEXT)
         createClarification(clarificationRequestId3, CLARIFICATION_TEXT)
-
+        and: "student2 answered clarification requests private"
+        student2.getDashboardStats().setShowNumAnsweredClarificationRequests(false)
         when:
         def result = dashboardService.getDashboardStats(student1.getId(), courseExecution.getId())
         result.sort {a, b -> a.getUserId() - b.getUserId()}
@@ -321,7 +322,7 @@ class GetDashboardStatsServiceSpockTest extends Specification {
         def myDashboardStats2 = result.get(1)
         myDashboardStats2 != null
         myDashboardStats2.getNumClarificationRequests() == 2
-        myDashboardStats2.getNumAnsweredClarificationRequests() == 2 // only 1 request answered
+        myDashboardStats2.getNumAnsweredClarificationRequests() == -1
     }
 
     def "make all stats from student1 private and list them only for him"() {
