@@ -7,13 +7,6 @@ describe('Tournaments walkthrough', () => {
     cy.contains('Logout').click({force:true});
   });
 
-  it('checks tournament stats', () => {
-    cy.get(':nth-child(8) > .v-btn__content').click();
-    cy.contains('Dashboard').click();
-    cy.get('[data-cy="searchBar"]').type('username');
-    cy.checkDashboardStudentTournamentStats('username', 1, 1);
-  });
-
   it('login creates a new tournament', () => {
     cy.createTournament('Demo Tournament', '5', '18');
     cy.deleteTournament('Demo Tournament');
@@ -60,9 +53,14 @@ describe('Tournaments walkthrough', () => {
   });
 
   it('participates on a tournament', () => {
-    cy.createTournament('Demo Tournament Quiz Test', '5', '18');
-    cy.enrollTournament('Demo Tournament');
     cy.participateTournament('Demo Tournament');
-    cy.answerQuiz();
+    cy.get('.end-quiz').click()
+  });
+
+  it('checks tournament stats', () => {
+    cy.get(':nth-child(8) > .v-btn__content').click();
+    cy.contains('Dashboard').click();
+    cy.get('[data-cy="searchBar"]').type('username');
+    cy.checkDashboardStudentTournamentStats('username', 1, 1);
   });
 });
