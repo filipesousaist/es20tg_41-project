@@ -22,11 +22,19 @@ public class DashboardStats {
     private int numProposedQuestions;
     private int numAcceptedQuestions;
 
+    private int numClarificationRequests;
+    private int numAnsweredClarificationRequests;
+
     private boolean showNumProposedQuestions = true;
     private boolean showNumAcceptedQuestions = true;
+
     private boolean showTotalTournaments = true;
     private boolean showHighestResult = true;
 
+    private boolean showNumClarificationRequests = true;
+    private boolean showNumAnsweredClarificationRequests = true;
+
+    // TODO: insert each functionality's related stats
     public DashboardStats() {
 
     }
@@ -38,6 +46,8 @@ public class DashboardStats {
         this.highestResult = user.getHighestResult();
         this.numProposedQuestions = user.getNumProposedQuestions();
         this.numAcceptedQuestions = user.getNumAcceptedQuestions();
+        this.numClarificationRequests = user.getNumClarificationRequests();
+        this.numAnsweredClarificationRequests = user.getNumAnsweredClarificationRequests();
     }
 
     public Integer getId() {
@@ -88,6 +98,22 @@ public class DashboardStats {
         this.numProposedQuestions = numProposedQuestions;
     }
 
+    public int getNumClarificationRequests() {
+        return numClarificationRequests;
+    }
+
+    public void setNumClarificationRequests(int numClarificationRequests) {
+        this.numClarificationRequests = numClarificationRequests;
+    }
+
+    public int getNumAnsweredClarificationRequests() {
+        return numAnsweredClarificationRequests;
+    }
+
+    public void setNumAnsweredClarificationRequests(int numAnsweredClarificationRequests) {
+        this.numAnsweredClarificationRequests = numAnsweredClarificationRequests;
+    }
+
     public boolean getShowNumProposedQuestions() {
         return showNumProposedQuestions;
     }
@@ -120,10 +146,29 @@ public class DashboardStats {
         this.showHighestResult = showHighestResult;
     }
 
+
+    public boolean getShowNumClarificationRequests() {
+        return showNumClarificationRequests;
+    }
+
+    public void setShowNumClarificationRequests(boolean showNumClarificationRequests) {
+        this.showNumClarificationRequests = showNumClarificationRequests;
+    }
+
+    public boolean getShowNumAnsweredClarificationRequests() {
+        return showNumAnsweredClarificationRequests;
+    }
+
+    public void setShowNumAnsweredClarificationRequests(boolean showNumAnsweredClarificationRequests) {
+        this.showNumAnsweredClarificationRequests = showNumAnsweredClarificationRequests;
+    }
+
     public void updatePermissions(DashboardPermissionsDto dashboardPermissionsDto) {
         this.showNumProposedQuestions = dashboardPermissionsDto.getShowNumProposedQuestions();
         this.showNumAcceptedQuestions = dashboardPermissionsDto.getShowNumAcceptedQuestions();
         this.showHighestResult = dashboardPermissionsDto.getShowHighestResult();
         this.showTotalTournaments = dashboardPermissionsDto.getShowTotalTournaments();
+        this.showNumClarificationRequests = dashboardPermissionsDto.getShowNumClarificationRequests();
+        this.showNumAnsweredClarificationRequests = dashboardPermissionsDto.getShowNumAnsweredClarificationRequests();
     }
 }

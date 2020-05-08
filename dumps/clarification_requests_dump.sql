@@ -1,0 +1,10 @@
+INSERT INTO clarification_requests (id, title, text, user_id, question_id, private) VALUES (200000, 'request_title', 'request_text', 718, 1489, false);
+INSERT INTO clarifications(id, text, user_id, clarification_request_id, summary) VALUES (200000, 'clarification_text', 677, 200000, 'clarification_summary');
+INSERT INTO clarification_requests (id, title, text, user_id, question_id, private) VALUES (200001, 'request_title', 'request_text', 718, 1506, false);
+INSERT INTO clarifications(id, text, user_id, clarification_request_id, summary) VALUES (200001, 'clarification_text', 677, 200001, 'clarification_summary');
+INSERT INTO clarification_requests (id, title, text, user_id, question_id, private) VALUES (200002, 'request_title', 'request_text', 718, 1392, false);
+INSERT INTO clarifications(id, text, user_id, clarification_request_id, summary) VALUES (200002, 'clarification_text', 677, 200002, 'clarification_summary');
+INSERT INTO clarification_requests (id, title, text, user_id, question_id, private) VALUES (200003, 'request_title', 'request_text', 718, 1504, false);
+INSERT INTO clarifications(id, text, user_id, clarification_request_id, summary) VALUES (200003, 'clarification_text', 677, 200003, 'clarification_summary');
+INSERT INTO clarification_requests (id, title, text, user_id, question_id, private) VALUES (200004, 'request_title', 'request_text', 718, 1507, false);
+INSERT INTO clarifications(id, text, user_id, clarification_request_id, summary) VALUES (200004, 'clarification_text', 677, 200004, 'clarification_summary');

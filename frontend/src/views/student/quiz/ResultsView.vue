@@ -61,7 +61,7 @@
     />
 
     <public-clarification-requests-dialog
-      v-if="!!statementManager.statementQuiz.questions[questionOrder]"
+      v-if="publicClarificationsDialog"
       v-model="publicClarificationsDialog"
       :question="statementManager.statementQuiz.questions[questionOrder]"
       v-on:close-public-clarification-requests-dialog="onClosePublicClarificationRequestsDialog"

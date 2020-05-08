@@ -32,6 +32,18 @@
         label="Show highest result tournament"
       />
 
+      <v-switch
+        class="ma-4"
+        v-model="editDashboardPermissions.showNumClarificationRequests"
+        label="Show number of clarification requests"
+      />
+
+      <v-switch
+        class="ma-4"
+        v-model="editDashboardPermissions.showNumAnsweredClarificationRequests"
+        label="Show number of answered clarification requests"
+      />
+
       <v-card-actions>
         <v-btn dark color="red" @click="closePermissionsDialog">Close</v-btn>
         <v-spacer />

@@ -10,7 +10,7 @@
                   <b>{{ comment.username}}:</b>{{ comment.text }}
                 </v-flex>
             </div>
-
+            <div v-if="!(!!clarificationRequest.clarification.summary)">
             <v-flex xs24 sm12 md8>
             <v-text-field
                 
@@ -28,6 +28,8 @@
           >Send</v-btn
         >
       </v-card-actions>
+              </div>
+
       </v-card-text>
 </v-card>
 </template>

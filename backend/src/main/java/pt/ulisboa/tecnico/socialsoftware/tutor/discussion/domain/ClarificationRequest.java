@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.discussion.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.domain.DashboardStats;
 import pt.ulisboa.tecnico.socialsoftware.tutor.discussion.dto.ClarificationRequestDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
@@ -82,6 +83,8 @@ public class ClarificationRequest {
 
     public void setClarification(Clarification clarification) {
         this.clarification = clarification;
+        DashboardStats stats = this.student.getDashboardStats();
+        stats.setNumAnsweredClarificationRequests(stats.getNumAnsweredClarificationRequests() + 1);
     }
 
     public String getTitle() {

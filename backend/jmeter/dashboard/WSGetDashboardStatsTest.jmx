@@ -69,7 +69,8 @@
           <stringProp name="dataSource">sampleReq</stringProp>
           <stringProp name="query">UPDATE dashboard_stats SET num_proposed_questions=18 WHERE id=676;
 UPDATE dashboard_stats SET num_accepted_questions=10 WHERE id=676;
-</stringProp>
+UPDATE dashboard_stats SET num_clarification_requests=4 WHERE id=676;
+UPDATE dashboard_stats SET num_answered_clarification_requests=2 WHERE id=676;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="queryTimeout"></stringProp>
@@ -169,7 +170,7 @@ UPDATE dashboard_stats SET num_accepted_questions=10 WHERE id=676;
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request to get dashboard stats" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
@@ -251,9 +252,45 @@ UPDATE dashboard_stats SET num_accepted_questions=10 WHERE id=676;
               <boolProp name="ISREGEX">false</boolProp>
             </JSONPathAssertion>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of clarification requests" enabled="true">
+              <stringProp name="JSON_PATH">$..[?(@.userId == 700)].numClarificationRequests</stringProp>
+              <stringProp name="EXPECTED_VALUE">-1</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of highest result (Demo Student)" enabled="true">
               <stringProp name="JSON_PATH">$..[?(@.userId == 676)].highestResult</stringProp>
               <stringProp name="EXPECTED_VALUE">26</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of answered clarification requests" enabled="true">
+              <stringProp name="JSON_PATH">$..[?(@.userId == 700)].numAnsweredClarificationRequests</stringProp>
+              <stringProp name="EXPECTED_VALUE">-1</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of clarification requests (Demo Student)" enabled="true">
+              <stringProp name="JSON_PATH">$..[?(@.userId == 676)].numClarificationRequests</stringProp>
+              <stringProp name="EXPECTED_VALUE">4</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert number of answered clarification requests (Demo Student)" enabled="true">
+              <stringProp name="JSON_PATH">$..[?(@.userId == 676)].numAnsweredClarificationRequests</stringProp>
+              <stringProp name="EXPECTED_VALUE">2</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -374,7 +411,9 @@ UPDATE dashboard_stats SET num_accepted_questions=10 WHERE id=676;
           <stringProp name="dataSource">sampleReq</stringProp>
           <stringProp name="queryType">Callable Statement</stringProp>
           <stringProp name="query">UPDATE dashboard_stats SET num_proposed_questions=0 WHERE id=676;
-UPDATE dashboard_stats SET num_accepted_questions=0 WHERE id=676;</stringProp>
+UPDATE dashboard_stats SET num_accepted_questions=0 WHERE id=676;
+UPDATE dashboard_stats SET num_clarification_requests=0 WHERE id=676;
+UPDATE dashboard_stats SET num_answered_clarification_requests=0 WHERE id=676;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
           <stringProp name="variableNames"></stringProp>

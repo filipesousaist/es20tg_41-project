@@ -62,6 +62,8 @@ public class DashboardService {
                 stats.setNumAcceptedQuestions(dashboardStats.getNumAcceptedQuestions());
                 stats.setTotalTournaments(user.getTotalTournaments());
                 stats.setHighestResult(user.getHighestResult());
+                stats.setNumClarificationRequests(dashboardStats.getNumClarificationRequests());
+                stats.setNumAnsweredClarificationRequests(dashboardStats.getNumAnsweredClarificationRequests());
             }
         }).collect(Collectors.toList());
     }

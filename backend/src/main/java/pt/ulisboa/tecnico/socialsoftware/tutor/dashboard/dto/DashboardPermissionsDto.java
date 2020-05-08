@@ -5,10 +5,10 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.dashboard.domain.DashboardStats;
 public class DashboardPermissionsDto {
     private boolean showNumProposedQuestions;
     private boolean showNumAcceptedQuestions;
-
-    /*Tournaments Stats*/
     private boolean showTotalTournaments;
     private boolean showHighestResult;
+    private boolean showNumClarificationRequests;
+    private boolean showNumAnsweredClarificationRequests;
 
     public DashboardPermissionsDto() {
         
@@ -19,6 +19,8 @@ public class DashboardPermissionsDto {
         this.showNumAcceptedQuestions = dashboardStats.getShowNumAcceptedQuestions();
         this.showTotalTournaments = dashboardStats.getShowTotalTournaments();
         this.showHighestResult = dashboardStats.getShowHighestResult();
+        this.showNumClarificationRequests = dashboardStats.getShowNumClarificationRequests();
+        this.showNumAnsweredClarificationRequests = dashboardStats.getShowNumAnsweredClarificationRequests();
     }
 
     public boolean getShowNumProposedQuestions() {
@@ -51,5 +53,21 @@ public class DashboardPermissionsDto {
 
     public void setShowHighestResult(boolean showHighestResult) {
         this.showHighestResult = showHighestResult;
+    }
+
+    public boolean getShowNumClarificationRequests() {
+        return showNumClarificationRequests;
+    }
+
+    public void setShowNumClarificationRequests(boolean showNumClarificationRequests) {
+        this.showNumClarificationRequests = showNumClarificationRequests;
+    }
+
+    public boolean getShowNumAnsweredClarificationRequests() {
+        return showNumAnsweredClarificationRequests;
+    }
+
+    public void setShowNumAnsweredClarificationRequests(boolean showNumAnsweredClarificationRequests) {
+        this.showNumAnsweredClarificationRequests = showNumAnsweredClarificationRequests;
     }
 }
