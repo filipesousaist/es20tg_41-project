@@ -63,13 +63,13 @@
 
       <template v-slot:item.numClarificationRequests="{ item }">
         <div data-cy="numClarificationRequests">
-          {{ item.numClarificationRequests }}
+          {{ item.numClarificationRequests === -1 ? '-' : item.numClarificationRequests}}
         </div>
       </template>
 
       <template v-slot:item.numAnsweredClarificationRequests="{ item }">
         <div data-cy="numAnsweredClarificationRequests">
-          {{ item.numAnsweredClarificationRequests }}
+          {{ item.numAnsweredClarificationRequests === -1 ? '-' : item.numAnsweredClarificationRequests}}
         </div>
       </template>
     </v-data-table>
