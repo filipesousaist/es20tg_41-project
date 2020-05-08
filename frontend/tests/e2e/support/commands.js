@@ -236,7 +236,6 @@ Cypress.Commands.add(
       .should(showNumAcceptedQuestions ? 'be.checked' : 'not.checked');
 
     cy.contains('Close').click();
->>>>>>> develop
   }
 );
 

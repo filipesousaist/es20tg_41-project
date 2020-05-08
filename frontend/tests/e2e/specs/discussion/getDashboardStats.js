@@ -14,8 +14,8 @@ describe('Create Clarification Request Walkthrough', () => {
     cy.checkDashboardDiscussionStats('Demo Student', 5, 5);
   });
 
-  it('Test search bar', () => {
+  it('Test search bar and check if Student stats are private', () => {
     cy.get('[data-cy="searchBar"]').type('Student 700');
-    cy.checkDashboardDiscussionStats('Student 700', 0, 0);
+    cy.checkDashboardDiscussionStats('Student 700', '-', '-');
   });
 });

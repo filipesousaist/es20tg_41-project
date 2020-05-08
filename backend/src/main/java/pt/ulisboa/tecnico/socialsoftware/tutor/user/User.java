@@ -196,6 +196,7 @@ public class User implements UserDetails, DomainEntity {
 
     public void addClarificationRequest(ClarificationRequest clarificationRequest){
         clarificationRequests.add(clarificationRequest);
+        dashboardStats.setNumClarificationRequests(dashboardStats.getNumClarificationRequests() + 1);
     }
 
     public Set<Clarification> getClarifications() {

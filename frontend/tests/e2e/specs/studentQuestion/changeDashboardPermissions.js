@@ -15,12 +15,12 @@ describe('Change Dashboard Permissions Walkthrough', () => {
   });
 
   it('Check if permissions are still correct and close', () => {
-    cy.checkDashboardStudentQuestionsPermissions(false, true);
+    cy.checkDashboardStudentQuestionsPermissions(true, false);
   });
 
   it('Change dashboard permissions and don\'t save', () => {
     cy.changeDashboardStudentQuestionsPermissions(false, true, false);
     // They should not have changed since previous tests
-    cy.checkDashboardStudentQuestionsPermissions(false, true);
+    cy.checkDashboardStudentQuestionsPermissions(true, false);
   });
 });
