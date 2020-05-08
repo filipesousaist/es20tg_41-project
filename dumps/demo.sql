@@ -11530,6 +11530,8 @@ CREATE TABLE public.dashboard_stats (
 	num_accepted_questions integer,
 	num_clarification_requests integer, 
 	num_answered_clarification_requests integer, 
+    highest_result integer,
+    total_tournaments integer,
 	show_num_proposed_questions boolean DEFAULT true,
 	show_num_accepted_questions boolean DEFAULT true,
 	show_total_tournaments boolean DEFAULT true,
