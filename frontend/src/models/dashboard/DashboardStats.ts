@@ -6,6 +6,9 @@ export default class DashboardStats {
   numProposedQuestions: number;
   numAcceptedQuestions: number;
 
+  numClarificationRequests: number;
+  numAnsweredClarificationRequests: number;
+
   // TODO: add properties for each stat
 
   constructor(jsonObj: DashboardStats) {
@@ -14,5 +17,7 @@ export default class DashboardStats {
     this.name = jsonObj.name;
     this.numProposedQuestions = jsonObj.numProposedQuestions;
     this.numAcceptedQuestions = jsonObj.numAcceptedQuestions;
+    this.numClarificationRequests = jsonObj.numClarificationRequests;
+    this.numAnsweredClarificationRequests = jsonObj.numAnsweredClarificationRequests;
   }
 }

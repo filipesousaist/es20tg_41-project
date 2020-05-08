@@ -19,11 +19,13 @@ public class DashboardStats {
     private int numProposedQuestions;
     private int numAcceptedQuestions;
 
+    private int numClarificationRequests;
+    private int numAnsweredClarificationRequests;
+
     private boolean showNumProposedQuestions = true;
     private boolean showNumAcceptedQuestions = true;
 
     // TODO: insert each functionality's related stats
-
     public DashboardStats() {
 
     }
@@ -32,6 +34,8 @@ public class DashboardStats {
         this.user = user;
         this.numProposedQuestions = user.getNumProposedQuestions();
         this.numAcceptedQuestions = user.getNumAcceptedQuestions();
+        this.numClarificationRequests = user.getNumClarificationRequests();
+        this.numAnsweredClarificationRequests = user.getNumAnsweredClarificationRequests();
     }
 
     public Integer getId() {
@@ -64,6 +68,22 @@ public class DashboardStats {
 
     public void setNumProposedQuestions(int numProposedQuestions) {
         this.numProposedQuestions = numProposedQuestions;
+    }
+
+    public int getNumClarificationRequests() {
+        return numClarificationRequests;
+    }
+
+    public void setNumClarificationRequests(int numClarificationRequests) {
+        this.numClarificationRequests = numClarificationRequests;
+    }
+
+    public int getNumAnsweredClarificationRequests() {
+        return numAnsweredClarificationRequests;
+    }
+
+    public void setNumAnsweredClarificationRequests(int numAnsweredClarificationRequests) {
+        this.numAnsweredClarificationRequests = numAnsweredClarificationRequests;
     }
 
     public boolean getShowNumProposedQuestions() {
