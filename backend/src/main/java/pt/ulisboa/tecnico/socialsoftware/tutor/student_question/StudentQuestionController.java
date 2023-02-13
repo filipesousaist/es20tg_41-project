@@ -80,4 +80,16 @@ public class StudentQuestionController {
 
         return studentQuestionService.updateStudentQuestion(user.getId(), studentQuestionId, studentQuestionDto);
     }
+
+    @PutMapping("studentQuestions/maxStudentQuestions/{value}")
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public void changeMaxStudentQuestions(Principal principal, @PathVariable int maxStudentQuestions) {
+        User user = (User) ((Authentication) principal).getPrincipal();
+
+        if (user == null) {
+            throw new TutorException(AUTHENTICATION_ERROR);
+        }
+
+        studentQuestionService.changeMaxStudentQuestions(user, maxStudentQuestions);
+    }
 }

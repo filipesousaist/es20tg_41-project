@@ -124,6 +124,11 @@ public class StudentQuestionService {
         return new StudentQuestionDto(studentQuestion);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void changeMaxStudentQuestions(User user, int value) {
+        user.setMaxStudentQuestions(value);
+    }
+
     @Retryable(
             value = { SQLException.class },
             backoff = @Backoff(delay = 5000))

@@ -53,6 +53,8 @@ public class User implements UserDetails, DomainEntity {
     private Integer numberOfCorrectInClassAnswers;
     private Integer numberOfCorrectStudentAnswers;
 
+    private Integer maxStudentQuestions;
+
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
@@ -105,6 +107,7 @@ public class User implements UserDetails, DomainEntity {
         this.numberOfCorrectTeacherAnswers = 0;
         this.numberOfCorrectInClassAnswers = 0;
         this.numberOfCorrectStudentAnswers = 0;
+        this.maxStudentQuestions = 10;
         initDashboardStats();
     }
 
@@ -357,6 +360,10 @@ public class User implements UserDetails, DomainEntity {
         this.numberOfCorrectStudentAnswers = numberOfCorrectStudentAnswers;
     }
 
+    public void setMaxStudentQuestions(Integer maxStudentQuestions) {
+        this.maxStudentQuestions = maxStudentQuestions;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -433,7 +440,12 @@ public class User implements UserDetails, DomainEntity {
         this.quizAnswers.add(quizAnswer);
     }
 
-    public void addStudentQuestion(StudentQuestion studentQuestion) { this.studentQuestions.add(studentQuestion); }
+    public void addStudentQuestion(StudentQuestion studentQuestion) {
+        if (this.studentQuestions.size() < this.maxStudentQuestions) {
+            this.maxStudentQuestions ++;
+            this.studentQuestions.add(studentQuestion);
+        }
+    }
 
     public void addQuestionEvaluation(QuestionEvaluation questionEvaluation) { this.questionEvaluations.add(questionEvaluation); }
 

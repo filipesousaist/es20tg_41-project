@@ -17,7 +17,6 @@ import java.util.Set;
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
 @Entity
-@Table(name = "course_executions")
 public class CourseExecution implements DomainEntity {
      public enum Status {ACTIVE, INACTIVE, HISTORIC}
 
